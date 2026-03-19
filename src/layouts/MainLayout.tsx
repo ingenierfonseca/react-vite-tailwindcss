@@ -1,9 +1,10 @@
-/*import { useState } from 'react'
-import './App.css'
-import Header from './components/Layout/Header'
-import Sidebar from './components/Layout/Sidebar'
+import { useState } from 'react'
+import '../App.css'
+import Header from '../components/Layout/Header'
+import Sidebar from '../components/Layout/Sidebar'
+import { Outlet } from 'react-router'
 
-function App() {
+export default function MainLayout() {
   const [sidebarCollased, setSidebarCollapsed] = useState(false)
   const [currentPage, setCurrentPage] = useState("dashboard")
   return (
@@ -14,10 +15,11 @@ function App() {
           currentPage={currentPage} onPageChange={setCurrentPage}/>
         <div className='flex-1 flex flex-col overflow-hidden'>
           <Header onToggle={()=> setSidebarCollapsed(prev => !prev)}/>
+          <main className='flex-1 overflow-y-auto bg-transparent p-6 space-y-6'>
+            <Outlet />
+          </main>
         </div>
       </div>
     </div>
   )
 }
-
-export default App*/
