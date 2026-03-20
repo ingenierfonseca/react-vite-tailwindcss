@@ -16,6 +16,7 @@ function Header({onToggle}: HeaderProps) {
                         onClick={onToggle}>
                         <Menu className="w-5 h-5" />
                     </button>
+                    <h1>Dashboard</h1>
                 </div>
             </div>
         </div>
