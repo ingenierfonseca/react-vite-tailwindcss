@@ -30,7 +30,7 @@ export default function StatsGrid() {
                             {<stat.icon className={`w-6 h-6 ${stat.textColor}`} />}
                         </div>
                     </div>
-                    <div className="mt-4 h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                    <div className="hidden mt-4 h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
                         <div className={`h-full bg-linear-to-r ${stat.color} rounded-full transition-all duration-100`}
                             style={{width: stat.trend === 'up' ? '75%' : '45%'}}></div>
                     </div>

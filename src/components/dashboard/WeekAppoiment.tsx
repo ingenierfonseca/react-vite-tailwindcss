@@ -1,6 +1,19 @@
+import { useEffect, useState } from "react";
+
 export default function WeekAppoiment({ appointment }: { appointment: any }) {
+    const [, setTick] = useState(0);
+
+    useEffect(() => {
+        const timer = setInterval(() => {
+        setTick(prev => prev + 1); // Forzamos re-render
+        console.log("Re-validando horarios...");
+        }, 1 * 60 * 1000); 
+
+        return () => clearInterval(timer);
+    }, []);
+
     return (
-        <div className="mt-4 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl rounded-2xl p-4 border border-slate-200/50 dark:border-slate-700/50 hover:shadow-xl hover:shadow-slate-200/20 dark:hover:shadow-slate-900/20 transition-all duration-300 group">
+        <div className="flex-1 mt-4 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl rounded-2xl p-4 border border-slate-200/50 dark:border-slate-700/50 hover:shadow-xl hover:shadow-slate-200/20 dark:hover:shadow-slate-900/20 transition-all duration-300 group">
             <div className={`p-1 border-t border-slate-200/50 dark:border-slate-700/50`}>
                 <div className={`flex items-center space-x-3 rounded-xl bg-slate-50
                         dark:bg-slate-800/50`}>
@@ -19,21 +32,30 @@ export default function WeekAppoiment({ appointment }: { appointment: any }) {
                         </div>
                 </div>
             </div>
-            <div className="flex justify-between items-start w-full mt-1">
+            <div className="flex items-stretch justify-between w-full mt-1">
                 {appointment.days.map((day: any, index: number) => (
-                    <div key={index} className={`flex-1 place-content-center ${day.current ? 'bg-blue-200/50 rounded-md' : ''}`}>
+                    <div key={index} className={`flex-1 grown shadow-sm rounded-md ${day.current ? 'bg-blue-200/50 dark:bg-blue-200 border-2 border-blue-500' : ''}`}>
                         <div className="flex flex-col text-center">
                             <span className="text-sm">{day.day.toUpperCase().slice(0, 3)}</span>
-                            <span className="text-2xl font-bold text-slate-500 dark:text-slate-400">{day.date}</span>
+                            <span className={`text-2xl font-bold ${day.current ? 'dark:text-black' : 'text-slate-500 dark:text-white'}`}>{day.date}</span>
                         </div>
                         <div>
-                            {day.appoiments.map((appoiment: any, idx: number) => (
-                                <div key={idx} className={`p-1 m-1 ${!isCurrentlyHappening(appoiment.time) ? 'bg-blue-300' : 'bg-blue-700'} rounded-md text-center`}>
-                                    <p className={`text-xs ${isCurrentlyHappening(appoiment.time) ? ' font-bold text-white' : ''}  text-slate-500 dark:text-slate-400`}>
+                            {day.appoiments.map((appoiment: any, idx: number) => {
+                                const isNow = isCurrentlyHappening(appoiment.time) && day.current
+
+                                return <div key={idx} className={`p-1 m-1 
+                                    ${!isNow ? 'bg-blue-300 dark:bg-gray-700' : 'bg-blue-700'} 
+                                    ${appoiment.status === 'canceled' ? 'bg-white' : ''} 
+                                    rounded-md text-center`}>
+                                    <p className={`text-xs 
+                                        ${isNow ? ' font-bold text-white' : ''}  
+                                        text-slate-500 dark:text-slate-400
+                                        ${appoiment.status === 'canceled' ? 'line-through' : ''}`
+                                    }>
                                         {appoiment.time}
                                     </p>
                                 </div>
-                            ))}
+                            })}
                         </div>
                     </div>
                 ))}

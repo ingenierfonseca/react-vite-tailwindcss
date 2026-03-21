@@ -4,7 +4,7 @@ import WeekAppoiment from "../components/dashboard/WeekAppoiment";
 const weekAppoiments = [
     {
         name: 'Dra. Melissa Fonseca', 
-        specialty: 'ortodoncia',
+        specialty: 'Ortodoncia . Especialista Certificada',
         avatar: 'https://scontent-bog2-2.xx.fbcdn.net/v/t1.6435-9/33609023_2027018804036941_7487435140159766528_n.jpg?_nc_cat=109&ccb=1-7&_nc_sid=7b2446&_nc_ohc=bDZQ6_PDGB8Q7kNvwE9fEBk&_nc_oc=AdrI8hhK6K2UOT3zLs0po_jHfPAqfygoQXSQ8Q_bUKty4DL3aQQE58L9DGafxiYOMcI&_nc_zt=23&_nc_ht=scontent-bog2-2.xx&_nc_gid=_rZVziTmO-hXzIimVGW1YA&_nc_ss=7a30f&oh=00_Afwsvzfzvcl9BCl8410F4KOvlpgYW8HDzolNYo8EUpmr5g&oe=69E41FF1',
         days: [
             { 
@@ -45,7 +45,7 @@ const weekAppoiments = [
                     { time: '11:30AM', patient: '', status: 'free' },
                     { time: '12:30AM', patient: '', status: 'free' },
                     { time: '10:00PM', patient: 'Thiago Fonseca', status: 'confirmed' },
-                    { time: '11:00PM', patient: '', status: 'free' },
+                    { time: '11:00PM', patient: '', status: 'canceled' },
                 ]
             },
             {
@@ -124,7 +124,7 @@ export default function DashboardPage() {
   return (
     <div>
       <StatsGrid />
-      <div className="grid grid-cols-2 md:grid-cols-1 xl:grid-cols-2 gap-4">
+      <div className="flex flex-wrap gap-4">
         {weekAppoiments.map((item, index) => (
             <WeekAppoiment key={index} appointment={item} />
         ))}
