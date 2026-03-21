@@ -3,12 +3,15 @@ import Thooth from "./components/thooth"
 import ModalFullScreen from "../../components/commons/ModalFullScreen";
 import ToothModal from "./components/thooth-modal";
 
+const upperJaw = [18, 17, 16, 15, 14, 13, 12, 11, 21, 22, 23, 24, 25, 26, 27, 28]
+const lowerJaw = [48, 47, 46, 45, 44, 43, 42, 41, 31, 32, 33, 34, 35, 36, 37, 38]
+const conditions = ["caries", "restoration", "fracture", "healthy", "up-braces", "down-braces"]
+
 export default function Odontogram() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedTooth, setSelectedTooth] = useState(0)
-    const upperJaw = [18, 17, 16, 15, 14, 13, 12, 11, 21, 22, 23, 24, 25, 26, 27, 28]
-    const lowerJaw = [48, 47, 46, 45, 44, 43, 42, 41, 31, 32, 33, 34, 35, 36, 37, 38]
-    const conditions = ["caries", "restoration", "fracture", "healthy", "up-braces", "down-braces"]
+    const [selectedCondition, setSelectedCondition] = useState(conditions[0])
+
 
     function openThoothModal(id: number) {
         setSelectedTooth(id)
@@ -17,12 +20,13 @@ export default function Odontogram() {
 
     return (
         <div>
-            <section className="flex mt-8 justify-center">
+            <section className="flex mt-8 mb-8 justify-center">
                 {conditions.map(condition => {
                     return (
                         <div key={condition} className="flex m-1 items-center">
                             <button style={{ backgroundColor: getColorForCondition(condition) }}
-                            className={`w-8 h-8 mr-3 cursor-pointer rounded-2xl`} />
+                                className={`w-8 h-8 mr-3 cursor-pointer rounded-2xl`}
+                                onClick={()=> setSelectedCondition(condition)}/>
                             <span className="text-white">{condition}</span>
                         </div>
                     )
@@ -32,12 +36,16 @@ export default function Odontogram() {
             <section className="text-center">
                 <div className="flex justify-center">
                     {upperJaw.map(id => (
-                        <Thooth key={id} id={id} rotate={true} type={getToothType(id)} openModal={()=> openThoothModal(id)} />
+                        <Thooth key={id} id={id} type={getToothType(id)}
+                            selectedCondition={selectedCondition}
+                            rotate={true} openModal={()=> openThoothModal(id)} />
                     ))}
                 </div>
                 <div className="flex justify-center w-full">
                     {lowerJaw.map(id => (
-                        <Thooth key={id} id={id} rotate={false} type={getToothType(id)} openModal={()=> openThoothModal(id)}/>
+                        <Thooth key={id} id={id} type={getToothType(id)} 
+                            selectedCondition={selectedCondition}
+                            rotate={false} openModal={()=> openThoothModal(id)}/>
                     ))}
                 </div>
             </section>
