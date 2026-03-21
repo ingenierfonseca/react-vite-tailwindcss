@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import '../App.css'
-import Header from '../components/Layout/Header'
-import Sidebar from '../components/Layout/Sidebar'
+import Header from '../components/layout/Header'
+import Sidebar from '../components/layout/Sidebar'
 import { Outlet } from 'react-router'
 
 export default function MainLayout() {

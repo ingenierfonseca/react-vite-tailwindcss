@@ -29,6 +29,12 @@ const menuItems = [
         ]
     },
     {
+        id: "odontogram",
+        icon: Users,
+        label: "Odontograma",
+        path: "/odontogram",
+    },
+    {
         id: "reports",
         icon: BarChart3,
         label: "Reports"

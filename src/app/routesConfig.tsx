@@ -1,4 +1,5 @@
 import AppointmentList from "../features/appointments/AppointmentList";
+import Odontogram from "../features/odontogram/Odontogram";
 import DashboardPage from "../pages/DashboardPage";
 
 export const routesConfig = [
@@ -16,6 +17,11 @@ export const routesConfig = [
     path: "/patients",
     title: "Pacientes",
     element: <div>Patients</div>
+  },
+  {
+    path: "/odontogram",
+    title: "Odontograma",
+    element: <Odontogram />
   },
   {
     path: "/doctors",
