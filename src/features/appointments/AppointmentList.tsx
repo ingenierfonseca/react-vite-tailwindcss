@@ -1,4 +1,5 @@
 import { CirclePlus, EllipsisVertical } from "lucide-react"
+import { useAppointments } from "./appointment.hooks"
 
 const headers = [
     '#',
@@ -11,7 +12,7 @@ const headers = [
     'action'
 ]
 
-const data =
+/*const data =
     {
         currentPage: 1,
         totalItems: 3,
@@ -45,14 +46,17 @@ const data =
                 status: "Cancelled"
             }
         ]
-    }
+    }*/
 
 
 export default function AppointmentList() {
+    const { data, loading, error, currentPage } = useAppointments()
     const buttonPage = 'px-3 py-1 rounded-md bg-blue-300 text-black text-sm'
     const dropDownStyle = 'ml-1 mt-2 p-1 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs text-black font-bold'
+    const isMobile = window.innerWidth <= 768
+    console.log("isMobile", isMobile)
     return (
-        <div className="w-full p-4 bg-white rounded-2xl">
+        <div className="w-full p-8 bg-white rounded-2xl">
             <div className="flex pb-5">
                 <div>
                     <p className="font-bold">Lista de Agendamentos</p>
@@ -96,18 +100,18 @@ export default function AppointmentList() {
             <div className="flex flex-col">
                 <div className="flex">
                     {headers.map((header) => {
-                        return <span key={header} className={`flex-1 text-xs text-slate-500 uppercase font-medium`}>{header}</span>
+                        return <span key={header} className={`${header[0] === "#" && isMobile ? 'hidden' : 'flex-1'} text-xs text-slate-500 uppercase font-medium`}>{header}</span>
                     })}
                 </div>
-                {data.data.map((item) => {
+                {data && data.data.map((item) => {
                     return (
                         <div key={item.id} className="flex items-center w-full py-2">
-                            <span className="flex-1 text-sm">{item.id}</span>
-                            <span className="flex-1 text-sm">{item.patientName}</span>
+                            <span className={`${isMobile ? 'hidden' : ''} text-sm`}>{item.id}</span>
+                            <span className="flex-1 text-sm">{item.patientFullName}</span>
                             <span className="flex-1 text-sm">{item.doctor}</span>
                             <span className="flex-1 text-sm">{item.department}</span>
-                            <span className="flex-1 text-sm">{item.date}</span>
-                            <span className="flex-1 text-sm">{item.time}</span>
+                            <span className="flex-1 text-sm">{item.dateTime}</span>
+                            <span className="flex-1 text-sm">{item.dateTime}</span>
                             <span className={`flex-1`}>
                                 <div className={`pl-2 pr-2 pb-0.5 w-22 text-center text-sm rounded-2xl ${getBgColorStatus(item.status)}`}>{item.status}</div>
                             </span>
@@ -119,17 +123,17 @@ export default function AppointmentList() {
                     )
                 })}
                 <div className="flex pt-3">
-                    <p className="text-xs">Showing 1 to {data.totalPages} of {data.totalItems} entries</p>
+                    <p className="text-xs">Showing 1 to {data && data.totalPages} of {data && data.totalItems} entries</p>
                     <div className="ml-auto flex gap-1">
-                        {data.currentPage !== 1 && (
+                        {data && data.currentPage !== 1 && (
                             <button className={`${buttonPage}`} disabled>Previous</button>
                         )}
-                        {data.totalPages > 1 && Array.from({ length: data.totalPages }).map((_, index) => (
+                        {data && data.totalPages > 1 && Array.from({ length: data.totalPages }).map((_, index) => (
                             <button key={index} className={`${buttonPage}`}>
                                 {index + 1}
                             </button>
                         ))}
-                        {data.currentPage < data.totalPages && (
+                        {data && currentPage < data.totalPages && (
                             <button className={`${buttonPage}`} disabled>Next</button>
                         )}
                     </div>
