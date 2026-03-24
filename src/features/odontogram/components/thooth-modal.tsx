@@ -40,10 +40,7 @@ export default function ToothModal({ type, isOpen, onClose, toothId }: Props) {
     // 3. Carga del Modelo 3D
     const loader = new GLTFLoader();
     
-    let model3d = "teeth";
-    if (type === "incisor" || type   === "canine") {
-        model3d = "tooth";
-    }
+    let model3d = getModelByType(type, toothId);
     loader.load(`/src/assets/${model3d}.glb`, (gltf) => {
       const model = gltf.scene;
       model.scale.set(2, 2, 2);
@@ -92,4 +89,18 @@ export default function ToothModal({ type, isOpen, onClose, toothId }: Props) {
       </div>
     </div>
   );
+}
+
+function getModelByType(type:string, id:number) {
+  console.log("type, id", type, id)
+  if (type === 'incisor' || type === 'canine') {
+    if (id === 41) {
+      return `incisor${id}`
+    }
+    return 'teeth'
+  } else {
+    if (id === 14)
+      return `premolar${id}`
+  }
+  return 'teeth'
 }

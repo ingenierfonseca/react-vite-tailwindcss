@@ -71,7 +71,7 @@ export default function Diagram({id, selectedCondition}: DiagramPros) {
     };
 
     return (
-        <svg className="cursor-pointer" viewBox="0 0 100 100">
+        <svg className="cursor-pointer rotate-45" viewBox="0 0 100 100">
             {surfacesConfig.map(({ key, type, props }) => {
                 const commonProps = {
                 key,

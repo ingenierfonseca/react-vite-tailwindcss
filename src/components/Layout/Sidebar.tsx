@@ -1,4 +1,4 @@
-import { BarChart3, BriefcaseMedical, Calendar, ChevronDown, LayoutDashboard, Settings, Users } from "lucide-react";
+import { BarChart3, BriefcaseMedical, Calendar, ChevronDown, LayoutDashboard, Receipt, Settings, Users } from "lucide-react";
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 import { routesConfig } from "../../app/routesConfig";
@@ -27,6 +27,12 @@ const menuItems = [
             { id: "new", label: "new" },
             { id: "reports", label: "reports" }
         ]
+    },
+    {
+        id: "invoice",
+        icon: Receipt,
+        label: "Factura",
+        path: "/invoice"
     },
     {
         id: "odontogram",

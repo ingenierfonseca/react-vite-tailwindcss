@@ -5,9 +5,11 @@ interface ModalProps {
   onClose: () => void;
   title: string;
   children: React.ReactNode;
+  textBtnConfirm: string,
+  clickBtnConfirm: () => void;
 }
 
-export default function Modal({ isOpen, onClose, title, children }: ModalProps) {
+export default function Modal({ title, textBtnConfirm, isOpen, onClose, children, clickBtnConfirm }: ModalProps) {
   if (!isOpen) return null;
 
   return (
@@ -19,7 +21,7 @@ export default function Modal({ isOpen, onClose, title, children }: ModalProps) 
       />
 
       {/* 2. Contenedor del Modal */}
-      <div className="relative w-full max-w-md bg-white dark:bg-slate-900 rounded-3xl shadow-2xl border border-slate-200/50 dark:border-slate-700/50 overflow-hidden animate-in zoom-in-95 duration-200">
+      <div className="relative w-3xl bg-white dark:bg-slate-900 rounded-3xl shadow-2xl border border-slate-200/50 dark:border-slate-700/50 overflow-hidden animate-in zoom-in-95 duration-200">
         
         {/* Cabecera */}
         <div className="flex items-center justify-between p-6 border-b border-slate-100 dark:border-slate-800">
@@ -47,10 +49,11 @@ export default function Modal({ isOpen, onClose, title, children }: ModalProps) 
           >
             Cancelar
           </button>
-          <button 
+          <button
+            onClick={clickBtnConfirm}
             className="px-6 py-2 text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-500 rounded-xl shadow-lg shadow-indigo-600/20 transition-all active:scale-95"
           >
-            Confirmar
+            {textBtnConfirm}
           </button>
         </div>
       </div>
