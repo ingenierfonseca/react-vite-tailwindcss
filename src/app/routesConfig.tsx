@@ -1,5 +1,6 @@
 import AppointmentList from "../features/appointments/AppointmentList";
 import Invoice from "../features/invoice/Invoice";
+import InvoiceDetail from "../features/invoice/InvoiceDetail";
 import Odontogram from "../features/odontogram/Odontogram";
 import DashboardPage from "../pages/DashboardPage";
 
@@ -28,6 +29,11 @@ export const routesConfig = [
     path: "/invoice",
     title: "Factura",
     element: <Invoice />
+  },
+  {
+    path: "/invoice/:id/detail",
+    title: "Detalle de Factura",
+    element: <InvoiceDetail />
   },
   {
     path: "/doctors",

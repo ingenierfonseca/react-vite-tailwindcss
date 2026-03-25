@@ -9,6 +9,7 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+const inputDefault = "w-full px-3 py-2 appearance-none border border-slate-300 bg-white/80"
 export const theme = {
   // Estilos para Botones
   button: {
@@ -32,9 +33,16 @@ export const theme = {
 
   // Estilos para Dropdowns / Menús flotantes (Glassmorphism)
   dropdown: {
-    content: "px-3 py-2 rounded-xl border border-slate-200/50 dark:border-slate-700/50 bg-white/80 dark:bg-slate-900/80",
-    item: "flex cursor-pointer select-none items-center rounded-xl px-3 py-2 text-sm text-slate-600 dark:text-slate-300 outline-none hover:bg-indigo-50 dark:hover:bg-indigo-900/30 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors",
+    content: `${inputDefault}`,// dark:border-slate-700/50 bg-white/80 dark:bg-slate-900/80
+    item: "flex cursor-pointer select-none items-center px-3 py-2 text-sm text-black outline-none hover:bg-indigo-50 dark:hover:bg-indigo-900/30 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors",
     label: "px-3 py-2 text-xs font-black uppercase tracking-widest text-slate-400 dark:text-slate-500",
     separator: "my-1 h-px bg-slate-200/50 dark:bg-slate-700/50"
-  }
+  },
+  calendar: {
+    content: `${inputDefault}`
+  },
+  inputtext: {
+    content: `${inputDefault}`
+  },
+  labelform: "font-bold p-1 text-xs text-black"
 };

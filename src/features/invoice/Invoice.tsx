@@ -3,6 +3,7 @@ import Modal from "../../components/commons/Modal";
 import PageList from "../../components/commons/PageList";
 import { cn, theme } from "../../utils/theme";
 import { useInvoice } from "./invoice.hooks";
+import { useNavigate } from "react-router";
 
 const headers = [
     '#',
@@ -63,13 +64,14 @@ const data: DataPage = {
 }
 
 export default function Invoice() {
+    const navigate = useNavigate();
     const [isModalOpen, setIsModalOpen] = useState(false)
     const {saveInvoice, invoice, setInvoice} = useInvoice()
     return (
         <>
-            <PageList headers={headers} data={data} setIsModalOpen={()=> setIsModalOpen(!isModalOpen)} />
+            <PageList headers={headers} data={data} setIsModalOpen={()=> navigate(`/invoice/0/detail`)} />
             <Modal isOpen={isModalOpen}
-                onClose={() => setIsModalOpen(false)}
+                onClose={() => navigate(`/invoice/0/detail`)}
                 title="Información de la Factura"
                 textBtnConfirm="Guardar"
                 clickBtnConfirm={()=> saveInvoice}>
