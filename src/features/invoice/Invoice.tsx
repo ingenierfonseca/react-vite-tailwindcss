@@ -17,59 +17,16 @@ const headers = [
     'action'
 ]
 
-interface PageListProps {
-
-}
-
-interface Invoice {
-    id: number,
-    invoiceNumber: string,
-    patientName: string,
-    subtotal: number,
-    tax: string,
-    total: number,
-    date: string,
-    status: string,
-    notes: string
-}
-
-interface InvoiceDetail {
-
-}
-
-interface DataPage {
-    currentPage: number,
-    totalPages: number,
-    totalItems: number,
-    data: Invoice[]
-}
-
-const data: DataPage = {
-    currentPage: 1,
-    totalItems: 3,
-    totalPages: 1,
-    data: [
-        {
-            id: 1,
-            invoiceNumber: "56754",
-            patientName: "John Doe",
-            subtotal: 3000,
-            tax: "Cardiology",
-            total: 3500,
-            date: "2024-07-01",
-            status: "Completed",
-            notes: ""
-        }
-    ]
-}
-
 export default function Invoice() {
     const navigate = useNavigate();
     const [isModalOpen, setIsModalOpen] = useState(false)
-    const {saveInvoice, invoice, setInvoice} = useInvoice()
+    const {saveInvoice, invoice, setInvoice, data} = useInvoice()
     return (
         <>
+        {data && 
             <PageList headers={headers} data={data} setIsModalOpen={()=> navigate(`/invoice/0/detail`)} />
+        }
+            
             <Modal isOpen={isModalOpen}
                 onClose={() => navigate(`/invoice/0/detail`)}
                 title="Información de la Factura"

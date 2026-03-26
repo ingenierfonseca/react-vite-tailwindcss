@@ -8,9 +8,10 @@ export interface Appointment {
     status: string;
 }
 
-export interface Paggination {
+export interface Paggination<T> {
     currentPage: number
+    pageSize: number
     totalItems: number
     totalPages: number
-    data: Appointment[]
+    data: T[]
 }

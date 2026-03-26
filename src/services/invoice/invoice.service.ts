@@ -7,6 +7,10 @@ export const InvoiceService = {
         const { data } = await api.get(`${method}`);
         return data;
     },
+    getInvoice: async (id:string) => {
+        const { data } = await api.get(`${method}${id}`);
+        return data;
+    },
     addInvoice: async (payload: Invoice | null) => {
         const { data } = await api.post(`${method}`, payload);
         return data;

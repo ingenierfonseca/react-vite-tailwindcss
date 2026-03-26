@@ -1,34 +1,21 @@
 import { CirclePlus, EllipsisVertical } from "lucide-react"
 import { routesConfig } from "../../app/routesConfig";
 import { cn, theme } from "../../utils/theme";
-
-interface Invoice {
-    id: number,
-    invoiceNumber: string,
-    patientName: string,
-    subtotal: number,
-    tax: string,
-    total: number,
-    date: string,
-    status: string,
-    notes: string
-}
-interface DataPage {
-    currentPage: number,
-    totalPages: number,
-    totalItems: number,
-    data: Invoice[]
-}
+import type { Paggination } from "../../services/appointment/appointment.types";
+import type { Invoice } from "../../services/invoice/invoice.types";
+import {formatDate, formatNumber} from "../../utils/utils";
+import { useNavigate } from "react-router";
 
 interface PageListProps {
     headers: string[],
-    data: DataPage,
+    data: Paggination<Invoice | null>,
     setIsModalOpen: () => void
 }
 export default function PageList({headers, data, setIsModalOpen}: PageListProps) {
     const currentRoute = routesConfig.find(
         (r) => r.path === location.pathname
     );
+    const navigate = useNavigate();
     const title = currentRoute !== undefined ? currentRoute.title : ''
     const title2 = getPluralName(title)
     return (
@@ -81,19 +68,21 @@ export default function PageList({headers, data, setIsModalOpen}: PageListProps)
                 </div>
                 {data.data.map((item) => {
                     return (
-                        <div key={item.id} className="flex items-center w-full py-2">
-                            <span className="mr-2 text-sm">{item.id}</span>
-                            <span className="flex-1 text-sm">{item.invoiceNumber}</span>
-                            <span className="flex-1 text-sm">{item.patientName}</span>
-                            <span className="flex-1 text-sm">{item.subtotal}</span>
-                            <span className="flex-1 text-sm">{item.tax}</span>
-                            <span className="flex-1 text-sm">{item.total}</span>
-                            <span className="flex-1 text-sm">{item.date}</span>
+                        <div key={item!.id} className="flex items-center w-full py-2">
+                            <span className="mr-2 text-sm">{item!.id}</span>
+                            <span className="flex-1 text-sm">{item!.number}</span>
+                            <span className="flex-1 text-sm"></span>
+                            <span className="flex-1 text-sm">{formatNumber(item!.subtotal)}</span>
+                            <span className="flex-1 text-sm">{formatNumber(item!.taxTotal)}</span>
+                            <span className="flex-1 text-sm">{formatNumber(item!.total)}</span>
+                            <span className="flex-1 text-sm">{formatDate(item!.date)}</span>
                             <span className={`flex-1`}>
-                                <div className={`pl-2 pr-2 pb-0.5 w-22 text-center text-sm rounded-2xl ${getBgColorStatus(item.status)}`}>{item.status}</div>
+                                <div className={`pl-2 pr-2 pb-0.5 w-22 text-center text-sm rounded-2xl ${getBgColorStatus(item!.statusId)}`}>{item!.statusId}</div>
                             </span>
                             <div className="flex flex-1">
-                                <button className="pl-4 pr-4 rounded-sm bg-blue-200 border-2 border-blue-600 text-sm">Ver</button>
+                                <button 
+                                    onClick={() => navigate(`/invoice/${item?.id}/detail`)}
+                                    className="pl-4 pr-4 rounded-sm bg-blue-200 border-2 border-blue-600 text-sm">Ver</button>
                                 <EllipsisVertical />
                             </div>
                         </div>

@@ -14,7 +14,7 @@ export default function DropDownApp({title, data}: DropDownAppProps) {
                 <select className={`${cn(theme.dropdown.content)} ${cn(theme.dropdown.item)}`}>
                     {data.map((item) => {
                         return (
-                            <option value={item.value}>{item.value}</option>
+                            <option key={item.id} value={item.value}>{item.value}</option>
                         )
                     })}
                 </select>
