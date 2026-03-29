@@ -1,17 +1,17 @@
-import { CirclePlus, EllipsisVertical } from "lucide-react"
+import { CirclePlus, EllipsisVertical, Plus } from "lucide-react"
 import { routesConfig } from "../../app/routesConfig";
 import { cn, theme } from "../../utils/theme";
 import type { Paggination } from "../../services/appointment/appointment.types";
 import type { Invoice } from "../../services/invoice/invoice.types";
-import {formatDate, formatNumber} from "../../utils/utils";
+import { formatDate, formatNumber } from "../../utils/utils";
 import { useNavigate } from "react-router";
 
 interface PageListProps {
     headers: string[],
-    data: Paggination<Invoice | null>,
+    data?: Paggination<Invoice | null>,
     setIsModalOpen: () => void
 }
-export default function PageList({headers, data, setIsModalOpen}: PageListProps) {
+export default function PageList({ headers, data, setIsModalOpen }: PageListProps) {
     const currentRoute = routesConfig.find(
         (r) => r.path === location.pathname
     );
@@ -27,52 +27,52 @@ export default function PageList({headers, data, setIsModalOpen}: PageListProps)
                 </div>
                 <div className="ml-auto flex">
                     <button className="flex pl-4 pr-4 cursor-pointer bg-blue-700 rounded-2xl items-center text-white text-sm" onClick={setIsModalOpen}>
-                        <CirclePlus className="mr-2"/>
+                        <CirclePlus className="mr-2" />
                         Agregar Nueva {title}
                     </button>
                 </div>
             </div>
             <div className="ml-auto flex gap-4 mb-4">
-                    <input type="text" placeholder="Search..." className="flex-1 mt-2 p-1 border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"/>
-                    <div>
-                        <span className="text-sm text-black mr-2">Doctor</span>
-                        <select className={`${cn(theme.dropDownStyle)}`}>
-                            <option value="">All</option>
-                            <option value="Dr. Smith">Dr. Smith</option>
-                        </select>
-                    </div>
-                    <div>
-                        <span className="text-sm text-black mr-2">Status</span>
-                        <select className={`${cn(theme.dropDownStyle)}`}>
-                            <option value="">All</option>
-                            <option value="Completed">Completed</option>
-                            <option value="Pending">Pending</option>
-                            <option value="Cancelled">Cancelled</option>
-                        </select>
-                    </div>
-                    <div>
-                        <select className={`${cn(theme.dropDownStyle)}`}>
-                            <option value="">Hoy</option>
-                            <option value="today">Semana</option>
-                            <option value="today">Mes</option>
-                            <option value="today">Todos</option>
-                        </select>
-                    </div>
+                <input type="text" placeholder="Search..." className="flex-1 mt-2 p-1 border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                <div>
+                    <span className="text-sm text-black mr-2">Doctor</span>
+                    <select className={`${cn(theme.dropDownStyle)}`}>
+                        <option value="">All</option>
+                        <option value="Dr. Smith">Dr. Smith</option>
+                    </select>
                 </div>
+                <div>
+                    <span className="text-sm text-black mr-2">Status</span>
+                    <select className={`${cn(theme.dropDownStyle)}`}>
+                        <option value="">All</option>
+                        <option value="Completed">Completed</option>
+                        <option value="Pending">Pending</option>
+                        <option value="Cancelled">Cancelled</option>
+                    </select>
+                </div>
+                <div>
+                    <select className={`${cn(theme.dropDownStyle)}`}>
+                        <option value="">Hoy</option>
+                        <option value="today">Semana</option>
+                        <option value="today">Mes</option>
+                        <option value="today">Todos</option>
+                    </select>
+                </div>
+            </div>
 
-            <div className="flex flex-col">
+            <div className="flex flex-1 overflow-auto flex-col">
                 <div className="flex">
                     {headers.map((header) => {
                         return <span key={header} className={`${header === '#' ? 'mr-2' : 'flex-1'} text-xs text-slate-500 uppercase font-medium`}>{header}</span>
                     })}
                 </div>
-                {data.data.map((item) => {
+                {data !== null && data?.data.map((item) => {
                     return (
                         <div key={item!.id} className="flex items-center w-full py-2">
                             <span className="mr-2 text-sm">{item!.id}</span>
                             <span className="flex-1 text-sm">{item!.number}</span>
                             <span className="flex-1 text-sm"></span>
-                            <span className="flex-1 text-sm">{formatNumber(item!.subtotal)}</span>
+                            <span className="flex-1 text-sm">{formatNumber(item!.subTotal)}</span>
                             <span className="flex-1 text-sm">{formatNumber(item!.taxTotal)}</span>
                             <span className="flex-1 text-sm">{formatNumber(item!.total)}</span>
                             <span className="flex-1 text-sm">{formatDate(item!.date)}</span>
@@ -80,7 +80,7 @@ export default function PageList({headers, data, setIsModalOpen}: PageListProps)
                                 <div className={`pl-2 pr-2 pb-0.5 w-22 text-center text-sm rounded-2xl ${getBgColorStatus(item!.statusId)}`}>{item!.statusId}</div>
                             </span>
                             <div className="flex flex-1">
-                                <button 
+                                <button
                                     onClick={() => navigate(`/invoice/${item?.id}/detail`)}
                                     className="pl-4 pr-4 rounded-sm bg-blue-200 border-2 border-blue-600 text-sm">Ver</button>
                                 <EllipsisVertical />
@@ -88,22 +88,35 @@ export default function PageList({headers, data, setIsModalOpen}: PageListProps)
                         </div>
                     )
                 })}
-                <div className="flex pt-3">
-                    <p className="text-xs">Showing 1 to {data.totalPages} of {data.totalItems} entries</p>
-                    <div className="ml-auto flex gap-1">
-                        {data.currentPage !== 1 && (
-                            <button className={`${cn(theme.buttonPage)}`} disabled>Previous</button>
-                        )}
-                        {data.totalPages > 1 && Array.from({ length: data.totalPages }).map((_, index) => (
-                            <button key={index} className={`${cn(theme.buttonPage)}`}>
-                                {index + 1}
-                            </button>
-                        ))}
-                        {data.currentPage < data.totalPages && (
-                            <button className={`${cn(theme.buttonPage)}`} disabled>Next</button>
-                        )}
+                {data !== null && data !== undefined &&
+                    <div className="flex pt-3">
+                        <p className="text-xs">Showing 1 to {data!.totalPages} of {data!.totalItems} entries</p>
+                        <div className="ml-auto flex gap-1">
+                            {data!.currentPage !== 1 && (
+                                <button className={`${cn(theme.buttonPage)}`} disabled>Previous</button>
+                            )}
+                            {data!.totalPages > 1 && Array.from({ length: data!.totalPages }).map((_, index) => (
+                                <button key={index} className={`${cn(theme.buttonPage)}`}>
+                                    {index + 1}
+                                </button>
+                            ))}
+                            {data!.currentPage < data!.totalPages && (
+                                <button className={`${cn(theme.buttonPage)}`} disabled>Next</button>
+                            )}
+                        </div>
                     </div>
-                </div>
+                }
+                {(!data || !data.data) &&
+                    <div className="flex flex-col items-center">
+                        <img src="./src/assets/notfounditem.png" className="w-72" />
+                        <p className="font-bold">No se encontraron facturas</p>
+                        <p className="py-2">No hay resultados con los filtros actuales, Intenta ajustar los filtros</p>
+                        <button className="flex p-2 cursor-pointer bg-blue-700 items-center text-white text-sm" onClick={setIsModalOpen}>
+                            <Plus className="mr-2" />
+                            Agregar Nueva {title}
+                        </button>
+                    </div>
+                }
             </div>
         </div>
     )

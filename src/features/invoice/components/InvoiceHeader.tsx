@@ -46,13 +46,15 @@ const moneys: DropDownAppModel[] = [
 ]
 
 interface InvoiceHeaderProps {
-    invoice: Invoice | null
+    invoice: Invoice | null,
+    disabled: boolean
+    updateField: (field: keyof Invoice, value: any) => void
 }
-export default function InvoiceHeader({invoice}: InvoiceHeaderProps) {
+export default function InvoiceHeader({invoice, disabled, updateField}: InvoiceHeaderProps) {
     return (
-        <div className="px-4 py-3">
+        <fieldset disabled={disabled} className="px-4 py-3">
             <p className="text-black text-xl font-bold px-2">
-                {invoice != null ? "Factura " + invoice.number : "Nueva Factura"}
+                {invoice != null && invoice!.number !== '' ? "Factura " + invoice!.number : "Nueva Factura"}
             </p>
             <div className="w-full h-0.5 bg-slate-200 mt-2" />
             <div className="flex gap-8 mt-4">
@@ -60,14 +62,14 @@ export default function InvoiceHeader({invoice}: InvoiceHeaderProps) {
                 <DropDownApp title="Terminos de Pago" data={paymentTerns} />
             </div>
             <div className="flex gap-8 mt-4">
-                <CalendarApp title="Fecha de Emision" value={invoice ? invoice?.date : ''} />
+                <CalendarApp title="Fecha de Emision" value={invoice?.date ?? ''} onChange={(val) => updateField("date", val)} />
                 <InputTextApp title="Numero de Factura" value={invoice ? invoice.number : ''} placeholder="" />
                 <DropDownApp title="Moneda" data={moneys} />
             </div>
             <div className="flex gap-8 mt-4">
                 <DropDownApp title="Metodo de Pago" data={paymentMethos} />
-                <CalendarApp title="Vencimiento" value={invoice ? invoice?.createdAt : ''} />
+                <CalendarApp title="Vencimiento" value={invoice?.dueDate ?? ''} onChange={(val) => updateField("dueDate", val)} />
             </div>
-        </div>
+        </fieldset>
     )
 }

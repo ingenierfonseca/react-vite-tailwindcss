@@ -1,0 +1,68 @@
+import { Button } from "@mui/material"
+import { ChevronDown } from "lucide-react"
+import type { MenuAppModel } from "../../models/menu.type"
+import { useLocation, useNavigate } from "react-router";
+import { routesConfig } from "../../app/routesConfig";
+
+interface SidebarItemsProps {
+    item: MenuAppModel
+    collapsed: boolean,
+    isDesktop: boolean,
+    expandedItems: Set<unknown>
+    setExpandedItems: (value: Set<unknown>)=>void
+}
+export default function SideBarItem({ item, collapsed, isDesktop, expandedItems, setExpandedItems }: SidebarItemsProps) {
+    const navigate = useNavigate();
+    const location = useLocation();
+    const currentRoute = routesConfig.find(
+        (r) => r.path === location.pathname
+    );
+    const classItem = 'text-white text-slate-600 dark:text-slate-300'
+    return (
+        <button
+            className={`w-full items-center justify-between p-3 rounded-xl
+            transition-all duration-200 ${currentRoute?.path === item.path ?
+            "bg-linear-to-r from-blue-500 to-purple-600 shadow-lg shadow-blue-500/25" :
+            "hover:bg-slate-100 dark:hover:bg-slate-800/50"
+            } 'active:scale-95 active:bg-slate-200 dark:active:bg-slate-700'`}
+            onClick={() => {
+                const newExpanded = new Set(expandedItems)
+                if (newExpanded.has(item.id)) {
+                    if (newExpanded.size > 0) {
+                        newExpanded.clear()
+                        setExpandedItems(newExpanded)
+                    }
+                } else {
+                    if (newExpanded.size > 0)
+                        newExpanded.clear()
+
+                    newExpanded.add(item.id)
+                    setExpandedItems(newExpanded)
+                }
+                navigate(item.path || "/");
+            }}>
+            <div className={`flex items-center space-x-3`}>
+                <item.icon className={`w-5 h-5 ${classItem}`} />
+                {(!collapsed || !isDesktop) && (
+                    <>
+                        <span className={`font-medium ml-2 ${classItem}`}>{item.label}</span>
+                        {item.badge && (
+                            <span className="px-2 py-1 text-xs bg-red-500 text-white rounded-full">
+                                <span className="relative -top-[0.5px]">{item.badge}</span>
+                            </span>
+                        )}
+                        {item.count && (
+                            <span className="px-2 py-1 text-xs bg-slate-200 dark:bg-slate-700
+                                                text-slate-600 dark:text-slate-300 rounded-full">
+                                <span className="relative -top-[0.5px]">{item.count}</span>
+                            </span>
+                        )}
+                    </>
+                )}
+            </div>
+            {item.submenu && (
+                <ChevronDown className={`${expandedItems.has(item.id) ? "" : "rotate-280 "}}w-4 h-4 transition-transform`} />
+            )}
+        </button>
+    )
+}

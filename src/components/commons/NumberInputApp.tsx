@@ -13,7 +13,7 @@ export default function NumberInputApp({value, className, min, step = 1, onChang
         <div className={className}>
             <input 
                 type="number" 
-                value={value}
+                value={value === 0 ? "" : value}
                 min={min}
                 step={step}
                 onChange={(e) => {

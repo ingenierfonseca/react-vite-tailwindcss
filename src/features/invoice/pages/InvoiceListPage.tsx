@@ -1,8 +1,8 @@
 import { useState } from "react";
-import Modal from "../../components/commons/Modal";
-import PageList from "../../components/commons/PageList";
-import { cn, theme } from "../../utils/theme";
-import { useInvoice } from "./invoice.hooks";
+import Modal from "../../../components/commons/Modal";
+import PageList from "../../../components/commons/PageList";
+import { cn, theme } from "../../../utils/theme";
+import { useInvoice } from "../hooks/invoice.hooks";
 import { useNavigate } from "react-router";
 
 const headers = [
@@ -20,12 +20,10 @@ const headers = [
 export default function Invoice() {
     const navigate = useNavigate();
     const [isModalOpen, setIsModalOpen] = useState(false)
-    const {saveInvoice, invoice, setInvoice, data} = useInvoice()
+    const {saveInvoice, data} = useInvoice()
     return (
         <>
-        {data && 
             <PageList headers={headers} data={data} setIsModalOpen={()=> navigate(`/invoice/0/detail`)} />
-        }
             
             <Modal isOpen={isModalOpen}
                 onClose={() => navigate(`/invoice/0/detail`)}

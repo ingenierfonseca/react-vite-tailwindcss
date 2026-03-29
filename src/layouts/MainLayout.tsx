@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import '../App.css'
-import Header from '../components/layout/Header'
-import Sidebar from '../components/layout/Sidebar'
 import { Outlet } from 'react-router'
+import Sidebar from './components/Sidebar'
+import Header from './components/Header'
 
 export default function MainLayout() {
   const [sidebarCollased, setSidebarCollapsed] = useState(false)
