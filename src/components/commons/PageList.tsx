@@ -71,7 +71,7 @@ export default function PageList({ headers, data, setIsModalOpen }: PageListProp
                         <div key={item!.id} className="flex items-center w-full py-2">
                             <span className="mr-2 text-sm">{item!.id}</span>
                             <span className="flex-1 text-sm">{item!.number}</span>
-                            <span className="flex-1 text-sm"></span>
+                            <span className="flex-1 text-sm">{item!.customerName}</span>
                             <span className="flex-1 text-sm">{formatNumber(item!.subTotal)}</span>
                             <span className="flex-1 text-sm">{formatNumber(item!.taxTotal)}</span>
                             <span className="flex-1 text-sm">{formatNumber(item!.total)}</span>

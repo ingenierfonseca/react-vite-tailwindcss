@@ -31,7 +31,11 @@ export default function InvoiceDetailPage() {
 
     return (
         <div className="bg-white">
-            <InvoiceHeader invoice={invoice} updateField={updateField} disabled={loading} />
+            <InvoiceHeader 
+                invoice={invoice} 
+                updateField={updateField} 
+                disabled={loading}
+            />
             <div className="w-full h-0.5 bg-slate-200 mt-3 mb-3" />
             <div className="flex flex-col px-4 py-3">
                 <p className="font-bold text-md">Detalle de la Factura</p>

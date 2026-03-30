@@ -1,4 +1,4 @@
 export interface DropDownAppModel {
-    id: number;
+    id: string | number;
     value: string;
 }

@@ -20,7 +20,7 @@ export default function SideBarItem({ item, collapsed, isDesktop, expandedItems,
     const classItem = 'text-white text-slate-600 dark:text-slate-300'
     return (
         <button
-            className={`w-full items-center justify-between p-3 rounded-xl
+            className={`w-full flex items-center justify-between p-3 rounded-xl
             transition-all duration-200 ${currentRoute?.path === item.path ?
             "bg-linear-to-r from-blue-500 to-purple-600 shadow-lg shadow-blue-500/25" :
             "hover:bg-slate-100 dark:hover:bg-slate-800/50"
@@ -61,7 +61,7 @@ export default function SideBarItem({ item, collapsed, isDesktop, expandedItems,
                 )}
             </div>
             {item.submenu && (
-                <ChevronDown className={`${expandedItems.has(item.id) ? "" : "rotate-280 "}}w-4 h-4 transition-transform`} />
+                <ChevronDown className={`${expandedItems.has(item.id) ? "" : "rotate-280"}} w-4 h-4 transition-transform`} />
             )}
         </button>
     )

@@ -1,16 +1,16 @@
-export function formatDate(strDate: string) {
-    const date = new Date(strDate);
-
-    /*const formatted = date.toLocaleString("es-NI", {
-    dateStyle: "medium",
-    timeStyle: "short"
-    });*/
+export function formatDate(strDate?: string) {
+    const date = strDate!= null ? new Date(strDate) : new Date();
 
     const formatted = `${date.getDate().toString().padStart(2, "0")}/${
     (date.getMonth() + 1).toString().padStart(2, "0")
     }/${date.getFullYear()}`;
 
     return formatted
+}
+
+export function formatDateToYYYYMMDD(date?: string | Date) {
+  if (!date) return "";
+  return new Date(date).toISOString().split("T")[0];
 }
 
 export function formatNumber(value: number): string {

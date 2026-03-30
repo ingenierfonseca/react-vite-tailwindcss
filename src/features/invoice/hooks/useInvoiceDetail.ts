@@ -5,6 +5,10 @@ import { InvoiceService } from "../../../services/invoice/invoice.service";
 import { formatNumber } from "../../../utils/utils";
 import { invoiceReducer } from "../state/invoice.reducer";
 import { toast } from "react-toastify";
+//import type { Customer } from "../../../services/customer/customer.type";
+//import { CustomerService } from "../../../services/customer/customer.service";
+//import { mapToDropdown } from "../../../utils/dropdow.util";
+//import type { Paggination } from "../../../services/appointment/appointment.types";
 
 const successMsg = "SUCCESS"
 export const useInvoiceDetail = () => {
@@ -14,6 +18,19 @@ export const useInvoiceDetail = () => {
         loading: true,
         error: null
     });
+
+    /*const [customers, setCustomers] = useState<Paggination<Customer | null>>();
+    /*const customerOptions = mapToDropdown(
+        (customers?.data ?? []).filter((c): c is Customer => c !== null),
+        c => c.id,
+        c => `${c.firstName} ${c.lastName}`
+    );
+
+    /*useEffect(() => {
+        CustomerService.getAllCustomers()
+            .then(data => setCustomers(data))
+            .catch(err => console.error("Error al cargar clientes:", err));
+    }, []);*/
 
     useEffect(() => {
         if (id === "0" || id === undefined) {
@@ -78,11 +95,7 @@ export const useInvoiceDetail = () => {
 
         try {
             const data = await InvoiceService.addInvoice(invoice);
-            
-            // Opcional: Si el servidor devuelve la factura creada/actualizada, 
-            // actualizamos el estado para sincronizar IDs o fechas de servidor.
-            //dispatch({ type: 'FETCH_SUCCESS', payload: data });
-            
+            dispatch({ type: 'FETCH_SUCCESS', payload: data });
             toast.success("Factura guardada correctamente");
             return data;
             

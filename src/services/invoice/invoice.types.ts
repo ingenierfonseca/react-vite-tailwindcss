@@ -1,6 +1,7 @@
 export interface Invoice {
     id: number
     customerId: number
+    customerName: string
     number: string
     date: string
     dueDate: string
@@ -18,7 +19,7 @@ export interface Invoice {
 export interface InvoiceItem {
     id: number
     productId: number
-    serviceId: string
+    serviceId: number
     description: string
     quantity: number
     unitPrice: number
@@ -29,7 +30,8 @@ export interface InvoiceItem {
 
 export const getInitialInvoice = (): Invoice => ({
     id: 0,
-    customerId: 0,
+    customerId: 1,
+    customerName: '',
     number: '',
     date: new Date().toISOString().split('T')[0],
     dueDate: new Date().toISOString().split('T')[0],
@@ -47,7 +49,7 @@ export const getInitialInvoice = (): Invoice => ({
 export const getInitialInvoiceItem = (): InvoiceItem => ({
     id: 0,
     productId: 0,
-    serviceId: '',
+    serviceId: 0,
     description: '',
     quantity: 1,
     unitPrice: 0,

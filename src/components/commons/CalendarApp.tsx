@@ -1,5 +1,6 @@
 import { Calendar } from "lucide-react";
 import { cn, theme } from "../../utils/theme";
+import { formatDateToYYYYMMDD } from "../../utils/utils";
 
 interface CalendarAppProps {
     title: string,
@@ -11,7 +12,7 @@ export default function CalendarApp({title, value, onChange}: CalendarAppProps) 
         <div className="flex flex-col flex-1">
             <p className={`${cn(theme.labelform)}`}>{title}</p>
             <div className="relative w-full">
-                <input type="date" value={value}
+                <input type="date" value={formatDateToYYYYMMDD(value)}
                     onChange={(e) => onChange(e.target.value)}
                     className={`${cn(theme.calendar.content)}`} />
                 <div className="pointer-events-none absolute inset-y-0 right-5 flex items-center">
