@@ -1,8 +1,6 @@
-import { useState } from "react";
 import { CustomerService } from "../services/customer/customer.service"
 import type { Customer } from "../services/customer/customer.type";
 import { useAsyncDropdown } from "./useAsyncDropdown"
-import type { Paggination } from "../services/appointment/appointment.types";
 
 export const useCustomerAsyncHook = () => {
     const {
@@ -11,7 +9,7 @@ export const useCustomerAsyncHook = () => {
         setSearch,
         loading,
         hasMore,
-        setPage
+        loadNextPage
     } = useAsyncDropdown<Customer>({
         fetchData: ({search, page}) => CustomerService.getAllCustomers(page, search),
         getValue: c => c.id,
@@ -33,7 +31,7 @@ export const useCustomerAsyncHook = () => {
         setSearch,
         loading,
         hasMore,
-        setPage,
+        loadNextPage,
         filteredOptions
     };
 } 

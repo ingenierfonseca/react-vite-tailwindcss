@@ -1,31 +1,38 @@
-import { ChevronDown } from "lucide-react";
-import { cn, theme } from "../../utils/theme";
 import type { DropDownAppModel } from "../../models/dropdownapp.type";
+import { FormControl, InputLabel, MenuItem, Select, type SelectChangeEvent } from "@mui/material";
 
 interface DropDownAppProps {
     title: string
     data: DropDownAppModel[]
-    value?: string | number
+    value: string | number
     onChange?: (value: string) => void
 }
 export default function DropDownApp({title, data, value, onChange}: DropDownAppProps) {
+    const handleChange = (event: SelectChangeEvent<string | number>) => {
+        const newValue = event.target.value;
+        if (onChange) {
+            onChange(newValue.toString());
+        }
+    };
+
     return (
-        <div className="flex flex-col flex-1">
-            <p className={`${cn(theme.labelform)}`}>{title}</p>
-            <div className="relative w-full">
-                <select className={`${cn(theme.dropdown.content)} ${cn(theme.dropdown.item)}`}
-                    value={value}
-                    onChange={(e) => onChange && onChange(e.target.value)}>
-                    {data.map((item) => {
+        <FormControl className="flex-1">
+            <InputLabel id="demo-simple-select-label">{title}</InputLabel>
+            <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                value={value}
+                label={title}
+                onChange={handleChange}
+            >
+                {data.map((item) => {
                         return (
-                            <option key={item.id} value={item.value}>{item.value}</option>
+                            <MenuItem key={item.id} value={item.id}>
+                                {item.value}
+                            </MenuItem>
                         )
                     })}
-                </select>
-                <div className="pointer-events-none absolute inset-y-0 right-5 flex items-center">
-                    <ChevronDown className="w-4 h-4" />
-                </div>
-            </div>
-        </div>
+            </Select>
+        </FormControl>
     )
 }

@@ -6,7 +6,11 @@ export const useAsyncDropdown = <T>({
   getValue,
   getLabel,
 }: {
-  fetchData: (params: { page: number; search: string }) => Promise<{ data: T[] }>
+  fetchData: (params: { page: number; search: string }) => Promise<{ 
+    data: T[]
+    currentPage: number
+    totalPages: number
+  }>
   getValue: (item: T) => string | number
   getLabel: (item: T) => string
 }) => {
@@ -26,6 +30,8 @@ export const useAsyncDropdown = <T>({
   }, [page, search]);
 
   const loadData = async () => {
+    if(loading) return;
+
     setLoading(true);
 
     const res = await fetchData({ page, search });
@@ -33,9 +39,14 @@ export const useAsyncDropdown = <T>({
     const mapped = mapToDropdown(res.data, getValue, getLabel);
 
     setOptions(prev => (page === 1 ? mapped : [...prev, ...mapped]));
-    setHasMore(res.data.length > 0);
+    setHasMore(res.currentPage < res.totalPages);
 
     setLoading(false);
+  };
+
+  const loadNextPage = () => {
+    if (!hasMore || loading) return;
+    setPage(prev => prev + 1);
   };
 
   return {
@@ -44,6 +55,6 @@ export const useAsyncDropdown = <T>({
     setSearch,
     loading,
     hasMore,
-    setPage,
+    loadNextPage,
   };
 };

@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
-import type { Paggination } from "../../services/appointment/appointment.types";
 import { AppointmentService } from "../../services/appointment/appointment.service"
+import type { PaginatedResponse } from "../../models/paginatedResponse";
+import type { Appointment } from "../../services/appointment/appointment.types";
 
 export const useAppointments = () => {
-  const [data, setData] = useState<Paggination | null>(null);
+  const [data, setData] = useState<PaginatedResponse<Appointment> | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<any>(null);
   const [currentPage, setCurrentPage] = useState(1)

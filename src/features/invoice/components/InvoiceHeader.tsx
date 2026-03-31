@@ -1,10 +1,12 @@
 import DropDownApp from "../../../components/commons/DropDownApp";
 import type { DropDownAppModel } from "../../../models/dropdownapp.type";
-import CalendarApp from "../../../components/commons/CalendarApp";
-import InputTextApp from "../../../components/commons/ImputTextApp";
 import type { Invoice } from "../../../services/invoice/invoice.types";
-import { useCustomerAsyncHook } from "../../../hooks/useCustomerAsyncHook";
-import AsyncDropdown from "../../../components/commons/AsyncDropdown";
+import { PaginatedAutocomplete } from "../../../components/commons/PaginatedAutocomplete";
+import { CustomerService } from "../../../services/customer/customer.service";
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import dayjs from 'dayjs';
+import 'dayjs/locale/es';
+import { TextField } from "@mui/material";
 
 const paymentTerns:DropDownAppModel[] = [
     {
@@ -47,17 +49,6 @@ interface InvoiceHeaderProps {
     updateField: (field: keyof Invoice, value: any) => void
 }
 export default function InvoiceHeader({invoice, disabled, updateField}: InvoiceHeaderProps) {
-    const {
-        options,
-        search,
-        setSearch,
-        loading,
-        hasMore,
-        setPage,
-        filteredOptions
-    } = useCustomerAsyncHook();
-
-    console.log("search", search)
     return (
         <fieldset disabled={disabled} className="px-4 py-3">
             <p className="text-black text-xl font-bold px-2">
@@ -65,25 +56,46 @@ export default function InvoiceHeader({invoice, disabled, updateField}: InvoiceH
             </p>
             <div className="w-full h-0.5 bg-slate-200 mt-2" />
             <div className="flex gap-8 mt-4">
-                <AsyncDropdown
-                    title="Paciente"
-                    options={filteredOptions}
-                    value={invoice?.customerId}
-                    onSearch={setSearch}
-                    onChange={(value) => updateField("customerId", value)}
-                    loadMore={() => setPage(p => p + 1)}
-                    hasMore={hasMore}
+                <PaginatedAutocomplete
+                    label="Paciente"
+                    value={invoice ? invoice.customerId : undefined}
+                    onChange={(value) =>
+                        updateField("customerId", value)
+                    }
+                    fetchData={CustomerService.getAllCustomers}
+                    getValue={(item) => item.id}
+                    getLabel={(item) => `${item.firstName.trim()} ${item.lastName.trim()}`}
                 />
-                <DropDownApp title="Terminos de Pago" data={paymentTerns} />
+                <DropDownApp 
+                    title="Terminos de Pago" 
+                    data={paymentTerns} 
+                    value={1} 
+                />
+            </div>
+            <div className="flex gap-8 mt-6">
+                <DatePicker
+                    label="Fecha de Emision"
+                    value={invoice?.date ? dayjs(invoice.date) : null}
+                    onChange={(val) => updateField("date", val)}
+                />
+                <TextField 
+                    label="Numero de Factura" 
+                    variant="outlined"
+                    value={invoice ? invoice.number : ''}
+                    slotProps={{
+                        inputLabel: { shrink: true } 
+                    }}
+                    disabled={true}
+                />
+                <DropDownApp title="Moneda" data={moneys} value={1} />
             </div>
             <div className="flex gap-8 mt-4">
-                <CalendarApp title="Fecha de Emision" value={invoice?.date ?? ''} onChange={(val) => updateField("date", val)} />
-                <InputTextApp title="Numero de Factura" value={invoice ? invoice.number : ''} placeholder="" disabled={true} />
-                <DropDownApp title="Moneda" data={moneys} />
-            </div>
-            <div className="flex gap-8 mt-4">
-                <DropDownApp title="Metodo de Pago" data={paymentMethos} />
-                <CalendarApp title="Vencimiento" value={invoice?.dueDate ?? ''} onChange={(val) => updateField("dueDate", val)} />
+                <DropDownApp title="Metodo de Pago" data={paymentMethos} value={1} />
+                <DatePicker
+                    label="Vencimiento"
+                    value={invoice?.dueDate ? dayjs(invoice.dueDate) : null}
+                    onChange={(val) => updateField("dueDate", val)}
+                />
             </div>
         </fieldset>
     )

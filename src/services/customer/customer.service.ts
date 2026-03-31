@@ -1,10 +1,16 @@
 import api from "../../api/api";
+import type { PaginatedResponse } from "../../models/paginatedResponse";
 import type { Customer } from "./customer.type";
 
 const method = `/customers/`
 export const CustomerService = {
-    getAllCustomers: async (page: number, search?: string) => {
-        const { data } = await api.get(`${method}?page=${page}${search ? `&search=${search}` : ''}`);
+    getAllCustomers: async ({
+        page,
+        search
+    }: { 
+        page: number; search: string
+     }): Promise<PaginatedResponse<Customer>> => {
+        const { data } = await api.get(`${method}?pageNumber=${page}${search ? `&search=${search}` : ''}`);
         return data;
     },
     getCustomer: async (id:string) => {

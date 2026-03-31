@@ -7,11 +7,3 @@ export interface Appointment {
     dateTime: string;
     status: string;
 }
-
-export interface Paggination<T> {
-    currentPage: number
-    pageSize: number
-    totalItems: number
-    totalPages: number
-    data: T[]
-}
