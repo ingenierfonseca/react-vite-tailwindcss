@@ -57,7 +57,7 @@ export function PaginatedAutocomplete<T>({
 
   return (
     <Autocomplete
-      className="flex-1"
+      className="flex-1 dark:border-slate-300 dark:border"
       options={options}
       value={selected}
       loading={loading}

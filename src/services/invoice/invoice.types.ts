@@ -11,7 +11,7 @@ export interface Invoice {
     total: number
     currencyId: number
     createdAt: string
-    statusId: string
+    statusId: number
     createdBy: string
     items: InvoiceItem[]
 }
@@ -41,7 +41,7 @@ export const getInitialInvoice = (): Invoice => ({
     total: 0,
     currencyId: 1,
     createdAt: new Date().toISOString().split('T')[0],
-    statusId: 'Draft',
+    statusId: 1,
     createdBy: '',
     items: [getInitialInvoiceItem()]
 });

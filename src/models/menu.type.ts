@@ -36,16 +36,23 @@ export function getMenuData() {
             icon: Users,
             label: "Patients",
             count: "2.4k",
-            submenu: [
-                { id: "new", label: "new" },
-                { id: "reports", label: "reports" }
-            ]
+            path: "/patients"
+        },
+        {
+            id: "reports",
+            icon: BarChart3,
+            label: "Treatments & Charts",
         },
         {
             id: "invoice",
             icon: Receipt,
-            label: "Factura",
+            label: "Billing and Insurance",
             path: "/invoice"
+        },
+        {
+            id: "reports",
+            icon: BarChart3,
+            label: "Clinic Performance"
         },
         {
             id: "odontogram",
@@ -61,7 +68,7 @@ export function getMenuData() {
         {
             id: "configurations",
             icon: Settings,
-            label: "Configurations",
+            label: "Settings",
             count: "2.4k",
             submenu: [
                 { id: "app", label: "app" },

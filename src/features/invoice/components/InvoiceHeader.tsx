@@ -7,6 +7,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs from 'dayjs';
 import 'dayjs/locale/es';
 import { TextField } from "@mui/material";
+import { getInvoiceStatusOptions } from "../state/state";
 
 const paymentTerns:DropDownAppModel[] = [
     {
@@ -74,11 +75,13 @@ export default function InvoiceHeader({invoice, disabled, updateField}: InvoiceH
             </div>
             <div className="flex gap-8 mt-6">
                 <DatePicker
+                    className="flex-1"
                     label="Fecha de Emision"
                     value={invoice?.date ? dayjs(invoice.date) : null}
                     onChange={(val) => updateField("date", val)}
                 />
-                <TextField 
+                <TextField
+                    className="flex-1"
                     label="Numero de Factura" 
                     variant="outlined"
                     value={invoice ? invoice.number : ''}
@@ -92,9 +95,14 @@ export default function InvoiceHeader({invoice, disabled, updateField}: InvoiceH
             <div className="flex gap-8 mt-4">
                 <DropDownApp title="Metodo de Pago" data={paymentMethos} value={1} />
                 <DatePicker
+                    className="flex-1"
                     label="Vencimiento"
                     value={invoice?.dueDate ? dayjs(invoice.dueDate) : null}
                     onChange={(val) => updateField("dueDate", val)}
+                />
+                <DropDownApp title="Estado" 
+                    data={getInvoiceStatusOptions()} value={invoice ? invoice.statusId : 1}
+                    onChange={(value) => updateField("statusId", value)}
                 />
             </div>
         </fieldset>
