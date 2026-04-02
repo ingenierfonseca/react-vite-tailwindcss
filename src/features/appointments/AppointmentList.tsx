@@ -1,5 +1,6 @@
-import { CirclePlus, EllipsisVertical } from "lucide-react"
+import { CirclePlus, EllipsisVertical, Plus } from "lucide-react"
 import { useAppointments } from "./appointment.hooks"
+import AddButtonApp from "../../components/commons/AddButtonApp"
 
 const headers = [
     '#',
@@ -62,11 +63,8 @@ export default function AppointmentList() {
                     <p className="font-bold">Lista de Agendamentos</p>
                     <p className="text-xs">Puedes buscar todas tus citas aquí.</p>
                 </div>
-                <div className="ml-auto flex">
-                    <button className="flex pl-4 pr-4 cursor-pointer bg-blue-700 rounded-2xl items-center text-white text-sm">
-                        <CirclePlus className="mr-2"/>
-                        Agregar Nueva Cita
-                    </button>
+                <div className="ml-auto">
+                    <AddButtonApp label="Agregar Nueva Cita" />
                 </div>
             </div>
             <div className="ml-auto flex gap-4 mb-4">

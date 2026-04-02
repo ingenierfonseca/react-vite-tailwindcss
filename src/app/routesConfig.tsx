@@ -3,6 +3,7 @@ import Invoice from "../features/invoice/pages/InvoiceListPage";
 import InvoiceDetailPage from "../features/invoice/pages/InvoiceDetailPage";
 import Odontogram from "../features/odontogram/Odontogram";
 import DashboardPage from "../pages/DashboardPage";
+import PatientListPage from "../features/patients/page/PatientListPage";
 
 export const routesConfig = [
   {
@@ -18,7 +19,7 @@ export const routesConfig = [
   {
     path: "/patients",
     title: "Pacientes",
-    element: <div>Patients</div>
+    element: <PatientListPage />
   },
   {
     path: "/odontogram",
