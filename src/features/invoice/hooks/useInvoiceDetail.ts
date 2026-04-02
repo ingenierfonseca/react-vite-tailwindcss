@@ -108,6 +108,10 @@ export const useInvoiceDetail = () => {
     };
 
     function validateInvoiceData(inv: Invoice | null) {
+        console.log("CustomerId:", inv?.customerId);
+        if (!inv?.customerId)
+            return "Debe seleccionar un paciente";
+
         if (!inv?.date)
             return "Debe ingresar una fecha de emisión válida";
 

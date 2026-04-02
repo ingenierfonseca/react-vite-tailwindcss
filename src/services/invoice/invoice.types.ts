@@ -30,7 +30,7 @@ export interface InvoiceItem {
 
 export const getInitialInvoice = (): Invoice => ({
     id: 0,
-    customerId: 1,
+    customerId: 0,
     customerName: '',
     number: '',
     date: new Date().toISOString().split('T')[0],
