@@ -3,7 +3,7 @@ export interface Invoice {
     customerId: number
     customerName: string
     number: string
-    date: string
+    issueDate: string
     dueDate: string
     subTotal: number
     taxTotal: number
@@ -12,6 +12,7 @@ export interface Invoice {
     currencyId: number
     createdAt: string
     statusId: number
+    paymentTermId: number
     createdBy: string
     items: InvoiceItem[]
 }
@@ -33,7 +34,7 @@ export const getInitialInvoice = (): Invoice => ({
     customerId: 0,
     customerName: '',
     number: '',
-    date: new Date().toISOString().split('T')[0],
+    issueDate: new Date().toISOString().split('T')[0],
     dueDate: new Date().toISOString().split('T')[0],
     subTotal: 0,
     taxTotal: 0,
@@ -43,6 +44,7 @@ export const getInitialInvoice = (): Invoice => ({
     createdAt: new Date().toISOString().split('T')[0],
     statusId: 1,
     createdBy: '',
+    paymentTermId: 1,
     items: [getInitialInvoiceItem()]
 });
 

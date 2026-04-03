@@ -19,20 +19,6 @@ const paymentTerns:DropDownAppModel[] = [
         value: '15 dias'
     }
 ]
-const paymentMethos:DropDownAppModel[] = [
-    {
-        id: 1,
-        value: 'Contado'
-    },
-    {
-        id: 2,
-        value: 'Transferencia'
-    },
-    {
-        id: 3,
-        value: 'Cuotas'
-    }
-]
 const moneys: DropDownAppModel[] = [
     {
         id: 1,
@@ -67,19 +53,14 @@ export default function InvoiceHeader({invoice, disabled, updateField}: InvoiceH
                     getValue={(item) => item.id}
                     getLabel={(item) => `${item.firstName.trim()} ${item.lastName.trim()}`}
                 />
-                <DropDownApp 
-                    title="Terminos de Pago" 
-                    data={paymentTerns} 
-                    value={1} 
-                />
-            </div>
-            <div className="flex gap-8 mt-6">
                 <DatePicker
                     className="flex-1"
                     label="Fecha de Emision"
-                    value={invoice?.date ? dayjs(invoice.date) : null}
-                    onChange={(val) => updateField("date", val)}
+                    value={invoice?.issueDate ? dayjs(invoice.issueDate) : null}
+                    onChange={(val) => updateField("issueDate", val)}
                 />
+            </div>
+            <div className="flex gap-8 mt-6">
                 <TextField
                     className="flex-1"
                     label="Numero de Factura" 
@@ -90,10 +71,14 @@ export default function InvoiceHeader({invoice, disabled, updateField}: InvoiceH
                     }}
                     disabled={true}
                 />
+                <DropDownApp 
+                    title="Terminos de Pago" 
+                    data={paymentTerns} 
+                    value={1} 
+                />
                 <DropDownApp title="Moneda" data={moneys} value={1} />
             </div>
             <div className="flex gap-8 mt-4">
-                <DropDownApp title="Metodo de Pago" data={paymentMethos} value={1} />
                 <DatePicker
                     className="flex-1"
                     label="Vencimiento"

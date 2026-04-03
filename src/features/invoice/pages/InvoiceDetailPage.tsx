@@ -9,7 +9,7 @@ import { Bounce, ToastContainer } from "react-toastify";
 import { useInvoiceDetail } from "../hooks/useInvoiceDetail";
 
 const headers = [
-    "Descripcion",
+    "Tratamiento",
     "Cantidad",
     "Precio Unitario",
     "IVA",
