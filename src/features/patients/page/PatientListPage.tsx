@@ -7,6 +7,7 @@ import { CustomerService } from "../../../services/customer/customer.service"
 import DashboardCard from "../../../components/dashboard/DashboardCard"
 import PatientProfile from "../components/PatientProfile"
 import { useState } from "react"
+import PatientCreate from "../components/PatientCreateEdit"
 
 const patients: CustomerFormData[] = [
     {
@@ -41,7 +42,18 @@ const headers = [
     'Patient', 'Age', 'Last Visit', 'Next Appointment', 'Balance Due', 'Actions'
 ]
 export default function PatientListPage() {
-    const [isOpen, setIsOpen] = useState(false);
+    const [isOpenTransitionRight, setIsOpenTransitionRight] = useState(false)
+    const [isOpenProfileInfo, setIsOpenProfileInfo] = useState(false)
+    const [isOpenCreateOrEdit, setIsOpenCreateOrEdit] = useState(false)
+
+    function openProfileInfo(value: boolean) {
+        setIsOpenTransitionRight(value)
+        setIsOpenProfileInfo(value)
+    }
+    function openCreate(value: boolean) {
+        setIsOpenTransitionRight(value)
+        setIsOpenCreateOrEdit(value)
+    }
     return (
         <div className="relative min-h-screen p-4 bg-white dark:bg-slate-900">
             <div className="flex">
@@ -50,7 +62,7 @@ export default function PatientListPage() {
                     <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">Manage your patients and their information.</p>
                 </div>
                 <div className="ml-auto">
-                    <AddButtonApp label="Agregar Nuevo Paciente" />
+                    <AddButtonApp onclick={()=> openCreate(true)} label="Agregar Nuevo Paciente" />
                 </div>
             </div>
 
@@ -91,19 +103,19 @@ export default function PatientListPage() {
             </div>
 
             <div className="mt-4 bg-white dark:bg-slate-800 rounded-lg shadow-md">
-            <div className="flex gap-4 mt-4 px-4 pt-4 bg-slate-100">
+            <div className="flex gap-4 mt-4 px-4 pt-4 bg-slate-100 dark:bg-slate-700/50">
                 {headers.map((header) => (
-                    <div key={header} className={`${header === 'Patient' ? 'flex-2' : 'flex-1'} font-semibold text-slate-700 dark:text-slate-300`}>
+                    <div key={header} className={`${header === 'Patient' ? 'flex-2' : 'flex-1'} font-semibold text-slate-700 dark:text-slate-100`}>
                         {header}
                     </div>
                 ))}
             </div>
             {patients.map((patient) => (
-                <div key={patient.id} className="flex gap-4 pt-4 px-4 text-slate-700 dark:text-slate-300 border-b border-slate-300 hover:bg-slate-100">
+                <div key={patient.id} className="flex gap-4 pt-4 px-4 text-slate-700 dark:text-slate-300 border-b border-slate-300 hover:bg-slate-100 dark:hover:bg-slate-600">
 
                     <button
-                        className="flex-2 flex items-center"
-                        onClick={() => setIsOpen(true)}
+                        className="flex-2 flex items-center cursor-pointer"
+                        onClick={() => openProfileInfo(true)}
                     >
                         {patient.avatarUrl ? (
                             <img src={patient.avatarUrl} alt={`${patient.firstName} ${patient.lastName}`} className="w-10 h-10 rounded-full" />
@@ -137,10 +149,11 @@ export default function PatientListPage() {
 
             <div
                 className={`fixed top-0 right-0 h-full w-7/12 bg-white dark:bg-slate-800 shadow-2xl z-50 
-                transform transition-transform duration-500 ease-in-out ${isOpen ? 'translate-x-0' : 'translate-x-full'
+                transform transition-transform duration-500 ease-in-out ${isOpenTransitionRight ? 'translate-x-0' : 'translate-x-full'
                 }`}
             >
-                <PatientProfile isOpen={isOpen} setIsOpen={setIsOpen} />
+                {isOpenProfileInfo && <PatientProfile setIsOpen={openProfileInfo} />}
+                {isOpenCreateOrEdit && <PatientCreate setIsOpen={openCreate} />}
             </div>
         </div>
     )

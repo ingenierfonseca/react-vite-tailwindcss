@@ -43,14 +43,21 @@ const cardinfo = [
     }
 ];
 interface PatientProfileProps {
-    isOpen: boolean;
-    setIsOpen: (isOpen: boolean) => void;
+    setIsOpen: (value: boolean) => void;
 }
 
-export default function PatientProfile({ isOpen, setIsOpen }: PatientProfileProps) {
+export default function PatientProfile({ setIsOpen }: PatientProfileProps) {
     return (
         <div className="w-full/2 h-screen py-5 px-4 overflow-y-auto overflow-x-hidden [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
-            <p className="font-semibold text-black dark:text-white">Perfil del Paciente</p>
+            <div className="flex">
+                <p className="font-semibold text-black dark:text-white">Perfil del Paciente</p>
+                <button 
+                    onClick={() => setIsOpen(false)}
+                    className="text-slate-500 hover:text-red-500 text-2xl ml-auto"
+                    >
+                    &times;
+                </button>
+            </div>
             <div className="flex mt-2 gap-2">
                 {customer.avatarUrl ? (
                     <img 
@@ -116,12 +123,6 @@ export default function PatientProfile({ isOpen, setIsOpen }: PatientProfileProp
                     <button className="flex-1 px-4 py-2 border border-slate-300 text-black dark:text-white rounded-md hover:bg-slate-600">Ver Facturas</button>
                 </div>
             </div>
-            <button 
-              onClick={() => setIsOpen(false)}
-              className="text-slate-500 hover:text-red-500 text-2xl"
-            >
-              &times;
-            </button>
         </div>
     )
 }
