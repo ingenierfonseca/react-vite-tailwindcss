@@ -31,7 +31,7 @@ export default function MainLayout() {
             setSidebarCollapsed(prev => !prev)
             setIsMobileMenuOpen(prev => !prev)
           }}/>
-          <main className='flex-1 overflow-y-auto bg-transparent p-6 space-y-6'>
+          <main className='flex-1 overflow-y-auto bg-transparent px-6 py-4'>
             <Outlet />
           </main>
         </div>

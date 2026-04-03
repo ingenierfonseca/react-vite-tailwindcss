@@ -1,4 +1,3 @@
-import { Button } from "@mui/material"
 import { ChevronDown } from "lucide-react"
 import type { MenuAppModel } from "../../models/menu.type"
 import { useLocation, useNavigate } from "react-router";
@@ -17,7 +16,7 @@ export default function SideBarItem({ item, collapsed, isDesktop, expandedItems,
     const currentRoute = routesConfig.find(
         (r) => r.path === location.pathname
     );
-    const classItem = 'text-white text-slate-600 dark:text-slate-300'
+    const classItem = `text-slate-600 dark:text-slate-300`
     return (
         <button
             className={`w-full flex items-center justify-between p-3 rounded-xl
@@ -42,10 +41,12 @@ export default function SideBarItem({ item, collapsed, isDesktop, expandedItems,
                 navigate(item.path || "/");
             }}>
             <div className={`flex items-center space-x-3`}>
-                <item.icon className={`w-5 h-5 ${classItem}`} />
+                <item.icon className={`w-5 h-5 ${classItem} ${currentRoute?.path === item.path ? "text-white" : ""}`} />
                 {(!collapsed || !isDesktop) && (
                     <>
-                        <span className={`font-medium ml-2 ${classItem}`}>{item.label}</span>
+                        <span className={`font-medium ml-2 ${classItem} ${currentRoute?.path === item.path ? "text-white" : ""}`}>
+                            {item.label}
+                        </span>
                         {item.badge && (
                             <span className="px-2 py-1 text-xs bg-red-500 text-white rounded-full">
                                 <span className="relative -top-[0.5px]">{item.badge}</span>

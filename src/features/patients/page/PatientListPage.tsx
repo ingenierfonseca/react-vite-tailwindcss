@@ -43,7 +43,7 @@ const headers = [
 export default function PatientListPage() {
     const [isOpen, setIsOpen] = useState(false);
     return (
-        <div className="relative min-h-screen p-4">
+        <div className="relative min-h-screen p-4 bg-white dark:bg-slate-900">
             <div className="flex">
                 <div>
                     <h1 className="text-2xl font-bold text-slate-800 dark:text-white">Patient Management</h1>
@@ -77,7 +77,7 @@ export default function PatientListPage() {
                 }} />
             </div>
 
-            <div className="mt-4">
+            <div className="mt-4 bg-white dark:bg-slate-800 rounded-lg shadow-md p-4">
                 <PaginatedAutocomplete
                     label="Paciente"
                     value={0}
@@ -90,7 +90,8 @@ export default function PatientListPage() {
                 />
             </div>
 
-            <div className="flex gap-4 mt-4">
+            <div className="mt-4 bg-white dark:bg-slate-800 rounded-lg shadow-md">
+            <div className="flex gap-4 mt-4 px-4 pt-4 bg-slate-100">
                 {headers.map((header) => (
                     <div key={header} className={`${header === 'Patient' ? 'flex-2' : 'flex-1'} font-semibold text-slate-700 dark:text-slate-300`}>
                         {header}
@@ -98,7 +99,7 @@ export default function PatientListPage() {
                 ))}
             </div>
             {patients.map((patient) => (
-                <div key={patient.id} className="flex gap-4 mt-4 text-slate-700 dark:text-slate-300">
+                <div key={patient.id} className="flex gap-4 pt-4 px-4 text-slate-700 dark:text-slate-300 border-b border-slate-300 hover:bg-slate-100">
 
                     <button
                         className="flex-2 flex items-center"
@@ -107,7 +108,7 @@ export default function PatientListPage() {
                         {patient.avatarUrl ? (
                             <img src={patient.avatarUrl} alt={`${patient.firstName} ${patient.lastName}`} className="w-10 h-10 rounded-full" />
                         ) : (
-                            <div className="w-10 h-10 rounded-full bg-slate-300 flex items-center justify-center">
+                            <div className="w-10 h-10 rounded-full p-2 bg-slate-300 flex items-center justify-center">
                                 <User className="w-5 h-5 text-slate-600" />
                             </div>
                         )}
@@ -132,9 +133,10 @@ export default function PatientListPage() {
                     </div>
                 </div>
             ))}
+            </div>
 
             <div
-                className={`fixed top-0 right-0 h-full w-1/2 bg-white dark:bg-slate-800 shadow-2xl z-50 
+                className={`fixed top-0 right-0 h-full w-7/12 bg-white dark:bg-slate-800 shadow-2xl z-50 
                 transform transition-transform duration-500 ease-in-out ${isOpen ? 'translate-x-0' : 'translate-x-full'
                 }`}
             >

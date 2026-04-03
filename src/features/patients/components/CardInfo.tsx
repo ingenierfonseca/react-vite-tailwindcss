@@ -10,7 +10,7 @@ export default function CardInfo({ title, description, info, icon, riskLevel }: 
     const { textColor, bgColor, borderColor, bgIconColor } = getColorByRiskLevel(riskLevel || 'low');
 
     return(
-        <div className={`flex-1 flex items-center ${bgColor || 'bg-gray-100'} ${borderColor || 'border-gray-300'} border rounded-md p-4 mt-4`}>
+        <div className={`flex-1 flex items-center ${bgColor || 'bg-gray-100'} ${borderColor || 'border-gray-300'} border rounded-md p-4`}>
             <div className={`flex justify-content mr-3 p-1 h-fit rounded-md ${bgIconColor || 'bg-green-300/50'}`}>{icon}</div>
             <div>
                 <p className={`font-semibold ${textColor || 'text-black dark:text-white'}`}>{title}</p>

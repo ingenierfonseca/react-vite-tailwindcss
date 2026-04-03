@@ -18,7 +18,6 @@ function Sidebar({collapsed, isMobileMenuOpen}: SidebarProps) {
             fixed md:relative top-0 left-0 h-screen z-50 flex flex-col
             transition-all duration-300 ease-in-out transform
             ${isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"}
-            w-72
             md:translate-x-0
             ${collapsed ? "md:w-20" : "md:w-72"} 
              bg-white/80 dark:bg-slate-900/80
