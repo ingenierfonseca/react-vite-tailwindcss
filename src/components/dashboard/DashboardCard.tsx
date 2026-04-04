@@ -5,6 +5,7 @@ interface DashboardCardProps {
         title: string,
         bgColor: string
         textColor: string
+        iconColor: string
         color: string
         value: string
         change: string
@@ -31,7 +32,7 @@ export default function DashboardCard({ stat }: DashboardCardProps) {
                     </div>
                 </div>
                 <div className={`p-3 rounded-xl ${stat.bgColor} group-hover:scale-110 transition-all duration-200`}>
-                    {<stat.icon className={`w-6 h-6 ${stat.textColor}`} />}
+                    {<stat.icon className={`w-6 h-6 ${stat.iconColor}`} />}
                 </div>
             </div>
             <div className="hidden mt-4 h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">

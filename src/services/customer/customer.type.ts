@@ -5,7 +5,8 @@ export interface Customer {
     phone: string
     email: string
     address: string
-    dateOfBirth: string
+    age: number
+    //dateOfBirth: string
     gender: string
     avatarUrl?: string
 }

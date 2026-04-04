@@ -26,7 +26,7 @@ function Sidebar({collapsed, isMobileMenuOpen}: SidebarProps) {
         >
             <div className={`${collapsed ? "py-6 pl-6 " : "p-6 "} border-b border-slate-200/50 dark:border-slate-700/50`}>
                 <div className="flex items-center space-x-3">
-                    <div className="w-10 h-10 bg-linear-to-r from-blue-600 to-purple-600 rounded-xl
+                    <div className="w-10 h-10 bg-primary rounded-xl
                     flex items-center justify-center shadow-lg">
                         <BriefcaseMedical className="w-6 h-6 text-white" />
                     </div>
@@ -34,7 +34,7 @@ function Sidebar({collapsed, isMobileMenuOpen}: SidebarProps) {
                     {(!collapsed || !isDesktop) && (
                         <div>
                             <h3 className="text-xl fontl-bold text-slate-800 dark:text-white">
-                                ClinicalSuiteNova
+                                Clinical<span className="text-primary">SuiteNova</span>
                             </h3>
                             <p className="text-xs text-slate-500 dark:text-slate-400">
                                 Admin Panel
@@ -66,7 +66,7 @@ function Sidebar({collapsed, isMobileMenuOpen}: SidebarProps) {
                 <div className={`${collapsed ? "p-2 " : "p-3 "}} flex items-center space-x-3 rounded-xl bg-slate-50
                         dark:bg-slate-800/50`}>
                     <img src="https://avatars.githubusercontent.com/u/16735800?v=4"
-                        alt="user" className="w-10 h-10 rounded-full ring-2 ring-blue-500"
+                        alt="user" className="w-10 h-10 rounded-full border-2 border-primary"
                     />
                     {(!collapsed || !isDesktop) && (
                         <div className="flex-1 min-w-0">
