@@ -1,1 +1,15 @@
 @import "tailwindcss";
+
+/* Aquí configuramos las variables de tu clínica directamente en CSS */
+@theme {
+  /* Al definirlo así, Tailwind v4 crea automáticamente las clases */
+  /* bg-primary, text-primary, etc. */
+  --color-primary: var(--color-primary-dynamic, #f97316);
+  --color-primary-foreground: var(--color-primary-fg-dynamic, #ffffff);
+}
+
+/* Variables que cambiarás con JS desde tu API de .NET */
+:root {
+  --color-primary-dynamic: #f97316; /* Naranja por defecto */
+  --color-primary-fg-dynamic: #ffffff;
+}

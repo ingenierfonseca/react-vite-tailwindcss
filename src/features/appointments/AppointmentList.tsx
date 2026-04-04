@@ -1,4 +1,4 @@
-import { CirclePlus, EllipsisVertical, Plus } from "lucide-react"
+import { EllipsisVertical } from "lucide-react"
 import { useAppointments } from "./appointment.hooks"
 import AddButtonApp from "../../components/commons/AddButtonApp"
 
@@ -51,7 +51,7 @@ const headers = [
 
 
 export default function AppointmentList() {
-    const { data, loading, error, currentPage } = useAppointments()
+    const { data, currentPage } = useAppointments()
     const buttonPage = 'px-3 py-1 rounded-md bg-blue-300 text-black text-sm'
     const dropDownStyle = 'ml-1 mt-2 p-1 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs text-black font-bold'
     const isMobile = window.innerWidth <= 768
@@ -64,7 +64,7 @@ export default function AppointmentList() {
                     <p className="text-xs">Puedes buscar todas tus citas aquí.</p>
                 </div>
                 <div className="ml-auto">
-                    <AddButtonApp label="Agregar Nueva Cita" />
+                    <AddButtonApp  label="Agregar Nueva Cita" onclick={()=>console.log('open button')} />
                 </div>
             </div>
             <div className="ml-auto flex gap-4 mb-4">

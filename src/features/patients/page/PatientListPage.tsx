@@ -1,7 +1,7 @@
 import { Calendar, PencilLine, User } from "lucide-react"
 import AddButtonApp from "../../../components/commons/AddButtonApp"
 import type { CustomerFormData } from "../../../services/customer/customer.type"
-import { calculateAgeFromString } from "../../../utils/date.util"
+import { calculateAgeFromString, formatDateDDMMYYYY } from "../../../utils/date.util"
 import { PaginatedAutocomplete } from "../../../components/commons/PaginatedAutocomplete"
 import { CustomerService } from "../../../services/customer/customer.service"
 import DashboardCard from "../../../components/dashboard/DashboardCard"
@@ -58,7 +58,7 @@ export default function PatientListPage() {
         <div className="relative min-h-screen p-4 bg-white dark:bg-slate-900">
             <div className="flex">
                 <div>
-                    <h1 className="text-2xl font-bold text-slate-800 dark:text-white">Patient Management</h1>
+                    <h1 className="text-2xl font-bold text-slate-800 dark:text-white">Administracion de Pacientes</h1>
                     <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">Manage your patients and their information.</p>
                 </div>
                 <div className="ml-auto">
@@ -72,7 +72,8 @@ export default function PatientListPage() {
                     value: "1,247",
                     change: "5%",
                     trend: "up",
-                    bgColor: "bg-blue-100/80",
+                    bgColor: "bg-primary/20",
+                    iconColor: "text-primary",
                     textColor: "text-blue-500",
                     color: "from-blue-400 to-blue-600",
                     icon: User
@@ -82,7 +83,8 @@ export default function PatientListPage() {
                     value: "892",
                     change: "5%",
                     trend: "up",
-                    bgColor: "bg-emerald-100/80",
+                    bgColor: "bg-primary/20",
+                    iconColor: "text-primary",
                     textColor: "text-emerald-500",
                     color: "from-emerald-400 to-emerald-600",
                     icon: User
@@ -125,21 +127,21 @@ export default function PatientListPage() {
                             </div>
                         )}
                         <div className="ml-4">
-                            <p className="font-semibold">
+                            <p className="font-semibold text-primary">
                                 {patient.firstName} {patient.lastName}
                             </p>
                             <p className="dark:text-slate-400">Tel: {patient.phone}</p>
                         </div>
                     </button>
                     <div className="flex-1">{calculateAgeFromString(patient.dateOfBirth)}</div>
-                    <div className="flex-1">{patient.lastVisit}</div>
-                    <div className="flex-1">{patient.nextAppointment}</div>
+                    <div className="flex-1">{formatDateDDMMYYYY(patient.lastVisit)}</div>
+                    <div className="flex-1">{formatDateDDMMYYYY(patient.nextAppointment)}</div>
                     <div className="flex-1">${patient.balanceDue.toFixed(2)}</div>
                     <div className="flex-1">
-                        <button className="text-white px-3">
+                        <button className="bg-primary/20 p-1 text-primary px-2 rounded-sm hover:bg-primary/30">
                             <Calendar />
                         </button>
-                        <button className="text-white px-3">
+                        <button className="bg-primary/20 p-1 text-primary px-2 ml-1 rounded-sm hover:bg-primary/30">
                             <PencilLine />
                         </button>
                     </div>

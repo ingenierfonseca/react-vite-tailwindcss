@@ -2,11 +2,11 @@ import { Loader2, Plus } from "lucide-react";
 import { cn, theme } from "../../../utils/theme";
 import InvoiceHeader from "../components/InvoiceHeader";
 import { useNavigate } from "react-router";
-import { formatNumber } from "../../../utils/utils";
 import TextEditApp from "../../../components/commons/TextEditApp";
 import NumberInputApp from "../../../components/commons/NumberInputApp";
 import { Bounce, ToastContainer } from "react-toastify";
 import { useInvoiceDetail } from "../hooks/useInvoiceDetail";
+import { formatNumber } from "../../../utils/number.util";
 
 const headers = [
     "Descripcion",

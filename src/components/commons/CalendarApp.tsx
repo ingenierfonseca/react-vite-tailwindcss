@@ -1,6 +1,6 @@
 import { Calendar } from "lucide-react";
 import { cn, theme } from "../../utils/theme";
-import { formatDateToYYYYMMDD } from "../../utils/utils";
+import { formatDateToYYYYMMDD } from "../../utils/date.util";
 
 interface CalendarAppProps {
     title: string,

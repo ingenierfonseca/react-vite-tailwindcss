@@ -1,14 +1,15 @@
 import { CirclePlus, EllipsisVertical, Plus } from "lucide-react"
 import { routesConfig } from "../../app/routesConfig";
 import { cn, theme } from "../../utils/theme";
-import type { Paggination } from "../../services/appointment/appointment.types";
 import type { Invoice } from "../../services/invoice/invoice.types";
-import { formatDate, formatNumber } from "../../utils/utils";
 import { useNavigate } from "react-router";
+import { formatDateDDMMYYYY } from "../../utils/date.util";
+import type { PaginatedResponse } from "../../models/paginatedResponse";
+import { formatNumber } from "../../utils/number.util";
 
 interface PageListProps {
     headers: string[],
-    data?: Paggination<Invoice | null>,
+    data?: PaginatedResponse<Invoice | null>,
     setIsModalOpen: () => void
 }
 export default function PageList({ headers, data, setIsModalOpen }: PageListProps) {
@@ -75,7 +76,7 @@ export default function PageList({ headers, data, setIsModalOpen }: PageListProp
                             <span className="flex-1 text-sm">{formatNumber(item!.subTotal)}</span>
                             <span className="flex-1 text-sm">{formatNumber(item!.taxTotal)}</span>
                             <span className="flex-1 text-sm">{formatNumber(item!.total)}</span>
-                            <span className="flex-1 text-sm">{formatDate(item!.date)}</span>
+                            <span className="flex-1 text-sm">{formatDateDDMMYYYY(item!.date)}</span>
                             <span className={`flex-1`}>
                                 <div className={`pl-2 pr-2 pb-0.5 w-22 text-center text-sm rounded-2xl ${getBgColorStatus(item!.statusId)}`}>{item!.statusId}</div>
                             </span>
@@ -126,13 +127,13 @@ function getPluralName(name: string) {
     return `${name}s`
 }
 
-function getBgColorStatus(status: string) {
+function getBgColorStatus(status: number) {
     switch (status) {
-        case "Completed":
+        case 1:
             return "bg-green-200 border-green-600 text-green-800"
-        case "Pending":
+        case 2:
             return "bg-yellow-200 border-yellow-600 text-yellow-800"
-        case "Cancelled":
+        case 3:
             return "bg-red-200 border-red-600 text-red-800"
         default:
             return "bg-gray-200 border-gray-600 text-gray-800"
