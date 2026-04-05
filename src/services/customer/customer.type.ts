@@ -8,7 +8,7 @@ export interface Customer {
     age: number
     //dateOfBirth: string
     gender: string
-    avatarUrl?: string
+    avatar?: string
 }
 
 
@@ -21,7 +21,7 @@ export interface CustomerFormData {
     address: string
     dateOfBirth: string
     gender: string
-    avatarUrl?: string
+    avatar?: string
     lastVisit: string
     nextAppointment: string
     balanceDue: number

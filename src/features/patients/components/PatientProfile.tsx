@@ -1,24 +1,7 @@
 import { Car } from "lucide-react";
 import type { Customer } from "../../../services/customer/customer.type";
-import { calculateAgeFromString } from "../../../utils/date.util";
 import CardInfo from "./CardInfo";
 
-const customer: Customer = {
-    id: 1,
-    firstName: "Emma",
-    lastName: "Jhonson",
-    email: "emma.jhonson@example.com",
-    phone: "123-456-7890",
-    address: "123 Main St, Anytown, USA",
-    dateOfBirth: "1990-01-01",
-    gender: "Female"
-    /*medicalHistory: "No known allergies. Previous surgery in 2015.",
-    medications: "None",
-    emergencyContact: {
-        name: "Jane Doe",
-        phone: "987-654-3210",
-    },*/
-};
 const cardinfo = [
     {
         title: "Missed Visit Risk",
@@ -43,10 +26,11 @@ const cardinfo = [
     }
 ];
 interface PatientProfileProps {
+    customer: Customer;
     setIsOpen: (value: boolean) => void;
 }
 
-export default function PatientProfile({ setIsOpen }: PatientProfileProps) {
+export default function PatientProfile({ customer, setIsOpen }: PatientProfileProps) {
     return (
         <div className="w-full/2 h-screen py-5 px-4 overflow-y-auto overflow-x-hidden [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
             <div className="flex">
@@ -59,11 +43,11 @@ export default function PatientProfile({ setIsOpen }: PatientProfileProps) {
                 </button>
             </div>
             <div className="flex mt-2 gap-2">
-                {customer.avatarUrl ? (
+                {customer.avatar ? (
                     <img 
-                        src={customer.avatarUrl}
+                        src={customer.avatar}
                         alt={`${customer.firstName} ${customer.lastName}`}
-                        className="w-16 h-16 rounded-full object-cover"
+                        className="w-1/2 h-1/2 rounded-md object-cover"
                     />
                 ) : (
                     <div className="flex-1 aspect-square bg-gray-300 rounded-md flex items-center justify-center">
@@ -77,7 +61,7 @@ export default function PatientProfile({ setIsOpen }: PatientProfileProps) {
                         <p className="font-medium text-black dark:text-white">
                             {customer.firstName} {customer.lastName}
                         </p>
-                        <p className="text-sm">Edad: {calculateAgeFromString(customer.dateOfBirth)}</p>
+                        <p className="text-sm">Edad: {customer.age}</p>
                         <p className="text-sm">Tel: {customer.phone}</p>
                         <p className="text-sm">Email: {customer.email}</p>
                     </div>

@@ -19,14 +19,14 @@ const headers = [
 
 export default function Invoice() {
     const navigate = useNavigate();
-    const [isModalOpen, setIsModalOpen] = useState(false)
+    const [isModalOpen] = useState(false)
     const {saveInvoice, data} = useInvoice()
     return (
         <>
-            <PageList headers={headers} data={data} setIsModalOpen={()=> navigate(`/invoice/0/detail`)} />
+            <PageList headers={headers} data={data} setIsModalOpen={()=> navigate(`/invoice/0`)} />
             
             <Modal isOpen={isModalOpen}
-                onClose={() => navigate(`/invoice/0/detail`)}
+                onClose={() => navigate(`/invoice/0`)}
                 title="Información de la Factura"
                 textBtnConfirm="Guardar"
                 clickBtnConfirm={()=> saveInvoice}>

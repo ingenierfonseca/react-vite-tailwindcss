@@ -20,7 +20,7 @@ export default function SideBarItem({ item, collapsed, isDesktop, expandedItems,
     return (//bg-linear-to-r from-blue-500 to-purple-600
         <button
             className={`w-full flex items-center justify-between p-3 rounded-xl
-            cursor-pointer transition-all duration-200 ${currentRoute?.path === item.path ?
+            cursor-pointer transition-all duration-200 ${item.path !== undefined && location.pathname.includes(item.path) ?
             "bg-primary shadow-lg shadow-blue-500/25" :
             "hover:bg-slate-100 dark:hover:bg-slate-800/50"
             } 'active:scale-95 active:bg-slate-200 dark:active:bg-slate-700'`}

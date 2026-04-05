@@ -20,5 +20,9 @@ export const CustomerService = {
     addCustomer: async (payload: Customer | null) => {
         const { data } = await api.post(`${method}`, payload);
         return data;
+    },
+    updateCustomer: async (id: number, payload: Customer | null) => {
+        const { data } = await api.put(`${method}${id}`, payload);
+        return data;
     }
 };

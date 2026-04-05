@@ -32,7 +32,7 @@ export const routesConfig = [
     element: <Invoice />
   },
   {
-    path: "/invoice/:id/detail",
+    path: "/invoice/:id",
     title: "Detalle de Factura",
     element: <InvoiceDetailPage />
   },

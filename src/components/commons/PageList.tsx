@@ -76,7 +76,7 @@ export default function PageList({ headers, data, setIsModalOpen }: PageListProp
                             <span className="flex-1 text-sm">{formatNumber(item!.subTotal)}</span>
                             <span className="flex-1 text-sm">{formatNumber(item!.taxTotal)}</span>
                             <span className="flex-1 text-sm">{formatNumber(item!.total)}</span>
-                            <span className="flex-1 text-sm">{formatDateDDMMYYYY(item!.date)}</span>
+                            <span className="flex-1 text-sm">{formatDateDDMMYYYY(item!.issueDate)}</span>
                             <span className={`flex-1`}>
                                 <div className={`pl-2 pr-2 pb-0.5 w-22 text-center text-sm rounded-2xl ${getBgColorStatus(item!.statusId)}`}>{item!.statusId}</div>
                             </span>

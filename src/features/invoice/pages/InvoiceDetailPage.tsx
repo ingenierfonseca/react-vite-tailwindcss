@@ -2,11 +2,11 @@ import { Loader2, Plus } from "lucide-react";
 import { cn, theme } from "../../../utils/theme";
 import InvoiceHeader from "../components/InvoiceHeader";
 import { useNavigate } from "react-router";
-import TextEditApp from "../../../components/commons/TextEditApp";
 import NumberInputApp from "../../../components/commons/NumberInputApp";
 import { Bounce, ToastContainer } from "react-toastify";
 import { useInvoiceDetail } from "../hooks/useInvoiceDetail";
 import { formatNumber } from "../../../utils/number.util";
+import TextFieldApp from "../../../components/commons/TextFieldApp";
 
 const headers = [
     "Tratamiento",
@@ -49,7 +49,7 @@ export default function InvoiceDetailPage() {
                         {invoice && invoice!.items.map((item, index) => {
                             return (
                                 <fieldset disabled={loading} key={item.id} className="w-full flex  p-2 gap-2 border border-slate-200">
-                                    <TextEditApp value={item.description} style="flex-2 px-2 text-sm" onChange={(val) => onChangeItem(index, "description", val)} />
+                                    <TextFieldApp label="Tratamiento" value={item.description} className="flex-2 px-2 text-sm" onChange={(val) => onChangeItem(index, "description", val)} />
                                     <NumberInputApp value={item.quantity} className="flex-1 px-2 text-sm" min={1} onChange={(val) => onChangeItem(index, "quantity", val)} />
                                     <NumberInputApp value={item.unitPrice} className="flex-1 px-2 text-sm" min={1} onChange={(val) => onChangeItem(index, "unitPrice", val)} />
                                     <NumberInputApp value={item.tax} className="flex-1 px-2 text-sm" min={1} onChange={(val) => onChangeItem(index, "tax", val)} />

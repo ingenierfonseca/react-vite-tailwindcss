@@ -1,4 +1,4 @@
-import { BarChart3, BriefcaseMedical, Calendar, LayoutDashboard, Receipt, Settings, Users, type LucideProps } from "lucide-react";
+import { BarChart3, Calendar, LayoutDashboard, Receipt, Settings, Users, type LucideProps } from "lucide-react";
 
 export interface SubMenuAppModel {
     id: string,
@@ -39,7 +39,7 @@ export function getMenuData() {
             path: "/patients"
         },
         {
-            id: "reports",
+            id: "treatments",
             icon: BarChart3,
             label: "Treatments & Charts",
         },
@@ -50,7 +50,7 @@ export function getMenuData() {
             path: "/invoice"
         },
         {
-            id: "reports",
+            id: "performance",
             icon: BarChart3,
             label: "Clinic Performance"
         },

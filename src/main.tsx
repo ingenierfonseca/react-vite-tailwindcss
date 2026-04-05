@@ -5,12 +5,15 @@ import AppRouter from './app/router.tsx'
 import { LocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { SettingsProvider } from './provider/SettingsProvider.tsx'
+import AppThemeProvider from './provider/AppThemeProvider.tsx'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="es">
       <SettingsProvider>
-        <AppRouter />
+        <AppThemeProvider>
+          <AppRouter />
+        </AppThemeProvider>
       </SettingsProvider>
     </LocalizationProvider>
   </StrictMode>,

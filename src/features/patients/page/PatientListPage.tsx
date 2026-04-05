@@ -1,47 +1,19 @@
 import { Calendar, PencilLine, User } from "lucide-react"
 import AddButtonApp from "../../../components/commons/AddButtonApp"
-import type { CustomerFormData } from "../../../services/customer/customer.type"
-import { calculateAgeFromString, formatDateDDMMYYYY } from "../../../utils/date.util"
 import { PaginatedAutocomplete } from "../../../components/commons/PaginatedAutocomplete"
 import { CustomerService } from "../../../services/customer/customer.service"
 import DashboardCard from "../../../components/dashboard/DashboardCard"
 import PatientProfile from "../components/PatientProfile"
 import { useState } from "react"
 import PatientCreate from "../components/PatientCreateEdit"
-
-const patients: CustomerFormData[] = [
-    {
-        id: 1,
-        firstName: 'Emma',
-        lastName: 'Johnson',
-        dateOfBirth: '1990-05-15',
-        lastVisit: '2024-05-15',
-        nextAppointment: '2024-06-20',
-        balanceDue: 150.00,
-        phone: '8611234567',
-        email: 'emma.johnson@example.com',
-        address: '123 Main St, City, State',
-        gender: 'Female'
-    },
-    {
-        id: 2,
-        firstName: ' Liam',
-        lastName: 'Williams',
-        dateOfBirth: '1985-12-10',
-        lastVisit: '2024-05-10',
-        nextAppointment: '2024-06-15',
-        balanceDue: 200.00,
-        phone: '8611234567',
-        email: 'liam.williams@example.com',
-        address: '456 Oak Ave, City, State',
-        gender: 'Male'
-    }
-]
+import { usePatient } from "../hooks/patient.hook"
+import { Bounce, ToastContainer } from "react-toastify"
 
 const headers = [
-    'Patient', 'Age', 'Last Visit', 'Next Appointment', 'Balance Due', 'Actions'
+    'Patient', 'Age', /*'Last Visit', 'Next Appointment', 'Balance Due',*/ 'Actions'
 ]
 export default function PatientListPage() {
+    const { data, customer, setCustomer, loadCustomers } = usePatient()
     const [isOpenTransitionRight, setIsOpenTransitionRight] = useState(false)
     const [isOpenProfileInfo, setIsOpenProfileInfo] = useState(false)
     const [isOpenCreateOrEdit, setIsOpenCreateOrEdit] = useState(false)
@@ -62,7 +34,10 @@ export default function PatientListPage() {
                     <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">Manage your patients and their information.</p>
                 </div>
                 <div className="ml-auto">
-                    <AddButtonApp onclick={()=> openCreate(true)} label="Agregar Nuevo Paciente" />
+                    <AddButtonApp onclick={() => {
+                        setCustomer(null)
+                        openCreate(true)
+                    }} label="Agregar Nuevo Paciente" />
                 </div>
             </div>
 
@@ -105,58 +80,80 @@ export default function PatientListPage() {
             </div>
 
             <div className="mt-4 bg-white dark:bg-slate-800 rounded-lg shadow-md">
-            <div className="flex gap-4 mt-4 px-4 pt-4 bg-slate-100 dark:bg-slate-700/50">
-                {headers.map((header) => (
-                    <div key={header} className={`${header === 'Patient' ? 'flex-2' : 'flex-1'} font-semibold text-slate-700 dark:text-slate-100`}>
-                        {header}
+                <div className="flex gap-4 mt-4 px-4 pt-4 bg-slate-100 dark:bg-slate-700/50">
+                    {headers.map((header) => (
+                        <div key={header} className={`${header === 'Patient' ? 'flex-2' : 'flex-1'} font-semibold text-slate-700 dark:text-slate-100`}>
+                            {header}
+                        </div>
+                    ))}
+                </div>
+                {data && data.data && data?.data.map((patient) => (
+                    <div key={patient!.id} className="flex gap-4 pt-4 px-4 text-slate-700 dark:text-slate-300 border-b border-slate-300 hover:bg-slate-100 dark:hover:bg-slate-600">
+
+                        <button
+                            className="flex-2 flex items-center cursor-pointer"
+                            onClick={() => {
+                                setCustomer(patient)
+                                openProfileInfo(true)
+                            }}
+                        >
+                            {patient!.avatar ? (
+                                <img src={patient!.avatar} alt={`${patient!.firstName} ${patient!.lastName}`} className="w-10 h-10 rounded-full" />
+                            ) : (
+                                <div className="w-10 h-10 rounded-full p-2 bg-slate-300 flex items-center justify-center">
+                                    <User className="w-5 h-5 text-slate-600" />
+                                </div>
+                            )}
+                            <div className="ml-4">
+                                <p className="font-semibold text-primary">
+                                    {patient!.firstName} {patient!.lastName}
+                                </p>
+                                <p className="dark:text-slate-400">Tel: {patient!.phone}</p>
+                            </div>
+                        </button>
+                        <div className="flex-1">{patient!.age}</div>
+                        {/*<div className="flex-1">{formatDateDDMMYYYY(patient!.lastVisit)}</div>
+                    <div className="flex-1">{formatDateDDMMYYYY(patient!.nextAppointment)}</div>
+                    <div className="flex-1">${patient!.balanceDue.toFixed(2)}</div>*/}
+                        <div className="flex-1">
+                            <button className="bg-primary/20 p-1 text-primary px-2 rounded-sm hover:bg-primary/30">
+                                <Calendar />
+                            </button>
+                            <button
+                                onClick={() => {
+                                    setCustomer(patient)
+                                    openCreate(true)
+                                }}
+                                className="bg-primary/20 p-1 text-primary px-2 ml-1 rounded-sm hover:bg-primary/30">
+                                <PencilLine />
+                            </button>
+                        </div>
                     </div>
                 ))}
-            </div>
-            {patients.map((patient) => (
-                <div key={patient.id} className="flex gap-4 pt-4 px-4 text-slate-700 dark:text-slate-300 border-b border-slate-300 hover:bg-slate-100 dark:hover:bg-slate-600">
-
-                    <button
-                        className="flex-2 flex items-center cursor-pointer"
-                        onClick={() => openProfileInfo(true)}
-                    >
-                        {patient.avatarUrl ? (
-                            <img src={patient.avatarUrl} alt={`${patient.firstName} ${patient.lastName}`} className="w-10 h-10 rounded-full" />
-                        ) : (
-                            <div className="w-10 h-10 rounded-full p-2 bg-slate-300 flex items-center justify-center">
-                                <User className="w-5 h-5 text-slate-600" />
-                            </div>
-                        )}
-                        <div className="ml-4">
-                            <p className="font-semibold text-primary">
-                                {patient.firstName} {patient.lastName}
-                            </p>
-                            <p className="dark:text-slate-400">Tel: {patient.phone}</p>
-                        </div>
-                    </button>
-                    <div className="flex-1">{calculateAgeFromString(patient.dateOfBirth)}</div>
-                    <div className="flex-1">{formatDateDDMMYYYY(patient.lastVisit)}</div>
-                    <div className="flex-1">{formatDateDDMMYYYY(patient.nextAppointment)}</div>
-                    <div className="flex-1">${patient.balanceDue.toFixed(2)}</div>
-                    <div className="flex-1">
-                        <button className="bg-primary/20 p-1 text-primary px-2 rounded-sm hover:bg-primary/30">
-                            <Calendar />
-                        </button>
-                        <button className="bg-primary/20 p-1 text-primary px-2 ml-1 rounded-sm hover:bg-primary/30">
-                            <PencilLine />
-                        </button>
-                    </div>
-                </div>
-            ))}
             </div>
 
             <div
                 className={`fixed top-0 right-0 h-full w-7/12 bg-white dark:bg-slate-800 shadow-2xl z-50 
                 transform transition-transform duration-500 ease-in-out ${isOpenTransitionRight ? 'translate-x-0' : 'translate-x-full'
-                }`}
+                    }`}
             >
-                {isOpenProfileInfo && <PatientProfile setIsOpen={openProfileInfo} />}
-                {isOpenCreateOrEdit && <PatientCreate setIsOpen={openCreate} />}
+                {isOpenProfileInfo && <PatientProfile setIsOpen={openProfileInfo} customer={customer!} />}
+                {isOpenCreateOrEdit && <PatientCreate setIsOpen={openCreate} customerParam={customer!} reload={loadCustomers} />}
             </div>
+
+            <ToastContainer
+                position="bottom-right"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick={false}
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="light"
+                transition={Bounce}
+            />
         </div>
     )
 }

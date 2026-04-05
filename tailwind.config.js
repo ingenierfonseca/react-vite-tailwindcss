@@ -12,6 +12,7 @@ export default {
           DEFAULT: 'var(--color-primary, #f97316)', 
           foreground: 'var(--color-primary-foreground, #ffffff)',
         },
+        border: 'var(--color-border)',
       },
     },
   },

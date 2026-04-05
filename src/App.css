@@ -6,10 +6,12 @@
   /* bg-primary, text-primary, etc. */
   --color-primary: var(--color-primary-dynamic, #f97316);
   --color-primary-foreground: var(--color-primary-fg-dynamic, #ffffff);
+  --color-border: var(--color-border-dynamic, #f97316); /* Ejemplo de color para bordes */
 }
 
 /* Variables que cambiarás con JS desde tu API de .NET */
 :root {
   --color-primary-dynamic: #f97316; /* Naranja por defecto */
   --color-primary-fg-dynamic: #ffffff;
+  --color-border-dynamic: #f97316; /* Naranja por defecto */
 }
