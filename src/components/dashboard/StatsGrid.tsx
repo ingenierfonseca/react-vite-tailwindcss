@@ -10,7 +10,7 @@ const statsData = [
 
 export default function StatsGrid() {
     return (
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+        <div className="grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-4">
             {statsData.map((stat, index) => (
                 <DashboardCard key={index} stat={stat} />
             ))}

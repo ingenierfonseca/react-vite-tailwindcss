@@ -1,4 +1,4 @@
-import { CirclePlus, EllipsisVertical, Plus } from "lucide-react"
+import { EllipsisVertical } from "lucide-react"
 import { routesConfig } from "../../app/routesConfig";
 import { cn, theme } from "../../utils/theme";
 import type { Invoice } from "../../services/invoice/invoice.types";
@@ -6,6 +6,7 @@ import { useNavigate } from "react-router";
 import { formatDateDDMMYYYY } from "../../utils/date.util";
 import type { PaginatedResponse } from "../../models/paginatedResponse";
 import { formatNumber } from "../../utils/number.util";
+import AddButtonApp from "./AddButtonApp";
 
 interface PageListProps {
     headers: string[],
@@ -27,10 +28,7 @@ export default function PageList({ headers, data, setIsModalOpen }: PageListProp
                     <p className="text-xs">Puedes buscar todas tus {title2} aquí.</p>
                 </div>
                 <div className="ml-auto flex">
-                    <button className="flex pl-4 pr-4 cursor-pointer bg-blue-700 rounded-2xl items-center text-white text-sm" onClick={setIsModalOpen}>
-                        <CirclePlus className="mr-2" />
-                        Agregar Nueva {title}
-                    </button>
+                    <AddButtonApp onclick={setIsModalOpen} label="Agregar Nueva Factura" />
                 </div>
             </div>
             <div className="ml-auto flex gap-4 mb-4">
@@ -112,10 +110,6 @@ export default function PageList({ headers, data, setIsModalOpen }: PageListProp
                         <img src="./src/assets/notfounditem.png" className="w-72" />
                         <p className="font-bold">No se encontraron facturas</p>
                         <p className="py-2">No hay resultados con los filtros actuales, Intenta ajustar los filtros</p>
-                        <button className="flex p-2 cursor-pointer bg-blue-700 items-center text-white text-sm" onClick={setIsModalOpen}>
-                            <Plus className="mr-2" />
-                            Agregar Nueva {title}
-                        </button>
                     </div>
                 }
             </div>

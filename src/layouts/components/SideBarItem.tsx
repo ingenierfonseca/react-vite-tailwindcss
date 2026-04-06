@@ -20,8 +20,8 @@ export default function SideBarItem({ item, collapsed, isDesktop, expandedItems,
     return (//bg-linear-to-r from-blue-500 to-purple-600
         <button
             className={`w-full flex items-center justify-between p-3 rounded-xl
-            cursor-pointer transition-all duration-200 ${item.path !== undefined && location.pathname.includes(item.path) ?
-            "bg-primary shadow-lg shadow-blue-500/25" :
+            cursor-pointer transition-all duration-200 ${location.pathname.includes(item.path!) ?
+            "bg-primary shadow-lg shadow-primary/25" :
             "hover:bg-slate-100 dark:hover:bg-slate-800/50"
             } 'active:scale-95 active:bg-slate-200 dark:active:bg-slate-700'`}
             onClick={() => {
@@ -45,7 +45,7 @@ export default function SideBarItem({ item, collapsed, isDesktop, expandedItems,
                 {(!collapsed || !isDesktop) && (
                     <>
                         <span className={`font-medium ml-2 ${classItem} ${currentRoute?.path === item.path ? "text-white" : ""}`}>
-                            {item.label}
+                            {item.label.slice(0, 22)}
                         </span>
                         {item.badge && (
                             <span className="px-2 py-1 text-xs bg-red-500 text-white rounded-full">

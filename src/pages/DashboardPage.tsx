@@ -124,7 +124,7 @@ export default function DashboardPage() {
   return (
     <div>
       <StatsGrid />
-      <div className="flex flex-wrap gap-4">
+      <div className="grid grid-cols-[repeat(auto-fit,minmax(500px,1fr))] gap-4">
         {weekAppoiments.map((item, index) => (
             <WeekAppoiment key={index} appointment={item} />
         ))}

@@ -1,35 +1,33 @@
-import { cn, theme } from "../../utils/theme";
+import { TextField } from "@mui/material";
 
 interface NumberInputAppProps {
     value: number
     onChange: (value: number) => void
     className?: string
     min?: number
-    //max?: number
+    max?: number
     step?: number
 }
-export default function NumberInputApp({value, className, min, step = 1, onChange}: NumberInputAppProps) {
+export default function NumberInputApp({ value, className, max, onChange }: NumberInputAppProps) {
     return (
         <div className={className}>
-            <input 
-                type="number" 
+            <TextField
+                className="flex-2"
+                variant="outlined"
+                type="number"
                 value={value === 0 ? "" : value}
-                min={min}
-                step={step}
-                onChange={(e) => {
-                    const val = e.target.value
-
-                    if (val === "") {
-                        onChange(0)
-                        return
-                    }
-
-                    const parsed = Number(val)
-                        if (!isNaN(parsed)) {
-                        onChange(parsed)
-                    }
+                slotProps={{
+                    htmlInput: {
+                        min: 0,
+                        max: max,
+                        step: 1,
+                    },
                 }}
-                className={`${cn(theme.inputtext.content)}`} />
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                    const val = parseInt(e.target.value, 10);
+                    onChange(isNaN(val) ? 0 : val);
+                }}
+            />
         </div>
     )
 }

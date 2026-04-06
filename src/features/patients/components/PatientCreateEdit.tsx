@@ -1,15 +1,16 @@
-import { TextField } from "@mui/material"
+import { CircularProgress, TextField } from "@mui/material"
 import { useEffect, useRef, useState, type ChangeEvent } from "react"
 import type { Customer } from "../../../services/customer/customer.type"
 import { usePatientCreateEdit } from "../hooks/patient.create.hook"
 import TextFieldApp from "../../../components/commons/TextFieldApp"
+import ButtonSaveApp from "../../../components/commons/ButtonSaveApp"
 interface PatientCreateProps {
     customerParam?: Customer
     setIsOpen: (value: boolean) => void
     reload: () => void
 }
 export default function PatientCreate({ customerParam, setIsOpen, reload }: PatientCreateProps) {
-    const { customer, setCustomer, savePatient } = usePatientCreateEdit()
+    const { customer, setCustomer, savePatient, loading } = usePatientCreateEdit()
     useEffect(() => {
         if (customerParam) {
             setCustomer(customerParam)
@@ -42,11 +43,13 @@ export default function PatientCreate({ customerParam, setIsOpen, reload }: Pati
     };
 
     const handleSave = async () => {
-        await savePatient(customer)
-        reload()
-        setIsOpen(false)
+        const response = await savePatient()
+        if (response) {
+            reload()
+            setIsOpen(false)
+        }
     }
-    
+
     return (
         <div className="w-full/2 h-screen py-5 px-4 overflow-y-auto overflow-x-hidden [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
             <div className="flex">
@@ -58,7 +61,7 @@ export default function PatientCreate({ customerParam, setIsOpen, reload }: Pati
                     &times;
                 </button>
             </div>
-            <fieldset>
+            <fieldset disabled={loading}>
                 <div className="flex gap-2 pt-3">
                     <div className="flex flex-col items-center">
                         <div className="relative group">
@@ -146,11 +149,12 @@ export default function PatientCreate({ customerParam, setIsOpen, reload }: Pati
                     />
                 </div>
                 <div className="flex justify-center">
-                    <button
+                    <ButtonSaveApp
+                        className="flex-6"
+                        label="Paciente"
                         onClick={() => handleSave()}
-                        className="flex-6 mt-4 bg-primary px-4 py-2 font-semibold text-white rounded-sm hover:bg-primary/90 self-end">
-                        Guardar Paciente
-                    </button>
+                        loading={loading}
+                     />
                 </div>
             </fieldset>
         </div>

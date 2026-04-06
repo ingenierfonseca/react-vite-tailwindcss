@@ -27,32 +27,32 @@ export function getMenuData() {
         {
             id: "appointments",
             icon: Calendar,
-            label: "Appointments",
+            label: "Citas",   //"Appointments",
             path: "/appointments",
             badge: "3"
         },
         {
             id: "patients",
             icon: Users,
-            label: "Patients",
+            label: "Pacientes",   //"Patients",
             count: "2.4k",
             path: "/patients"
         },
         {
             id: "treatments",
             icon: BarChart3,
-            label: "Treatments & Charts",
+            label: "Tratamientos y expedientes",   //"Treatments and Records",
         },
         {
             id: "invoice",
             icon: Receipt,
-            label: "Billing and Insurance",
+            label: "Facturación y pagos",   //"Billing and Insurance",
             path: "/invoice"
         },
         {
             id: "performance",
             icon: BarChart3,
-            label: "Clinic Performance"
+            label: "Desempeño de la clínica",   //"Clinic Performance"
         },
         {
             id: "odontogram",
@@ -63,12 +63,12 @@ export function getMenuData() {
         {
             id: "reports",
             icon: BarChart3,
-            label: "Reports"
+            label: "Reportes",  //"Reports",
         },
         {
             id: "configurations",
             icon: Settings,
-            label: "Settings",
+            label: "Configuraciones",  //"Settings",
             count: "2.4k",
             submenu: [
                 { id: "app", label: "app" },

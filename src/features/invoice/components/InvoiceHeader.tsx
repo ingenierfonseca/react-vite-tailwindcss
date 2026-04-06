@@ -38,10 +38,10 @@ interface InvoiceHeaderProps {
 export default function InvoiceHeader({invoice, disabled, updateField}: InvoiceHeaderProps) {
     return (
         <fieldset disabled={disabled} className="px-4 py-3">
-            <p className="text-black text-xl font-bold px-2">
+            <p className="text-black text-xl font-bold px-2 dark:text-slate-100">
                 {invoice != null && invoice!.number !== '' ? "Factura " + invoice!.number : "Nueva Factura"}
             </p>
-            <div className="w-full h-0.5 bg-slate-200 mt-2" />
+            <div className="w-full h-0.5 bg-slate-200 mt-2 dark:bg-slate-600" />
             <div className="flex gap-8 mt-4">
                 <PaginatedAutocomplete
                     label="Paciente"
