@@ -8,12 +8,13 @@ import { useState } from "react"
 import PatientCreate from "../components/PatientCreateEdit"
 import { usePatient } from "../hooks/patient.hook"
 import { Bounce, ToastContainer } from "react-toastify"
+import AvatarInfo from "../../../components/commons/AvatarInfo"
 
 const headers = [
     'Patient', 'Age', /*'Last Visit', 'Next Appointment', 'Balance Due',*/ 'Actions'
 ]
 export default function PatientListPage() {
-    const { data, customer, setCustomer, loadCustomers } = usePatient()
+    const { data, customer, setCustomer, loadCustomers, search, setSearch } = usePatient()
     const [isOpenTransitionRight, setIsOpenTransitionRight] = useState(false)
     const [isOpenProfileInfo, setIsOpenProfileInfo] = useState(false)
     const [isOpenCreateOrEdit, setIsOpenCreateOrEdit] = useState(false)
@@ -31,7 +32,7 @@ export default function PatientListPage() {
             <div className="flex">
                 <div>
                     <h1 className="text-2xl font-bold text-slate-800 dark:text-white">Administracion de Pacientes</h1>
-                    <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">Manage your patients and their information.</p>
+                    <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">Administra la información de tus pacientes</p>
                 </div>
                 <div className="ml-auto">
                     <AddButtonApp onclick={() => {
@@ -69,10 +70,8 @@ export default function PatientListPage() {
             <div className="mt-4 bg-white dark:bg-slate-800 rounded-lg shadow-md p-4">
                 <PaginatedAutocomplete
                     label="Paciente"
-                    value={0}
-                    onChange={(value) => alert(value)
-                        //updateField("customerId", value)
-                    }
+                    value={search}
+                    onChange={(value) => setSearch(data?.data.find(c => c?.id === value)?.firstName || '')}
                     fetchData={CustomerService.getAllCustomers}
                     getValue={(item) => item.id}
                     getLabel={(item) => `${item.firstName.trim()} ${item.lastName.trim()}`}
@@ -89,28 +88,16 @@ export default function PatientListPage() {
                 </div>
                 {data && data.data && data?.data.map((patient) => (
                     <div key={patient!.id} className="flex gap-4 pt-4 px-4 text-slate-700 dark:text-slate-300 border-b border-slate-300 hover:bg-slate-100 dark:hover:bg-slate-600">
-
-                        <button
-                            className="flex-2 flex items-center cursor-pointer"
+                        <AvatarInfo
+                            className="flex-2"
+                            avatar={patient!.avatar}
+                            name={patient!.firstName + " " + patient!.lastName}
+                            description={`Tel: ${patient!.phone}`}
                             onClick={() => {
                                 setCustomer(patient)
                                 openProfileInfo(true)
                             }}
-                        >
-                            {patient!.avatar ? (
-                                <img src={patient!.avatar} alt={`${patient!.firstName} ${patient!.lastName}`} className="w-10 h-10 rounded-full" />
-                            ) : (
-                                <div className="w-10 h-10 rounded-full p-2 bg-slate-300 flex items-center justify-center">
-                                    <User className="w-5 h-5 text-slate-600" />
-                                </div>
-                            )}
-                            <div className="ml-4">
-                                <p className="font-semibold text-primary">
-                                    {patient!.firstName} {patient!.lastName}
-                                </p>
-                                <p className="dark:text-slate-400">Tel: {patient!.phone}</p>
-                            </div>
-                        </button>
+                        />
                         <div className="flex-1">{patient!.age}</div>
                         {/*<div className="flex-1">{formatDateDDMMYYYY(patient!.lastVisit)}</div>
                     <div className="flex-1">{formatDateDDMMYYYY(patient!.nextAppointment)}</div>

@@ -1,17 +1,8 @@
 import { ArrowDownRight, ArrowUpRight } from "lucide-react"
+import type { CardModel } from "../../models/card.type"
 
 interface DashboardCardProps {
-    stat: {
-        title: string,
-        bgColor: string
-        textColor: string
-        iconColor: string
-        color: string
-        value: string
-        change: string
-        trend: string
-        icon: React.ElementType
-    }
+    stat: CardModel
 }
 
 export default function DashboardCard({ stat }: DashboardCardProps) {
@@ -21,7 +12,7 @@ export default function DashboardCard({ stat }: DashboardCardProps) {
                 <div className="flex-1">
                     <p className="text-sm font-medium text-shadow-amber-600 dark:text-shadow-amber-400 mb-2">{stat.title}</p>
                     <p className="text-3xl font-bold text-shadow-amber-800 dark:text-white mb-4">{stat.value}</p>
-                    <div className="flex items-center space-x-2">
+                    {stat.trend && <div className="flex items-center space-x-2">
                         {stat.trend === 'up' ? <ArrowUpRight className="w-4 h4 text-emerald-500" /> : <ArrowDownRight className="w-4 h-4 text-red-500" />}
                         <span className={`text-sm font-semibold ${stat.trend === 'up' ? 'text-emerald-500' : 'text-red-500'}`}>
                             {stat.change}
@@ -29,7 +20,7 @@ export default function DashboardCard({ stat }: DashboardCardProps) {
                         <span className="text-sm text-slate-500 dark:text-slate-400">
                             vs last month
                         </span>
-                    </div>
+                    </div>}
                 </div>
                 <div className={`p-3 rounded-xl ${stat.bgColor} group-hover:scale-110 transition-all duration-200`}>
                     {<stat.icon className={`w-6 h-6 ${stat.iconColor}`} />}

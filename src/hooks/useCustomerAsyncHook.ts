@@ -11,7 +11,7 @@ export const useCustomerAsyncHook = () => {
         hasMore,
         loadNextPage
     } = useAsyncDropdown<Customer>({
-        fetchData: ({search, page}) => CustomerService.getAllCustomers(page, search),
+        fetchData: ({search, page}) => CustomerService.getAllCustomers({page, search}),
         getValue: c => c.id,
         getLabel: c => `${c.firstName} ${c.lastName}`,
     });

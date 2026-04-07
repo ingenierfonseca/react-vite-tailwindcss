@@ -7,7 +7,7 @@ export const useAppointments = () => {
   const [data, setData] = useState<PaginatedResponse<Appointment> | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<any>(null);
-  const [currentPage, setCurrentPage] = useState(1)
+  const [currentPage] = useState(1)
 
   useEffect(() => {
     AppointmentService.getAllAppointments()

@@ -8,10 +8,12 @@ export const usePatient = () => {
     const [customer, setCustomer] = useState<Customer | null>(null)
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<any>(null);
+    const [search, setSearch] = useState<string>('')
+    const [currentPage] = useState<number>(1)
 
     const loadCustomers = async () => {
         setLoading(true)
-        CustomerService.getAllCustomers({ page: 1, search: '' })
+        CustomerService.getAllCustomers({ page: currentPage, search })
             .then(setData)
             .catch(setError)
             .finally(() => setLoading(false));
@@ -20,7 +22,7 @@ export const usePatient = () => {
 
     useEffect(() => {
         loadCustomers()
-    }, []);
+    }, [currentPage, search]);
 
     return {
         data,
@@ -28,6 +30,8 @@ export const usePatient = () => {
         error,
         customer,
         setCustomer,
-        loadCustomers
+        loadCustomers,
+        search,
+        setSearch
     };
 };

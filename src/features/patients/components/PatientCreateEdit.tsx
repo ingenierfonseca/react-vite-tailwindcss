@@ -1,4 +1,4 @@
-import { CircularProgress, TextField } from "@mui/material"
+import { TextField } from "@mui/material"
 import { useEffect, useRef, useState, type ChangeEvent } from "react"
 import type { Customer } from "../../../services/customer/customer.type"
 import { usePatientCreateEdit } from "../hooks/patient.create.hook"

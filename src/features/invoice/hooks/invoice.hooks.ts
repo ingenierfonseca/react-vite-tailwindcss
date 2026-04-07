@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import type { Paggination } from "../../../services/appointment/appointment.types";
 import { InvoiceService } from "../../../services/invoice/invoice.service";
 import type { Invoice } from "../../../services/invoice/invoice.types";
+import type { PaginatedResponse } from "../../../models/paginatedResponse";
 
 export const useInvoice = () => {
-    const [data, setData] = useState<Paggination<Invoice | null>>();
+    const [data, setData] = useState<PaginatedResponse<Invoice | null>>();
     const [invoice, setInvoice] = useState<Invoice | null>(null)
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<any>(null);

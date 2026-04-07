@@ -1,4 +1,4 @@
-import { Loader2, Plus } from "lucide-react";
+import { Plus } from "lucide-react";
 import { cn, theme } from "../../../utils/theme";
 import InvoiceHeader from "../components/InvoiceHeader";
 import { useNavigate } from "react-router";

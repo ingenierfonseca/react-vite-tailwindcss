@@ -112,7 +112,7 @@ export const useInvoiceDetail = () => {
         if (!inv?.customerId)
             return "Debe seleccionar un paciente";
 
-        if (!inv?.date)
+        if (!inv?.issueDate)
             return "Debe ingresar una fecha de emisión válida";
 
         if (!inv?.dueDate)
