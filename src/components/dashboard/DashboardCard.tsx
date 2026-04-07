@@ -3,9 +3,10 @@ import type { CardModel } from "../../models/card.type"
 
 interface DashboardCardProps {
     stat: CardModel
+    iconClassName?: string
 }
 
-export default function DashboardCard({ stat }: DashboardCardProps) {
+export default function DashboardCard({ stat, iconClassName }: DashboardCardProps) {
     return (
         <div className="flex-1 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl rounded-2xl p-6 border border-slate-200/50 dark:border-slate-700/50 hover:shadow-xl hover:shadow-slate-200/20 dark:hover:shadow-slate-900/20 transition-all duration-300 group">
             <div className="flex items-start justify-between">
@@ -22,7 +23,7 @@ export default function DashboardCard({ stat }: DashboardCardProps) {
                         </span>
                     </div>}
                 </div>
-                <div className={`p-3 rounded-xl ${stat.bgColor} group-hover:scale-110 transition-all duration-200`}>
+                <div className={`p-3 rounded-xl ${stat.bgColor} group-hover:scale-110 transition-all duration-200 ${iconClassName}`}>
                     {<stat.icon className={`w-6 h-6 ${stat.iconColor}`} />}
                 </div>
             </div>

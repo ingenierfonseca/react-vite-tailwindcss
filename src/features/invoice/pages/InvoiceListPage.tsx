@@ -5,8 +5,6 @@ import { CustomerService } from "../../../services/customer/customer.service";
 import DashboardCard from "../../../components/dashboard/DashboardCard";
 import AvatarInfo from "../../../components/commons/AvatarInfo";
 import { Receipt } from "lucide-react";
-import { Bounce } from "react-toastify";
-import { ToastContainer } from "react-toastify";
 import { useState } from "react";
 import PatientBillInfo from "../components/PatientBillInfo";
 import { useCustomerInvoice } from "../hooks/customerInvoice.hook";
@@ -119,20 +117,6 @@ export default function Invoice() {
             >
                 {isOpenProfileBillInfo && <PatientBillInfo customer={customer} setIsOpen={openProfileBillInfo} />}
             </div>
-
-            <ToastContainer
-                position="bottom-right"
-                autoClose={5000}
-                hideProgressBar={false}
-                newestOnTop={false}
-                closeOnClick={false}
-                rtl={false}
-                pauseOnFocusLoss
-                draggable
-                pauseOnHover
-                theme="light"
-                transition={Bounce}
-            />
         </PageComponent>
     )
 }

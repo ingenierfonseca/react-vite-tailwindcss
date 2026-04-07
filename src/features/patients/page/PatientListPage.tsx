@@ -1,5 +1,4 @@
 import { Calendar, PencilLine, User } from "lucide-react"
-import AddButtonApp from "../../../components/commons/AddButtonApp"
 import { PaginatedAutocomplete } from "../../../components/commons/PaginatedAutocomplete"
 import { CustomerService } from "../../../services/customer/customer.service"
 import DashboardCard from "../../../components/dashboard/DashboardCard"
@@ -7,9 +6,33 @@ import PatientProfile from "../components/PatientProfile"
 import { useState } from "react"
 import PatientCreate from "../components/PatientCreateEdit"
 import { usePatient } from "../hooks/patient.hook"
-import { Bounce, ToastContainer } from "react-toastify"
 import AvatarInfo from "../../../components/commons/AvatarInfo"
+import PageComponent from "../../../components/commons/PageComponent"
 
+const cardStats = [
+    {
+        title: "Total Patients",
+        value: "1,247",
+        change: "5%",
+        trend: "up",
+        bgColor: "bg-primary/20",
+        iconColor: "text-primary",
+        textColor: "text-blue-500",
+        color: "from-blue-400 to-blue-600",
+        icon: User
+    },
+    {
+        title: "Active Patients",
+        value: "892",
+        change: "5%",
+        trend: "up",
+        bgColor: "bg-primary/20",
+        iconColor: "text-primary",
+        textColor: "text-emerald-500",
+        color: "from-emerald-400 to-emerald-600",
+        icon: User
+    }
+]
 const headers = [
     'Patient', 'Age', /*'Last Visit', 'Next Appointment', 'Balance Due',*/ 'Actions'
 ]
@@ -28,43 +51,22 @@ export default function PatientListPage() {
         setIsOpenCreateOrEdit(value)
     }
     return (
-        <div className="relative min-h-screen p-4 bg-white dark:bg-slate-900">
-            <div className="flex">
-                <div>
-                    <h1 className="text-2xl font-bold text-slate-800 dark:text-white">Administracion de Pacientes</h1>
-                    <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">Administra la información de tus pacientes</p>
-                </div>
-                <div className="ml-auto">
-                    <AddButtonApp onclick={() => {
-                        setCustomer(null)
-                        openCreate(true)
-                    }} label="Agregar Nuevo Paciente" />
-                </div>
-            </div>
+        <PageComponent
+            title="Administración de Pacientes"
+            description="Administra la información de tus pacientes"
+            textButton="Agregar Nuevo Paciente"
+            onclick={() => {
+                setCustomer(null)
+                openCreate(true)
+            }}>
 
-            <div className="flex gap-8">
-                <DashboardCard stat={{
-                    title: "Total Patients",
-                    value: "1,247",
-                    change: "5%",
-                    trend: "up",
-                    bgColor: "bg-primary/20",
-                    iconColor: "text-primary",
-                    textColor: "text-blue-500",
-                    color: "from-blue-400 to-blue-600",
-                    icon: User
-                }} />
-                <DashboardCard stat={{
-                    title: "Active Patients",
-                    value: "892",
-                    change: "5%",
-                    trend: "up",
-                    bgColor: "bg-primary/20",
-                    iconColor: "text-primary",
-                    textColor: "text-emerald-500",
-                    color: "from-emerald-400 to-emerald-600",
-                    icon: User
-                }} />
+            <div className="grid grid-cols-[repeat(auto-fit,minmax(80px,1fr))] gap-4">
+                {cardStats.map((stat, index) => (
+                    <DashboardCard
+                        key={index}
+                        iconClassName={'hidden md:block'}
+                        stat={stat} />
+                ))}
             </div>
 
             <div className="mt-4 bg-white dark:bg-slate-800 rounded-lg shadow-md p-4">
@@ -127,20 +129,6 @@ export default function PatientListPage() {
                 {isOpenProfileInfo && <PatientProfile setIsOpen={openProfileInfo} customer={customer!} />}
                 {isOpenCreateOrEdit && <PatientCreate setIsOpen={openCreate} customerParam={customer!} reload={loadCustomers} />}
             </div>
-
-            <ToastContainer
-                position="bottom-right"
-                autoClose={5000}
-                hideProgressBar={false}
-                newestOnTop={false}
-                closeOnClick={false}
-                rtl={false}
-                pauseOnFocusLoss
-                draggable
-                pauseOnHover
-                theme="light"
-                transition={Bounce}
-            />
-        </div>
+        </PageComponent>
     )
 }

@@ -1,4 +1,5 @@
-import AddButtonApp from "./AddButtonApp"
+import { Bounce, ToastContainer } from "react-toastify"
+import AddButtonApp, { FloatingAddButton } from "./AddButtonApp"
 
 interface PageComponentProps {
     title: string,
@@ -15,11 +16,25 @@ export default function PageComponent({ title, description, textButton, onclick,
                     <h1 className="text-2xl font-bold text-slate-800 dark:text-white">{title}</h1>
                     <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">{description}</p>
                 </div>
-                <div className="ml-auto">
+                <div className="hidden md:block ml-auto">
                     <AddButtonApp onclick={onclick} label={textButton} />
                 </div>
             </div>
             {children}
+            <FloatingAddButton onclick={onclick} label={textButton} />
+            <ToastContainer
+                position="bottom-right"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick={false}
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="light"
+                transition={Bounce}
+            />
         </div>
     )
 }
