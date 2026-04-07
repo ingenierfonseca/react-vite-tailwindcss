@@ -20,11 +20,9 @@ export function FloatingAddButton({ label, onclick }: AddButtonAppProps) {
         <button
             onClick={onclick}
             className="flex md:hidden fixed items-center justify-center bottom-5 left-1/2 -translate-x-1/2 
-             w-[80%] py-3 rounded-2xl 
-             bg-gradient-to-r from-pink-500 to-purple-600 
-             text-white font-semibold text-sm
-             shadow-xl z-50
-             hover:scale-[1.02] active:scale-[0.98] transition">
+            z-0 w-[80%] py-3 rounded-2xl text-white font-semibold text-sm
+            bg-linear-to-r from-pink-500 to-purple-600  shadow-xl
+            hover:scale-[1.02] active:scale-[0.98] transition">
             <Plus className="mr-2" />
             {label}
         </button>

@@ -29,6 +29,21 @@ export interface InvoiceItem {
     lineTotal: number
 }
 
+export interface InvoiceInfoDTO {
+    id: number
+    number: string
+    issueDate: string
+    dueDate: string
+    subTotal: number
+    taxTotal: number
+    discountTotal: number
+    total: number
+    currency: string
+    status: string
+    paymentTerm: string
+    statusId: number
+}
+
 export const getInitialInvoice = (): Invoice => ({
     id: 0,
     customerId: 0,

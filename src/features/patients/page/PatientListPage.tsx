@@ -83,7 +83,10 @@ export default function PatientListPage() {
             <div className="mt-4 bg-white dark:bg-slate-800 rounded-lg shadow-md">
                 <div className="flex gap-4 mt-4 px-4 pt-4 bg-slate-100 dark:bg-slate-700/50">
                     {headers.map((header) => (
-                        <div key={header} className={`${header === 'Patient' ? 'flex-2' : 'flex-1'} font-semibold text-slate-700 dark:text-slate-100`}>
+                        <div key={header} className={`
+                            ${header === 'Patient' ? 'flex-2' : ''}
+                            ${header === 'Age' ? 'flex-1 hidden md:block' : ''}
+                            ${header === 'Actions' ? 'flex-1 text-right' : ''} font-semibold text-slate-700 dark:text-slate-100`}>
                             {header}
                         </div>
                     ))}
@@ -100,11 +103,11 @@ export default function PatientListPage() {
                                 openProfileInfo(true)
                             }}
                         />
-                        <div className="flex-1">{patient!.age}</div>
+                        <div className="flex-1 hidden md:block">{patient!.age}</div>
                         {/*<div className="flex-1">{formatDateDDMMYYYY(patient!.lastVisit)}</div>
                     <div className="flex-1">{formatDateDDMMYYYY(patient!.nextAppointment)}</div>
                     <div className="flex-1">${patient!.balanceDue.toFixed(2)}</div>*/}
-                        <div className="flex-1">
+                        <div className="flex-1 flex justify-end items-center gap-2">
                             <button className="bg-primary/20 p-1 text-primary px-2 rounded-sm hover:bg-primary/30">
                                 <Calendar />
                             </button>
@@ -122,7 +125,7 @@ export default function PatientListPage() {
             </div>
 
             <div
-                className={`fixed top-0 right-0 h-full w-7/12 bg-white dark:bg-slate-800 shadow-2xl z-50 
+                className={`fixed top-0 right-0 h-full md:w-7/12 bg-white dark:bg-slate-800 shadow-2xl z-50 
                 transform transition-transform duration-500 ease-in-out ${isOpenTransitionRight ? 'translate-x-0' : 'translate-x-full'
                     }`}
             >

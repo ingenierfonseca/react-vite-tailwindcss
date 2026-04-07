@@ -10,7 +10,7 @@ interface PageComponentProps {
 }
 export default function PageComponent({ title, description, textButton, onclick, children }: PageComponentProps) {
     return (
-        <div className="relative min-h-screen p-4 bg-white dark:bg-slate-900">
+        <div className="relative min-h-screen p-4 z-20 bg-white dark:bg-slate-900">
             <div className="flex">
                 <div>
                     <h1 className="text-2xl font-bold text-slate-800 dark:text-white">{title}</h1>

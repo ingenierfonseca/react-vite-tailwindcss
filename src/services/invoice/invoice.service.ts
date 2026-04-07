@@ -29,5 +29,9 @@ export const InvoiceService = {
     getInvoicesByCustomer: async (id:number) => {
         const { data } = await api.get(`${method}customer/${id}`);
         return data;
+    },
+    getPaymentHistoryByCustomer: async (id:number) => {
+        const { data } = await api.get(`${method}customer/${id}/payments`);
+        return data;
     }
 };

@@ -51,7 +51,7 @@ export default function Invoice() {
                     textColor: "text-blue-500",
                     color: "from-blue-400 to-blue-600",
                     icon: Receipt
-                }} />
+                }} iconClassName="hidden md:block" />
                 <DashboardCard stat={{
                     title: "Total Facturas Pagadas",
                     value: "80",
@@ -60,7 +60,7 @@ export default function Invoice() {
                     textColor: "text-emerald-500",
                     color: "from-emerald-400 to-emerald-600",
                     icon: Receipt
-                }} />
+                }} iconClassName="hidden md:block"/>
             </div>
             <div className="mt-4 bg-white dark:bg-slate-800 rounded-lg shadow-md p-4">
                 <PaginatedAutocomplete
@@ -88,10 +88,10 @@ export default function Invoice() {
                             }}
                         />
                         <div className="ml-auto">
-                            <p className={`text-4xl font-semibold ${getColorByPendingCount(customer!)}`}>
+                            <p className={`text-2xl md:text-4xl font-semibold ${getColorByPendingCount(customer!)}`}>
                                 {customer?.currencyId ? customer.currencyId : 'C$'}{formatNumber(customer!.balance)}
                             </p>
-                            <p className="text-lg text-slate-600 dark:text-slate-400">Saldo Pendiente</p>
+                            <p className="md:text-lg text-slate-600 dark:text-slate-400">Saldo Pendiente</p>
                         </div>
                     </div>
                     <div className="flex w-full px-4">
@@ -111,7 +111,7 @@ export default function Invoice() {
             ))}
 
             <div
-                className={`fixed top-0 right-0 h-full w-7/12 bg-white dark:bg-slate-800 shadow-2xl z-50 
+                className={`fixed top-0 right-0 h-full md:w-7/12 bg-white dark:bg-slate-800 shadow-2xl z-50 
                             transform transition-transform duration-500 ease-in-out ${isOpenTransitionRight ? 'translate-x-0' : 'translate-x-full'
                     }`}
             >
