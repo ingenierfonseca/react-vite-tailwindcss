@@ -5,6 +5,6 @@ export type Action =
     | { type: 'FETCH_SUCCESS'; payload: Invoice }
     | { type: 'FETCH_ERROR'; payload: any }
     | { type: 'UPDATE_FIELD'; payload: { field: keyof Invoice; value: any } }
-    | { type: 'ADD_ITEM' }
+    | { type: 'ADD_ITEM'; payload?: InvoiceItem }
     | { type: 'REMOVE_ITEM'; payload: number }
     | { type: 'UPDATE_ITEM'; payload: { index: number; field: keyof InvoiceItem; value: any } };

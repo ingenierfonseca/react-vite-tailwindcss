@@ -91,11 +91,11 @@ export default function Invoice() {
                             }}
                         />
                         <div className="ml-auto w-fit">
-                            {customer && customer.balances.map((balance => (
-                                <p className={`text-2xl md:text-3xl font-semibold ${getColorByPendingCount(customer!)} flex justify-end`}>
+                            {customer && customer.balances.map((balance, index) => (
+                                <p key={index} className={`text-2xl md:text-3xl font-semibold ${getColorByPendingCount(customer!)} flex justify-end`}>
                                     {balance.symbol}{formatNumber(balance.amount)}
                                 </p>
-                            )))}
+                            ))}
                             <p className="md:text-lg text-slate-600 dark:text-slate-400 flex justify-end">Deuda  Total</p>
                         </div>
                     </div>
@@ -116,7 +116,7 @@ export default function Invoice() {
             ))}
 
             <div
-                className={`fixed top-0 right-0 h-full md:w-7/12 bg-white dark:bg-slate-800 shadow-2xl z-50        
+                className={`fixed top-0 right-0 h-full w-full md:w-7/12 bg-white dark:bg-slate-800 shadow-2xl z-50        
                     transform transition-transform duration-500 ease-in-out 
                     ${isOpenTransitionRight ? 'translate-x-0' : 'translate-x-full'
                 }`}

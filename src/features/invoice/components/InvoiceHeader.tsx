@@ -77,17 +77,17 @@ export default function InvoiceHeader({invoice, disabled, updateField}: InvoiceH
                     data={moneys} value={invoice ? invoice.currencyId : 1}
                     onChange={(val) => updateField("currencyId", val)} />
             </div>
-            <div className="flex gap-8 mt-4">
+            <div className="flex flex-col md:flex-row gap-8 mt-4">
                 <DatePicker
                     className="flex-1"
                     label="Vencimiento"
                     value={invoice?.dueDate ? dayjs(invoice.dueDate) : null}
                     onChange={(val) => updateField("dueDate", val)}
                 />
-                <DropDownApp title="Estado" 
-                    data={getInvoiceStatusOptions()} value={invoice ? invoice.statusId : 1}
+                {invoice && invoice.number && <DropDownApp title="Estado" 
+                    data={getInvoiceStatusOptions()} value={invoice.statusId}
                     onChange={(value) => updateField("statusId", value)}
-                />
+                />}
             </div>
         </fieldset>
     )

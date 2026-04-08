@@ -15,9 +15,15 @@ export function invoiceReducer(state: State, action: Action): State {
             return { ...state, invoice: { ...state.invoice, [action.payload.field]: action.payload.value } };
         case 'ADD_ITEM':
             const currentInvoice = state.invoice || getInitialInvoice();
+
+            // Si action.payload existe, usamos ese. Si no, usamos el default.
+            const newItem = action.payload ? action.payload : getInitialInvoiceItem();
             return {
                 ...state,
-                invoice: { ...currentInvoice, items: [...currentInvoice.items, getInitialInvoiceItem()] }
+                invoice: {
+                    ...currentInvoice, 
+                    items: [...currentInvoice.items, newItem]
+                }
             };
         case 'REMOVE_ITEM':
             if (!state.invoice) return state;

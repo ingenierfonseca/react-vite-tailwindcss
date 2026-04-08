@@ -1,6 +1,6 @@
-import { useEffect, useReducer } from "react";
+import { useEffect, useReducer, useState } from "react";
 import { useParams } from "react-router";
-import { getInitialInvoice, type Invoice, type InvoiceItem } from "../../../services/invoice/invoice.types";
+import { getInitialInvoice, getInitialInvoiceItem, type Invoice, type InvoiceItem } from "../../../services/invoice/invoice.types";
 import { InvoiceService } from "../../../services/invoice/invoice.service";
 import { invoiceReducer } from "../state/invoice.reducer";
 import { toast } from "react-toastify";
@@ -18,6 +18,7 @@ export const useInvoiceDetail = () => {
         loading: true,
         error: null
     });
+    const [itemInvoice] = useState<InvoiceItem>(getInitialInvoiceItem());
 
     /*const [customers, setCustomers] = useState<Paggination<Customer | null>>();
     /*const customerOptions = mapToDropdown(
@@ -45,7 +46,24 @@ export const useInvoiceDetail = () => {
     }, [id]);
 
     // Helpers que envuelven el dispatch
-    const handleAddItem = () => dispatch({ type: 'ADD_ITEM' });
+    //const handleAddItem = () => dispatch({ type: 'ADD_ITEM' });
+
+    const handleAddNewItem = () => {
+        dispatch({ 
+            type: 'ADD_ITEM',
+            payload: {
+                id: itemInvoice.id,
+                productId: itemInvoice.productId,
+                serviceId: itemInvoice.serviceId,
+                description: itemInvoice.description,
+                quantity: itemInvoice.quantity,
+                unitPrice: itemInvoice.unitPrice,
+                tax: itemInvoice.tax,
+                discount: itemInvoice.discount,
+                lineTotal: itemInvoice.lineTotal
+            }
+        });
+    }
     
     const handleRemoveItem = (index: number) => {
         if (state.invoice && state.invoice.items.length <= 1) {
@@ -143,12 +161,13 @@ export const useInvoiceDetail = () => {
 
     return {
         ...state,
-        handleAddItem,
+        handleAddNewItem,
         handleRemoveItem,
         onChangeItem,
         updateField,
         calculateLineTotal,
         calculateTotal,
-        saveInvoice
+        saveInvoice,
+        itemInvoice
     };
 };

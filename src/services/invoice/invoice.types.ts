@@ -60,7 +60,7 @@ export const getInitialInvoice = (): Invoice => ({
     statusId: 1,
     createdBy: '',
     paymentTermId: 1,
-    items: [getInitialInvoiceItem()]
+    items: []
 });
 
 export const getInitialInvoiceItem = (): InvoiceItem => ({
