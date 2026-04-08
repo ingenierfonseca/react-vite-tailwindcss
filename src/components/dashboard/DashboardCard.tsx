@@ -14,8 +14,8 @@ export default function DashboardCard({ stat, iconClassName }: DashboardCardProp
                     <p className="text-sm font-medium text-shadow-amber-600 dark:text-shadow-amber-400 mb-2">{stat.title}</p>
                     <p className="text-3xl font-bold text-shadow-amber-800 dark:text-white mb-4">{stat.value}</p>
                     {stat.trend && <div className="flex items-center space-x-2">
-                        {stat.trend === 'up' ? <ArrowUpRight className="w-4 h4 text-emerald-500" /> : <ArrowDownRight className="w-4 h-4 text-red-500" />}
-                        <span className={`text-sm font-semibold ${stat.trend === 'up' ? 'text-emerald-500' : 'text-red-500'}`}>
+                        {stat.trend === 'Up' ? <ArrowUpRight className="w-4 h4 text-emerald-500" /> : <ArrowDownRight className="w-4 h-4 text-red-500" />}
+                        <span className={`text-sm font-semibold ${stat.trend === 'Up' ? 'text-emerald-500' : 'text-red-500'}`}>
                             {stat.change}
                         </span>
                         <span className="text-sm text-slate-500 dark:text-slate-400">

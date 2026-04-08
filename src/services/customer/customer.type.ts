@@ -11,6 +11,13 @@ export interface Customer {
     avatar?: string
 }
 
+export interface CustomerDashboard {
+    title: string
+    value: string
+    trend: string
+    change: string
+}
+
 
 export interface CustomerFormData {
     id: number

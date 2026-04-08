@@ -8,7 +8,6 @@ export type State = {
 };
 
 export const InvoiceStatus = Object.freeze({
-    DRAFT: 0,
     PENDING: 1,
     PAID: 2,
     OVERDUE: 3,
@@ -18,7 +17,6 @@ export const InvoiceStatus = Object.freeze({
 });
 
 export const InvoiceStatusLabels = {
-    [InvoiceStatus.DRAFT]: "Borrador",
     [InvoiceStatus.PENDING]: "Pendiente",
     [InvoiceStatus.PAID]: "Pagada",
     [InvoiceStatus.OVERDUE]: "Vencida",

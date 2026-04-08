@@ -3,5 +3,5 @@ export interface Payment {
     amount: number
     invoiceNumber: string
     date: string
-    paymentMethodId: number
+    paymentTypeName: string
 }

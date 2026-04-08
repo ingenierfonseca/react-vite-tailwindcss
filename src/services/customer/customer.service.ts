@@ -4,6 +4,10 @@ import type { Customer } from "./customer.type";
 
 const method = `/customers/`
 export const CustomerService = {
+    getDashboard: async () => {
+        const { data } = await api.get(`${method}${`dashboard`}`);
+        return data;
+    },
     getAllCustomers: async ({
         page,
         search

@@ -1,4 +1,3 @@
-import { useNavigate } from "react-router";
 import PageComponent from "../../../components/commons/PageComponent";
 import { PaginatedAutocomplete } from "../../../components/commons/PaginatedAutocomplete";
 import { CustomerService } from "../../../services/customer/customer.service";
@@ -10,28 +9,36 @@ import PatientBillInfo from "../components/PatientBillInfo";
 import { useCustomerInvoice } from "../hooks/customerInvoice.hook";
 import { formatNumber } from "../../../utils/number.util";
 import type { CustomerInvoiceDTO } from "../../../services/invoice/customerinvoice.dto.type";
-
-/*const headers = [
-    '#',
-    'invoice number',
-    'patient name',
-    'subtotal',
-    'tax',
-    'total',
-    'date',
-    'status',
-    'action'
-]*/
+import InvoiceDetail from "../components/InvoiceDetail";
 
 export default function Invoice() {
-    const { data, customer, setCustomer } = useCustomerInvoice()
+    const { data, dashboardData, customer, setCustomer } = useCustomerInvoice()
     const [isOpenTransitionRight, setIsOpenTransitionRight] = useState(false)
     const [isOpenProfileBillInfo, setIsOpenProfileBillInfo] = useState(false)
-    const navigate = useNavigate();
+    const [isOpenMakeInvoice, setIsOpenMakeInvoice] = useState(false)
 
     function openProfileBillInfo(value: boolean) {
-        setIsOpenTransitionRight(value)
-        setIsOpenProfileBillInfo(value)
+        if (value) {
+            setIsOpenProfileBillInfo(true);
+            setIsOpenTransitionRight(true);
+        } else {
+            setIsOpenTransitionRight(false);
+            setTimeout(() => {
+                setIsOpenProfileBillInfo(false);
+            }, 500); 
+        }
+    }
+
+    function openMakeInvoice(value: boolean) {
+        if (value) {
+            setIsOpenMakeInvoice(true);
+            setIsOpenTransitionRight(true);
+        } else {
+            setIsOpenTransitionRight(false);
+            setTimeout(() => {
+                setIsOpenMakeInvoice(false);
+            }, 500);
+        }
     }
 
 
@@ -40,27 +47,23 @@ export default function Invoice() {
             title="Facturas"
             description="Administra la información de tus facturas"
             textButton="Agregar Nueva Factura"
-            onclick={() => navigate(`/invoice/0`)}
+            onclick={() => openMakeInvoice(true)}
         >
             <div className="flex gap-8">
-                <DashboardCard stat={{
-                    title: "Total Facturas Pendientes",
-                    value: "12",
-                    bgColor: "bg-primary/20",
-                    iconColor: "text-primary",
-                    textColor: "text-blue-500",
-                    color: "from-blue-400 to-blue-600",
-                    icon: Receipt
-                }} iconClassName="hidden md:block" />
-                <DashboardCard stat={{
-                    title: "Total Facturas Pagadas",
-                    value: "80",
-                    bgColor: "bg-primary/20",
-                    iconColor: "text-primary",
-                    textColor: "text-emerald-500",
-                    color: "from-emerald-400 to-emerald-600",
-                    icon: Receipt
-                }} iconClassName="hidden md:block"/>
+                {dashboardData && dashboardData.map((dashboard, index) => (
+                    <DashboardCard
+                        key={index}
+                        stat={{
+                            title: dashboard.title,
+                            value: dashboard.value,
+                            bgColor: "bg-primary/20",
+                            iconColor: "text-primary",
+                            textColor: "text-blue-500",
+                            color: "from-blue-400 to-blue-600",
+                            icon: Receipt
+                        }}
+                        iconClassName="hidden md:block" />
+                ))}
             </div>
             <div className="mt-4 bg-white dark:bg-slate-800 rounded-lg shadow-md p-4">
                 <PaginatedAutocomplete
@@ -87,11 +90,13 @@ export default function Invoice() {
                                 openProfileBillInfo(true)
                             }}
                         />
-                        <div className="ml-auto">
-                            <p className={`text-2xl md:text-4xl font-semibold ${getColorByPendingCount(customer!)}`}>
-                                {customer?.currencyId ? customer.currencyId : 'C$'}{formatNumber(customer!.balance)}
-                            </p>
-                            <p className="md:text-lg text-slate-600 dark:text-slate-400">Saldo Pendiente</p>
+                        <div className="ml-auto w-fit">
+                            {customer && customer.balances.map((balance => (
+                                <p className={`text-2xl md:text-3xl font-semibold ${getColorByPendingCount(customer!)} flex justify-end`}>
+                                    {balance.symbol}{formatNumber(balance.amount)}
+                                </p>
+                            )))}
+                            <p className="md:text-lg text-slate-600 dark:text-slate-400 flex justify-end">Deuda  Total</p>
                         </div>
                     </div>
                     <div className="flex w-full px-4">
@@ -111,11 +116,13 @@ export default function Invoice() {
             ))}
 
             <div
-                className={`fixed top-0 right-0 h-full md:w-7/12 bg-white dark:bg-slate-800 shadow-2xl z-50 
-                            transform transition-transform duration-500 ease-in-out ${isOpenTransitionRight ? 'translate-x-0' : 'translate-x-full'
-                    }`}
+                className={`fixed top-0 right-0 h-full md:w-7/12 bg-white dark:bg-slate-800 shadow-2xl z-50        
+                    transform transition-transform duration-500 ease-in-out 
+                    ${isOpenTransitionRight ? 'translate-x-0' : 'translate-x-full'
+                }`}
             >
                 {isOpenProfileBillInfo && <PatientBillInfo customer={customer} setIsOpen={openProfileBillInfo} />}
+                {isOpenMakeInvoice && <InvoiceDetail setIsOpen={openMakeInvoice} />}
             </div>
         </PageComponent>
     )

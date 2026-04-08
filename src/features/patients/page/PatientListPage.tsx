@@ -9,46 +9,35 @@ import { usePatient } from "../hooks/patient.hook"
 import AvatarInfo from "../../../components/commons/AvatarInfo"
 import PageComponent from "../../../components/commons/PageComponent"
 
-const cardStats = [
-    {
-        title: "Total Patients",
-        value: "1,247",
-        change: "5%",
-        trend: "up",
-        bgColor: "bg-primary/20",
-        iconColor: "text-primary",
-        textColor: "text-blue-500",
-        color: "from-blue-400 to-blue-600",
-        icon: User
-    },
-    {
-        title: "Active Patients",
-        value: "892",
-        change: "5%",
-        trend: "up",
-        bgColor: "bg-primary/20",
-        iconColor: "text-primary",
-        textColor: "text-emerald-500",
-        color: "from-emerald-400 to-emerald-600",
-        icon: User
-    }
-]
 const headers = [
-    'Patient', 'Age', /*'Last Visit', 'Next Appointment', 'Balance Due',*/ 'Actions'
+    'Paciente', 'Edad', /*'Last Visit', 'Next Appointment', 'Balance Due',*/ 'Acciones'
 ]
 export default function PatientListPage() {
-    const { data, customer, setCustomer, loadCustomers, search, setSearch } = usePatient()
+    const { data, dashboardData, customer, setCustomer, loadCustomers, search, setSearch } = usePatient()
     const [isOpenTransitionRight, setIsOpenTransitionRight] = useState(false)
     const [isOpenProfileInfo, setIsOpenProfileInfo] = useState(false)
     const [isOpenCreateOrEdit, setIsOpenCreateOrEdit] = useState(false)
 
     function openProfileInfo(value: boolean) {
-        setIsOpenTransitionRight(value)
-        setIsOpenProfileInfo(value)
+        if (value) {
+            setIsOpenTransitionRight(value)
+            setIsOpenProfileInfo(value)
+        } else {
+            setIsOpenTransitionRight(false)
+            setTimeout(() => {                setIsOpenProfileInfo(false)
+            }, 500);
+        }
     }
     function openCreate(value: boolean) {
+        if (value) {
         setIsOpenTransitionRight(value)
         setIsOpenCreateOrEdit(value)
+        } else {
+            setIsOpenTransitionRight(false)
+            setTimeout(() => {
+                setIsOpenCreateOrEdit(false)
+            }, 500);
+        }
     }
     return (
         <PageComponent
@@ -61,11 +50,21 @@ export default function PatientListPage() {
             }}>
 
             <div className="grid grid-cols-[repeat(auto-fit,minmax(80px,1fr))] gap-4">
-                {cardStats.map((stat, index) => (
+                {dashboardData && dashboardData.map((dashboard, index) => (
                     <DashboardCard
                         key={index}
-                        iconClassName={'hidden md:block'}
-                        stat={stat} />
+                        iconClassName={`${dashboardData.length > 1 ? "hidden md:block" : ""}`}
+                        stat= {{
+                            title: dashboard.title,
+                            value: dashboard.value,
+                            change: dashboard.change,
+                            trend: dashboard.trend,
+                            bgColor: "bg-primary/20",
+                            iconColor: "text-primary",
+                            textColor: "text-blue-500",
+                            color: "from-blue-400 to-blue-600",
+                            icon: User
+                        }} />
                 ))}
             </div>
 
@@ -84,9 +83,9 @@ export default function PatientListPage() {
                 <div className="flex gap-4 mt-4 px-4 pt-4 bg-slate-100 dark:bg-slate-700/50">
                     {headers.map((header) => (
                         <div key={header} className={`
-                            ${header === 'Patient' ? 'flex-2' : ''}
-                            ${header === 'Age' ? 'flex-1 hidden md:block' : ''}
-                            ${header === 'Actions' ? 'flex-1 text-right' : ''} font-semibold text-slate-700 dark:text-slate-100`}>
+                            ${header === 'Paciente' ? 'flex-2' : ''}
+                            ${header === 'Edad' ? 'flex-1 hidden md:block' : ''}
+                            ${header === 'Acciones' ? 'flex-1 text-right' : ''} font-semibold text-slate-700 dark:text-slate-100`}>
                             {header}
                         </div>
                     ))}

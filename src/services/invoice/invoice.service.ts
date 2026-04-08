@@ -5,13 +5,17 @@ import type { Invoice } from "./invoice.types";
 
 const method = `/invoice/`
 export const InvoiceService = {
+    getDashboard: async () => {
+        const { data } = await api.get(`${method}dashboard`);
+        return data;
+    },
     getCustomerIvoicesDashboard: async ({
         page,
         search
     }: { 
         page: number; search: string
      }): Promise<PaginatedResponse<CustomerInvoiceDTO>> => {
-        const { data } = await api.get(`${method}dashboard?pageNumber=${page}${search ? `&search=${search}` : ''}`);
+        const { data } = await api.get(`${method}dashboard-customers?pageNumber=${page}${search ? `&search=${search}` : ''}`);
         return data;
     },
     getAllInvoicess: async () => {

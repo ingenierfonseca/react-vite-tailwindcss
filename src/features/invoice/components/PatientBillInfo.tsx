@@ -38,7 +38,7 @@ export default function PatientBillInfo({ customer, setIsOpen }: PatientBillInfo
 
             <p className="text-2xl font-semibold text-black dark:text-slate-200">Lista de Facturas</p>
             {invoiceData && invoiceData.map((invoice) => (
-                <div key={invoice.id} className="flex justify-between items-center mt-4 p-4 bg-white dark:bg-slate-800 border-b-2 border-slate-300">
+                <div key={invoice.id} className="flex justify-between items-center mt-4 p-4 bg-white dark:bg-slate-800 border-b-2 dark:border-slate-700">
                     <div>
                         <p className="font-bold text-lg text-black dark:text-slate-200">{invoice.number}</p>
                         <p className="text-sm text-slate-600 dark:text-slate-400">{invoice.dueDate}</p>
@@ -54,10 +54,10 @@ export default function PatientBillInfo({ customer, setIsOpen }: PatientBillInfo
 
             <p className="text-2xl mt-28 font-semibold text-black dark:text-slate-200">Historial de Pago</p>
             {paymentHistoryData && paymentHistoryData.length > 0 && paymentHistoryData.map((payment) => (
-                <div key={payment.id} className="flex justify-between items-center mt-4 p-4 bg-white dark:bg-slate-800 border-b-2 border-slate-300">
+                <div key={payment.id} className="flex justify-between items-center mt-4 p-4 bg-white dark:bg-slate-800 border-b-2 dark:border-slate-700">
                     <div>
                         <p className="font-bold text-lg text-black dark:text-slate-200">C${payment.amount.toFixed(2)}</p>
-                        <p className="text-sm text-slate-600 dark:text-slate-400">{payment.paymentMethodId}</p>
+                        <p className="text-lg text-slate-600 dark:text-slate-400">{payment.paymentTypeName}</p>
                     </div>
                     <div>
                         <p className="font-semibold text-lg text-black dark:text-slate-200">{payment.date}</p>
@@ -65,6 +65,13 @@ export default function PatientBillInfo({ customer, setIsOpen }: PatientBillInfo
                     </div>
                 </div>
             ))}
+
+            <div className="mt-28 rounded-md p-2 border dark:border-slate-300">
+                <p className="font-semibold text-black dark:text-white">Acciones Rapidas</p>
+                <div className="grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-4 mt-4">
+                    <button className="flex-1 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">Agendar Pago</button>
+                </div>
+            </div>
         </PageRightComponent>
     )
 }

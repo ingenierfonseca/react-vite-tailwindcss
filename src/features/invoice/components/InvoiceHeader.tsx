@@ -38,11 +38,7 @@ interface InvoiceHeaderProps {
 export default function InvoiceHeader({invoice, disabled, updateField}: InvoiceHeaderProps) {
     return (
         <fieldset disabled={disabled} className="px-4 py-3">
-            <p className="text-black text-xl font-bold px-2 dark:text-slate-100">
-                {invoice != null && invoice!.number !== '' ? "Factura " + invoice!.number : "Nueva Factura"}
-            </p>
-            <div className="w-full h-0.5 bg-slate-200 mt-2 dark:bg-slate-600" />
-            <div className="flex gap-8 mt-4">
+            <div className="flex flex-col md:flex-row gap-8 mt-4">
                 <PaginatedAutocomplete
                     label="Paciente"
                     value={invoice ? invoice.customerId : undefined}
@@ -60,7 +56,7 @@ export default function InvoiceHeader({invoice, disabled, updateField}: InvoiceH
                     onChange={(val) => updateField("issueDate", val)}
                 />
             </div>
-            <div className="flex gap-8 mt-6">
+            <div className="flex flex-col md:flex-row gap-8 mt-6">
                 <TextField
                     className="flex-1"
                     label="Numero de Factura" 
@@ -76,7 +72,10 @@ export default function InvoiceHeader({invoice, disabled, updateField}: InvoiceH
                     data={paymentTerns} 
                     value={1} 
                 />
-                <DropDownApp title="Moneda" data={moneys} value={1} />
+                <DropDownApp 
+                    title="Moneda" 
+                    data={moneys} value={invoice ? invoice.currencyId : 1}
+                    onChange={(val) => updateField("currencyId", val)} />
             </div>
             <div className="flex gap-8 mt-4">
                 <DatePicker
