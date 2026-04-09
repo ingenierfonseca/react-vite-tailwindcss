@@ -24,7 +24,7 @@ interface PaymentModalProps {
 }
 
 export default function PaymentModal({ customer, isModalOpen, setIsModalOpen, onClick }: PaymentModalProps) {
-    const { invoiceData, invoice, payment, onUpdateField, setCustomer, setInvoice } = useQuickPayment();
+    const { invoiceData, invoice, payment, error, onUpdateField, setCustomer, setInvoice, registerPayment } = useQuickPayment();
 
     useEffect(() => {
         if (customer) {
@@ -46,10 +46,15 @@ export default function PaymentModal({ customer, isModalOpen, setIsModalOpen, on
             }}
             title="Información del Pago"
             textBtnConfirm="Agregar"
-            clickBtnConfirm={() => {
+            clickBtnConfirm={async () => {
                 if (validateFields(payment, invoice!)) {
-                    onClick()
-                    setIsModalOpen(false)
+                    await registerPayment();
+                    if (error) {
+                        toast.error("Error al registrar el pago: " + error.message);
+                    } else {
+                        onClick()
+                        setIsModalOpen(false)
+                    }
                 }
             }}>
             <div className="space-y-4">
@@ -105,7 +110,7 @@ const validateFields = (item: Payment, invoice: InvoiceInfoDTO) => {
         return false;
     }
     if (amount > invoice.total) {
-        toast.error("El monto no puede ser mayor al saldo pendiente de la factura");
+        toast.error("El monto excede al saldo pendiente de la factura");
         return false;
     }
 

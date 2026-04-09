@@ -3,6 +3,7 @@ import { InvoiceService } from "../../../services/invoice/invoice.service";
 import type { CustomerInvoiceDTO } from "../../../services/invoice/customerinvoice.dto.type";
 import type { InvoiceInfoDTO } from "../../../services/invoice/invoice.types";
 import type { Payment } from "../../../services/payment/payment.type";
+import { PaymentService } from "../../../services/payment/payment.service";
 
 export const useQuickPayment = () => {
     const [invoiceData, setInvoiceData] = useState<InvoiceInfoDTO[]>();
@@ -15,6 +16,7 @@ export const useQuickPayment = () => {
 
     useEffect(() => {
         if (customer) {
+            setLoading(true);
             onUpdateField("customerId", customer.id);
             InvoiceService.getInvoicesByCustomer(customer.id)
                 .then(setInvoiceData)
@@ -30,6 +32,18 @@ export const useQuickPayment = () => {
         }))
     }
 
+    const registerPayment = async () => {
+        try {
+            setLoading(true);
+            setError(null);
+            await PaymentService.addInvoice(payment);
+        } catch (error) {
+            setError(error as Error);
+        } finally {
+            setLoading(false);
+        }
+    }
+
     return {
         invoiceData,
         loading,
@@ -39,6 +53,7 @@ export const useQuickPayment = () => {
         invoice,
         setCustomer,
         onUpdateField,
-        setInvoice
+        setInvoice,
+        registerPayment
     };
 }

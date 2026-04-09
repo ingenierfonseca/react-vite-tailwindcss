@@ -31,3 +31,15 @@ export function formatDateToYYYYMMDD(date?: string | Date) {
   if (!date) return "";
   return new Date(date).toISOString().split("T")[0];
 }
+
+export const formatDateToMMDameDDYYYY = (strDate: string) => {
+  const date = new Date(strDate);
+
+  const formatted = new Intl.DateTimeFormat("en-US", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  }).format(date);
+
+  return formatted.replace(",", ",");
+};

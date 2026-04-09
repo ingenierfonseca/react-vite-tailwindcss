@@ -4,6 +4,8 @@ import PageRightComponent from "../../../components/commons/PageRightComponent"
 import type { CustomerInvoiceDTO } from "../../../services/invoice/customerinvoice.dto.type"
 import { usePatientBill } from "../hooks/patientBill.hook"
 import PaymentModal from "./PaymentModal"
+import { formatDateToMMDameDDYYYY } from "../../../utils/date.util"
+import { CircularProgress } from "@mui/material"
 
 interface PatientBillInfoProps {
     customer: CustomerInvoiceDTO | null
@@ -11,7 +13,7 @@ interface PatientBillInfoProps {
 }
 
 export default function PatientBillInfo({ customer, setIsOpen }: PatientBillInfoProps) {
-    const { setCustomer, invoiceData, paymentHistoryData } = usePatientBill()
+    const { setCustomer, invoiceData, paymentHistoryData, setReload, loading } = usePatientBill()
     const [isOpenModal, setIsOpenModal] = useState(false)
     
     useEffect(() => {
@@ -34,12 +36,12 @@ export default function PatientBillInfo({ customer, setIsOpen }: PatientBillInfo
             />
             <div className="w-full h-0.5 bg-slate-700 mb-12"/>
 
-            <p className="text-2xl font-semibold text-black dark:text-slate-200">Lista de Facturas</p>
-            {invoiceData && invoiceData.map((invoice) => (
+            <p className="text-xl md:text-2xl font-semibold text-black dark:text-slate-200">Lista de Facturas</p>
+            {!loading &&invoiceData && invoiceData.map((invoice) => (
                 <div key={invoice.id} className="flex justify-between items-center mt-4 p-4 bg-white dark:bg-slate-800 border-b-2 dark:border-slate-700">
                     <div>
                         <p className="font-bold text-lg text-black dark:text-slate-200">{invoice.number}</p>
-                        <p className="text-sm text-slate-600 dark:text-slate-400">{invoice.dueDate}</p>
+                        <p className="text-sm text-slate-600 dark:text-slate-400">{formatDateToMMDameDDYYYY(invoice.dueDate)}</p>
                     </div>
                     <div>
                         <p className="font-semibold text-lg text-black dark:text-slate-200">${invoice.total.toFixed(2)}</p>
@@ -49,29 +51,41 @@ export default function PatientBillInfo({ customer, setIsOpen }: PatientBillInfo
                     </div>
                 </div>
             ))}
+            {loading && 
+                <div className="flex flex-col justify-center items-center mt-4 p-4 bg-white dark:bg-slate-800 border-b-2 dark:border-slate-700">
+                    <CircularProgress size={50} color="primary" />
+                    <p className="text-slate-500 dark:text-slate-400">Cargando información...</p>
+                </div>
+            }
 
-            <p className="text-2xl mt-28 font-semibold text-black dark:text-slate-200">Historial de Pago</p>
-            {paymentHistoryData && paymentHistoryData.length > 0 && paymentHistoryData.map((payment) => (
+            <p className="text-xl md:text-2xl mt-28 font-semibold text-black dark:text-slate-200">Historial de Pago</p>
+            {!loading && paymentHistoryData && paymentHistoryData.length > 0 && paymentHistoryData.map((payment) => (
                 <div key={payment.id} className="flex justify-between items-center mt-4 p-4 bg-white dark:bg-slate-800 border-b-2 dark:border-slate-700">
                     <div>
                         <p className="font-bold text-lg text-black dark:text-slate-200">C${payment.amount.toFixed(2)}</p>
                         <p className="text-lg text-slate-600 dark:text-slate-400">{payment.paymentTypeName}</p>
                     </div>
                     <div>
-                        <p className="font-semibold text-lg text-black dark:text-slate-200">{payment.date}</p>
+                        <p className="font-semibold text-lg text-black dark:text-slate-200">{formatDateToMMDameDDYYYY(payment.date)}</p>
                         <p className="font-semibold text-lg text-slate-600 dark:text-slate-400">{payment.invoiceNumber}</p>
                     </div>
                 </div>
             ))}
+            {loading && 
+                <div className="flex flex-col justify-center items-center mt-4 p-4 bg-white dark:bg-slate-800 border-b-2 dark:border-slate-700">
+                    <CircularProgress size={50} color="primary" />
+                    <p className="text-slate-500 dark:text-slate-400">Cargando información...</p>
+                </div>
+            }
 
             <div className="mt-28 rounded-md p-2 border dark:border-slate-300">
                 <p className="font-semibold text-black dark:text-white">Acciones Rapidas</p>
                 <div className="grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-4 mt-4">
-                    <button className="flex-1 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600" onClick={()=> setIsOpenModal(true)}>Agregar Pago</button>
+                    <button className="flex-1 px-4 py-2 bg-primary text-white rounded-md hover:bg-blue-600" onClick={()=> setIsOpenModal(true)}>Agregar Pago</button>
                 </div>
             </div>
 
-            <PaymentModal customer={customer!} isModalOpen={isOpenModal} setIsModalOpen={setIsOpenModal} onClick={() => {}} />
+            <PaymentModal customer={customer!} isModalOpen={isOpenModal} setIsModalOpen={setIsOpenModal} onClick={() => setReload((prev) => prev + 1)} />
         </PageRightComponent>
     )
 }
