@@ -18,7 +18,7 @@ export const useInvoiceDetail = () => {
         loading: true,
         error: null
     });
-    const [itemInvoice] = useState<InvoiceItem>(getInitialInvoiceItem());
+    const [itemInvoice, setItemInvoice] = useState<InvoiceItem>(getInitialInvoiceItem());
 
     /*const [customers, setCustomers] = useState<Paggination<Customer | null>>();
     /*const customerOptions = mapToDropdown(
@@ -47,6 +47,14 @@ export const useInvoiceDetail = () => {
 
     // Helpers que envuelven el dispatch
     //const handleAddItem = () => dispatch({ type: 'ADD_ITEM' });
+
+    const resetItemInvoice = () => {
+        setItemInvoice(getInitialInvoiceItem());
+    }
+
+    const onChangeItemInvoice = (field: keyof InvoiceItem, value: any) => {
+        setItemInvoice(prev => ({ ...prev, [field]: value }));
+    }
 
     const handleAddNewItem = () => {
         dispatch({ 
@@ -164,10 +172,12 @@ export const useInvoiceDetail = () => {
         handleAddNewItem,
         handleRemoveItem,
         onChangeItem,
+        onChangeItemInvoice,
         updateField,
         calculateLineTotal,
         calculateTotal,
         saveInvoice,
-        itemInvoice
+        itemInvoice,
+        resetItemInvoice
     };
 };

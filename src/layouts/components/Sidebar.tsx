@@ -33,9 +33,13 @@ function Sidebar({collapsed, isMobileMenuOpen}: SidebarProps) {
 
                     {(!collapsed || !isDesktop) && (
                         <div>
-                            <h3 className="text-xl fontl-bold text-slate-800 dark:text-white">
-                                Clinical<span className="text-primary">SuiteNova</span>
-                            </h3>
+                            
+                            <div className="flex">
+                                <h3 className="text-xl font-bold text-slate-800 dark:text-white">
+                                    Clinical
+                                </h3>
+                                <span className="text-primary text-lg">SuiteNova</span>
+                            </div>
                             <p className="text-xs text-slate-500 dark:text-slate-400">
                                 Admin Panel
                             </p>

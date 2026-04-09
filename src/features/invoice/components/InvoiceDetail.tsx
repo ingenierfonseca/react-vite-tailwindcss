@@ -6,6 +6,7 @@ import { formatNumber } from "../../../utils/number.util";
 import ButtonSaveApp from "../../../components/commons/ButtonSaveApp";
 import PageRightComponent from "../../../components/commons/PageRightComponent";
 import ThreatmentModal from "./ThreatmentModal";
+import { useState } from "react";
 
 const headers = [
     "Tratamiento",
@@ -19,10 +20,13 @@ interface InvoiceDetailProps {
     setIsOpen: (value: boolean) => void
 }
 export default function InvoiceDetail({ setIsOpen }: InvoiceDetailProps) {
+    const [isOpenModal, setIsOpenModal] = useState(false)
     const { 
         invoice,
         itemInvoice,
         loading,
+        resetItemInvoice,
+        onChangeItemInvoice,
         handleAddNewItem,
         calculateLineTotal,
         calculateTotal,
@@ -61,7 +65,10 @@ export default function InvoiceDetail({ setIsOpen }: InvoiceDetailProps) {
                                 </div>
                             )
                         })}
-                        <button onClick={handleAddNewItem}
+                        <button onClick={() => {
+                            resetItemInvoice()
+                            setIsOpenModal(true)
+                        }}
                             disabled={loading}
                             className={`mt-2 mb-4 flex disabled:opacity-50 ${cn(theme.button.base)} bg-slate-200 dark:bg-slate-800 dark:border-slate-500 dark:text-white dark:hover:bg-slate-700`}>
                             <Plus />
@@ -84,9 +91,13 @@ export default function InvoiceDetail({ setIsOpen }: InvoiceDetailProps) {
                 <ButtonSaveApp label="Factura" onClick={saveInvoice} loading={loading} />
             </div>
             <ThreatmentModal 
-                isModalOpen={false}
-                setIsModalOpen={() => {}}
-                onClick={() => {}}
+                isModalOpen={isOpenModal}
+                setIsModalOpen={setIsOpenModal}
+                onClick={() => {
+                    handleAddNewItem()
+                    setIsOpenModal(false)
+                }}
+                onChangeItem={onChangeItemInvoice}
                 invoiceItem={itemInvoice} />
         </PageRightComponent>
     )

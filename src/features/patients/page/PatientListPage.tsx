@@ -79,6 +79,7 @@ export default function PatientListPage() {
                 />
             </div>
 
+            {data && data.data && 
             <div className="mt-4 bg-white dark:bg-slate-800 rounded-lg shadow-md">
                 <div className="flex gap-4 mt-4 px-4 pt-4 bg-slate-100 dark:bg-slate-700/50">
                     {headers.map((header) => (
@@ -90,7 +91,7 @@ export default function PatientListPage() {
                         </div>
                     ))}
                 </div>
-                {data && data.data && data?.data.map((patient) => (
+                {data.data.map((patient) => (
                     <div key={patient!.id} className="flex gap-4 pt-4 px-4 text-slate-700 dark:text-slate-300 border-b border-slate-300 hover:bg-slate-100 dark:hover:bg-slate-600">
                         <AvatarInfo
                             className="flex-2"
@@ -121,7 +122,7 @@ export default function PatientListPage() {
                         </div>
                     </div>
                 ))}
-            </div>
+            </div>}
 
             <div
                 className={`fixed top-0 right-0 h-full md:w-7/12 bg-white dark:bg-slate-800 shadow-2xl z-50 
