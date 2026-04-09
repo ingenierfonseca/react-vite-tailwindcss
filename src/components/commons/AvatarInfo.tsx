@@ -23,7 +23,7 @@ export default function AvatarInfo({ avatar, name, description, className, onCli
             )}
             <div className="ml-4 text-left">
                 <p className="text-xl md:text-2xl font-semibold text-black dark:text-slate-200">{name}</p>
-                <p className="text-lg text-slate-600 dark:text-slate-400">{description}</p>
+                <p className="text-md md:text-lg text-slate-600 dark:text-slate-400">{description}</p>
             </div>
         </button>
     )

@@ -92,11 +92,11 @@ export default function Invoice() {
                         />
                         <div className="ml-auto w-fit">
                             {customer && customer.balances.map((balance, index) => (
-                                <p key={index} className={`text-2xl md:text-3xl font-semibold ${getColorByPendingCount(customer!)} flex justify-end`}>
+                                <p key={index} className={`sm:text-lg md:text-3xl font-semibold ${getColorByPendingCount(customer!)} flex justify-end`}>
                                     {balance.symbol}{formatNumber(balance.amount)}
                                 </p>
                             ))}
-                            <p className="md:text-lg text-slate-600 dark:text-slate-400 flex justify-end">Deuda  Total</p>
+                            <p className="text-md md:text-lg text-slate-600 dark:text-slate-400 flex justify-end">Deuda  Total</p>
                         </div>
                     </div>
                     <div className="flex w-full px-4">
