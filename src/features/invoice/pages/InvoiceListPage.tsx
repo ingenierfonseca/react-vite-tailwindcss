@@ -84,19 +84,22 @@ export default function Invoice() {
                         <AvatarInfo
                             avatar={customer!.avatar}
                             name={customer!.fullName}
-                            description={`Ultimo Pago: ${customer!.lastPayment ? customer!.lastPayment : 'No ha realizado pagos'}`}
+                            description={`Ultimo Pago: ${customer!.lastPayment ? customer!.lastPayment : 'Sin registros'}`}
                             onClick={() => {
                                 setCustomer(customer)
                                 openProfileBillInfo(true)
                             }}
                         />
-                        <div className="ml-auto w-fit">
+                        <div className="ml-auto">
                             {customer && customer.balances.map((balance, index) => (
                                 <p key={index} className={`sm:text-lg md:text-3xl font-semibold ${getColorByPendingCount(customer!)} flex justify-end`}>
                                     {balance.symbol}{formatNumber(balance.amount)}
                                 </p>
                             ))}
-                            <p className="text-md md:text-lg text-slate-600 dark:text-slate-400 flex justify-end">Deuda  Total</p>
+                            {customer && customer.balances.length === 0 && (
+                                <p className={`sm:text-lg md:text-3xl font-semibold ${getColorByPendingCount(customer!)} flex justify-end`}>C$0.00</p>
+                            )}
+                            <p className="text-sm md:text-lg text-slate-600 dark:text-slate-400 flex justify-end whitespace-nowrap truncate">Deuda  Total</p>
                         </div>
                     </div>
                     <div className="flex w-full px-4">

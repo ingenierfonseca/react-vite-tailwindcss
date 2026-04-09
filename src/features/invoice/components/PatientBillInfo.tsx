@@ -30,10 +30,7 @@ export default function PatientBillInfo({ customer, setIsOpen }: PatientBillInfo
                 avatar={customer?.avatar}
                 name={customer?.fullName || ""}
                 description={`Edad: ${customer?.age} . Ultima Visita: ${customer?.lastVisit ? customer.lastVisit : 'No ha realizado visitas'}`}
-                onClick={() => {
-                    //setCustomer(patient)
-                    //openProfileBillInfo(true)
-                }}
+                onClick={() => {}}
             />
             <div className="w-full h-0.5 bg-slate-700 mb-12"/>
 

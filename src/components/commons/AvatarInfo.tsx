@@ -9,6 +9,8 @@ interface AvatarInfoProps {
 }
 
 export default function AvatarInfo({ avatar, name, description, className, onClick }: AvatarInfoProps) {
+    const shortName = getFirstNameAndLastName(name);
+
     return (
         <button
             className={`flex my-2 cursor-pointer ${className || ""}`}
@@ -22,9 +24,18 @@ export default function AvatarInfo({ avatar, name, description, className, onCli
                 </div>
             )}
             <div className="ml-4 text-left">
-                <p className="text-xl md:text-2xl font-semibold text-black dark:text-slate-200">{name}</p>
+                <p className="hidden md:block text-2xl font-semibold text-black dark:text-slate-200">{name}</p>
+                <p className="block md:hidden text-lg font-semibold text-black dark:text-slate-200">{shortName}</p>
                 <p className="text-md md:text-lg text-slate-600 dark:text-slate-400">{description}</p>
             </div>
         </button>
     )
+}
+
+const getFirstNameAndLastName = (fullName: string): string => {
+    const parts = fullName.trim().split(" ");
+    if (parts.length === 1) return parts[0]; // solo un nombre
+    if (parts.length === 2) return fullName; // ya es nombre + apellido
+  
+    return `${parts[0]} ${parts[2]}`;
 }

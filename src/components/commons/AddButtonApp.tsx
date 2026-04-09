@@ -8,7 +8,7 @@ export default function AddButtonApp({ label, onclick }: AddButtonAppProps) {
     return (
         <button
             onClick={onclick}
-            className="flex p-3 cursor-pointer bg-primary rounded-md items-center text-white text-sm font-semibold shadow-md shadow-slate-300 hover:scale-[1.02] active:scale-[0.98] transition">
+            className="flex p-3 cursor-pointer bg-primary rounded-md items-center text-white text-sm font-semibold shadow-md hover:scale-[1.02] active:scale-[0.98] transition">
             <Plus className="mr-2" />
             {label}
         </button>
