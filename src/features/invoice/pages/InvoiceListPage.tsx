@@ -79,7 +79,7 @@ export default function Invoice() {
             </div>
 
             {data && data.data && data?.data.map((customer) => (
-                <div key={customer!.id} className="flex flex-col text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-md bg-white my-3 py-2 dark:bg-slate-800">
+                <div key={customer!.id} className="flex flex-col text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-md bg-white my-3 py-2 dark:bg-slate-800 shadow-md active:scale-[0,98] transition-transform">
                     <div className="flex w-full px-4">
                         <AvatarInfo
                             avatar={customer!.avatar}
