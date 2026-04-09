@@ -69,13 +69,3 @@ const calculateLineTotal = (item: InvoiceItem) => {
     if (discount) total *= 1 - discount / 100;
     return formatNumber(total);
 };
-
-/*
-<fieldset disabled={loading} key={item.id} className="grid p-2 gap-2 border border-slate-200 dark:border-slate-700">
-                    <TextFieldApp label="Tratamiento" value={item.description} className="md:flex-2 px-2 text-sm" onChange={(val) => onChangeItem(index, "description", val)} />
-                    <NumberInputApp value={item.quantity} className="md:flex-1 px-2 text-sm" min={1} onChange={(val) => onChangeItem(index, "quantity", val)} />
-                    <NumberInputApp value={item.unitPrice} className="md:flex-1 px-2 text-sm" min={1} onChange={(val) => onChangeItem(index, "unitPrice", val)} />
-                    <NumberInputApp value={item.discount} className="md:flex-1 px-2 text-sm" min={1} onChange={(val) => onChangeItem(index, "discount", val)} />
-                    <span className={`flex-1 px-2 text-sm`}>{calculateLineTotal(item)}</span>
-                </fieldset>
- */

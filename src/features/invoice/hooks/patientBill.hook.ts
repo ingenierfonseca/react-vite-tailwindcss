@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { InvoiceService } from "../../../services/invoice/invoice.service";
 import type { CustomerInvoiceDTO } from "../../../services/invoice/customerinvoice.dto.type";
-import type { Payment } from "../../../services/invoice/payment.type";
+import type { PaymentDTO } from "../../../services/payment/payment.type";
 import type { InvoiceInfoDTO } from "../../../services/invoice/invoice.types";
 
 export const usePatientBill = () => {
     const [invoiceData, setInvoiceData] = useState<InvoiceInfoDTO[]>();
-    const [paymentHistoryData, setPaymentHistoryData] = useState<Payment[]>();
+    const [paymentHistoryData, setPaymentHistoryData] = useState<PaymentDTO[]>();
     const [customer, setCustomer] = useState<CustomerInvoiceDTO | null>();
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<Error | null>(null);

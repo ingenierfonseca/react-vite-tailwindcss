@@ -1,8 +1,9 @@
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import AvatarInfo from "../../../components/commons/AvatarInfo"
 import PageRightComponent from "../../../components/commons/PageRightComponent"
 import type { CustomerInvoiceDTO } from "../../../services/invoice/customerinvoice.dto.type"
 import { usePatientBill } from "../hooks/patientBill.hook"
+import PaymentModal from "./PaymentModal"
 
 interface PatientBillInfoProps {
     customer: CustomerInvoiceDTO | null
@@ -11,7 +12,7 @@ interface PatientBillInfoProps {
 
 export default function PatientBillInfo({ customer, setIsOpen }: PatientBillInfoProps) {
     const { setCustomer, invoiceData, paymentHistoryData } = usePatientBill()
-    console.log("Payment History Data in PatientBillInfo:", paymentHistoryData);
+    const [isOpenModal, setIsOpenModal] = useState(false)
     
     useEffect(() => {
         if (customer) {
@@ -69,9 +70,11 @@ export default function PatientBillInfo({ customer, setIsOpen }: PatientBillInfo
             <div className="mt-28 rounded-md p-2 border dark:border-slate-300">
                 <p className="font-semibold text-black dark:text-white">Acciones Rapidas</p>
                 <div className="grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-4 mt-4">
-                    <button className="flex-1 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">Agendar Pago</button>
+                    <button className="flex-1 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600" onClick={()=> setIsOpenModal(true)}>Agregar Pago</button>
                 </div>
             </div>
+
+            <PaymentModal customer={customer!} isModalOpen={isOpenModal} setIsModalOpen={setIsOpenModal} onClick={() => {}} />
         </PageRightComponent>
     )
 }
