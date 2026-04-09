@@ -10,6 +10,7 @@ import { useCustomerInvoice } from "../hooks/customerInvoice.hook";
 import { formatNumber } from "../../../utils/number.util";
 import type { CustomerInvoiceDTO } from "../../../services/invoice/customerinvoice.dto.type";
 import InvoiceDetail from "../components/InvoiceDetail";
+import { formatDateToMMDameDDYYYY } from "../../../utils/date.util";
 
 export default function Invoice() {
     const { data, dashboardData, customer, setCustomer } = useCustomerInvoice()
@@ -84,7 +85,7 @@ export default function Invoice() {
                         <AvatarInfo
                             avatar={customer!.avatar}
                             name={customer!.fullName}
-                            description={`Ultimo Pago: ${customer!.lastPayment ? customer!.lastPayment : 'Sin registros'}`}
+                            description={`Ultimo Pago: ${customer!.lastPayment ? formatDateToMMDameDDYYYY(customer!.lastPayment) : 'Sin registros'}`}
                             onClick={() => {
                                 setCustomer(customer)
                                 openProfileBillInfo(true)
