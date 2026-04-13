@@ -7,14 +7,14 @@ export default function AppRouter() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<MainLayout />} >
-        <Route index element={<Navigate to="/dashboard" replace />} />
-          {routesConfig.map((route) => (
-            <Route
-              key={route.path}
-              path={route.path}
-              element={route.element}
-            />
-          ))}
+          <Route index element={<Navigate to="/dashboard" replace />} />
+            {routesConfig.map((route) => (
+              <Route
+                key={route.path}
+                path={route.path}
+                element={route.element}
+              />
+            ))}
         </Route>
       </Routes>
     </BrowserRouter>

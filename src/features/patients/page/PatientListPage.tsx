@@ -1,9 +1,8 @@
-import { Calendar, PencilLine, User } from "lucide-react"
+import { Calendar, Pencil, PencilLine, User } from "lucide-react"
 import { PaginatedAutocomplete } from "../../../components/commons/PaginatedAutocomplete"
 import { CustomerService } from "../../../services/customer/customer.service"
 import DashboardCard from "../../../components/dashboard/DashboardCard"
 import PatientProfile from "../components/PatientProfile"
-import { useState } from "react"
 import PatientCreate from "../components/PatientCreateEdit"
 import { usePatient } from "../hooks/patient.hook"
 import AvatarInfo from "../../../components/commons/AvatarInfo"
@@ -13,32 +12,21 @@ const headers = [
     'Paciente', 'Edad', /*'Last Visit', 'Next Appointment', 'Balance Due',*/ 'Acciones'
 ]
 export default function PatientListPage() {
-    const { data, dashboardData, customer, setCustomer, loadCustomers, search, setSearch } = usePatient()
-    const [isOpenTransitionRight, setIsOpenTransitionRight] = useState(false)
-    const [isOpenProfileInfo, setIsOpenProfileInfo] = useState(false)
-    const [isOpenCreateOrEdit, setIsOpenCreateOrEdit] = useState(false)
+    const { 
+        data, 
+        dashboardData, 
+        customer, 
+        setCustomer, 
+        loadCustomers, 
+        search, 
+        setSearch,
+        isOpenCreateOrEdit,
+        isOpenProfileInfo,
+        isOpenTransitionRight,
+        openCreate,
+        openProfileInfo
+    } = usePatient()
 
-    function openProfileInfo(value: boolean) {
-        if (value) {
-            setIsOpenTransitionRight(value)
-            setIsOpenProfileInfo(value)
-        } else {
-            setIsOpenTransitionRight(false)
-            setTimeout(() => {                setIsOpenProfileInfo(false)
-            }, 500);
-        }
-    }
-    function openCreate(value: boolean) {
-        if (value) {
-        setIsOpenTransitionRight(value)
-        setIsOpenCreateOrEdit(value)
-        } else {
-            setIsOpenTransitionRight(false)
-            setTimeout(() => {
-                setIsOpenCreateOrEdit(false)
-            }, 500);
-        }
-    }
     return (
         <PageComponent
             title="Administración de Pacientes"
@@ -81,7 +69,7 @@ export default function PatientListPage() {
 
             {data && data.data && 
             <div className="mt-4 bg-white dark:bg-slate-800 rounded-lg shadow-md">
-                <div className="flex gap-4 mt-4 px-4 py-4 bg-slate-100 dark:bg-slate-700/50">
+                <div className="flex gap-4 mt-4 px-4 py-4 bg-slate-100 dark:bg-slate-700/20">
                     {headers.map((header) => (
                         <div key={header} className={`
                             ${header === 'Paciente' ? 'flex-2' : ''}
@@ -92,7 +80,7 @@ export default function PatientListPage() {
                     ))}
                 </div>
                 {data.data.map((patient) => (
-                    <div key={patient!.id} className="flex gap-4 pt-4 px-4 text-slate-700 dark:text-slate-300 border-b border-slate-300 hover:bg-slate-100 dark:hover:bg-slate-600 dark:border-slate-600">
+                    <div key={patient!.id} className="flex gap-4 pt-4 px-4 text-slate-700 dark:text-slate-300 border-b border-slate-300 hover:bg-slate-100 dark:hover:bg-slate-600 dark:border-slate-700">
                         <AvatarInfo
                             className="flex-2"
                             avatar={patient!.avatar}
@@ -116,8 +104,8 @@ export default function PatientListPage() {
                                     setCustomer(patient)
                                     openCreate(true)
                                 }}
-                                className="bg-primary/20 p-1 text-primary px-2 ml-1 rounded-sm hover:bg-primary/30">
-                                <PencilLine />
+                                className="bg-primary/20 p-1 text-primary dark:bg-slate-700/50 dark:text-slate-300 px-2 ml-1 rounded-sm hover:bg-primary/30">
+                                <Pencil />
                             </button>
                         </div>
                     </div>

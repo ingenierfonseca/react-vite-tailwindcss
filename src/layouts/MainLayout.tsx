@@ -3,8 +3,10 @@ import '../App.css'
 import { Outlet } from 'react-router'
 import Sidebar from './components/Sidebar'
 import Header from './components/Header'
+import { useLayout } from './hooks/layout.hook'
 
 export default function MainLayout() {
+  const {} = useLayout()
   const [sidebarCollased, setSidebarCollapsed] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 

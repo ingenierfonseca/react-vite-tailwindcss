@@ -6,6 +6,9 @@ import { CustomerService } from "../../../services/customer/customer.service";
 export const usePatient = () => {
     const [data, setData] = useState<PaginatedResponse<Customer | null>>();
     const [dashboardData, setDashboardData] = useState<CustomerDashboard[]>();
+    const [isOpenTransitionRight, setIsOpenTransitionRight] = useState(false)
+    const [isOpenProfileInfo, setIsOpenProfileInfo] = useState(false)
+    const [isOpenCreateOrEdit, setIsOpenCreateOrEdit] = useState(false)
     const [customer, setCustomer] = useState<Customer | null>(null)
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<any>(null);
@@ -33,6 +36,29 @@ export const usePatient = () => {
         loadCustomers()
     }, [currentPage, search]);
 
+    function openProfileInfo(value: boolean) {
+        if (value) {
+            setIsOpenTransitionRight(value)
+            setIsOpenProfileInfo(value)
+        } else {
+            setIsOpenTransitionRight(false)
+            setTimeout(() => {
+                setIsOpenProfileInfo(false)
+            }, 500);
+        }
+    }
+    function openCreate(value: boolean) {
+        if (value) {
+            setIsOpenTransitionRight(value)
+            setIsOpenCreateOrEdit(value)
+        } else {
+            setIsOpenTransitionRight(false)
+            setTimeout(() => {
+                setIsOpenCreateOrEdit(false)
+            }, 500);
+        }
+    }
+
     return {
         data,
         dashboardData,
@@ -42,6 +68,11 @@ export const usePatient = () => {
         setCustomer,
         loadCustomers,
         search,
-        setSearch
+        setSearch,
+        isOpenTransitionRight,
+        isOpenProfileInfo,
+        isOpenCreateOrEdit,
+        openProfileInfo,
+        openCreate
     };
 };

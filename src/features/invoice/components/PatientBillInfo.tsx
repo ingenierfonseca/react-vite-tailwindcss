@@ -81,7 +81,9 @@ export default function PatientBillInfo({ customer, setIsOpen }: PatientBillInfo
             <div className="mt-28 rounded-md p-2 border dark:border-slate-300">
                 <p className="font-semibold text-black dark:text-white">Acciones Rapidas</p>
                 <div className="grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-4 mt-4">
-                    <button className="flex-1 px-4 py-2 bg-primary text-white rounded-md hover:bg-blue-600" onClick={()=> setIsOpenModal(true)}>Agregar Pago</button>
+                    <button className="flex-1 px-4 py-2 bg-primary text-white rounded-md hover:bg-blue-600" onClick={()=> setIsOpenModal(true)} disabled={invoiceData?.filter(inv => inv.statusId === 1 || inv.statusId === 5).length === 0}>
+                        Agregar Pago
+                    </button>
                 </div>
             </div>
 

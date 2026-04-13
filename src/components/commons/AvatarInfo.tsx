@@ -19,7 +19,7 @@ export default function AvatarInfo({ avatar, name, description, className, onCli
             {avatar ? (
                 <img src={avatar} className="w-15 h-15 md:w-20 md:h-20 rounded-full" />
             ) : (
-                <div className="w-15 h-15 md:w-20 md:h-20 rounded-full p-2 bg-slate-300 flex items-center justify-center">
+                <div className="w-10 h-10 sm:w-15 sm:h-15 md:w-20 md:h-20 rounded-full p-2 bg-slate-300 flex items-center justify-center">
                     <User className="w-10 h-10 text-slate-600" />
                 </div>
             )}

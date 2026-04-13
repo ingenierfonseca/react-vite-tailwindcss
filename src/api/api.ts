@@ -10,7 +10,6 @@ const api = axios.create({
   },
 });
 
-// 🔐 Interceptor request (ej: token)
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
 
@@ -28,7 +27,7 @@ api.interceptors.response.use(
     console.error("API Error:", error.response?.data || error.message);
 
     if (error.response?.status === 401) {
-      // logout o redirect
+      localStorage.removeItem("token");
     }
 
     return Promise.reject(error);

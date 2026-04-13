@@ -3,6 +3,7 @@ import Invoice from "../features/invoice/pages/InvoiceListPage";
 import Odontogram from "../features/odontogram/Odontogram";
 import DashboardPage from "../pages/DashboardPage";
 import PatientListPage from "../features/patients/page/PatientListPage";
+import SettingsPage from "../features/settings/SettingsPage";
 
 export const routesConfig = [
   {
@@ -38,6 +39,6 @@ export const routesConfig = [
   {
     path: "/settings",
     title: "Configuración",
-    element: <div>Settings</div>
+    element: <SettingsPage />
   }
 ];
