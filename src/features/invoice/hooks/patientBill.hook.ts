@@ -12,27 +12,28 @@ export const usePatientBill = () => {
     const [error, setError] = useState<Error | null>(null);
     const [reload, setReload] = useState(1);
 
+    const loadPageData = async () => {
+        InvoiceService.getInvoicesByCustomer(customer!.id)
+            .then(setInvoiceData)
+            .catch(setError)
+            .finally(() => setLoading(false));
+
+        InvoiceService.getPaymentHistoryByCustomer(customer!.id)
+            .then(setPaymentHistoryData)
+            .catch(setError)
+            .finally(() => setLoading(false));
+    }
+
     useEffect(() => {
         if (customer) {
-            InvoiceService.getInvoicesByCustomer(customer!.id)
-                .then(setInvoiceData)
-                .catch(setError)
-                .finally(() => setLoading(false));
+           loadPageData();
+        }
+    }, [customer]);
 
-            InvoiceService.getPaymentHistoryByCustomer(customer!.id)
-                .then(setPaymentHistoryData)
-                .catch(setError)
-                .finally(() => setLoading(false));
-        }}, [customer]);
-    
     useEffect(() => {
         if (!customer) return;
 
-        setLoading(true);
-        InvoiceService.getPaymentHistoryByCustomer(customer!.id)
-                .then(setPaymentHistoryData)
-                .catch(setError)
-                .finally(() => setLoading(false));
+        loadPageData();
     }, [reload])
 
 

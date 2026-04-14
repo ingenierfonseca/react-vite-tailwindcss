@@ -11,7 +11,7 @@ export const useCustomerInvoice = () => {
     const [error, setError] = useState<Error | null>(null);
     const [customer, setCustomer] = useState<CustomerInvoiceDTO | null>(null);
 
-    useEffect(() => {
+    const loadDataPage = async () => {
         setLoading(true)
         InvoiceService.getDashboard()
             .then(setDashboardData)
@@ -22,6 +22,10 @@ export const useCustomerInvoice = () => {
             .then(setData)
             .catch(setError)
             .finally(() => setLoading(false));
+    }
+
+    useEffect(() => {
+        loadDataPage()
     }, []);
 
     return {
@@ -30,6 +34,7 @@ export const useCustomerInvoice = () => {
         loading,
         error,
         customer,
-        setCustomer
+        setCustomer,
+        loadDataPage
     };
 }

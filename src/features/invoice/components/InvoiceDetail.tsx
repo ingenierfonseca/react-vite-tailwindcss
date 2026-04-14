@@ -1,4 +1,4 @@
-import { Plus } from "lucide-react";
+import { Plus, Trash2 } from "lucide-react";
 import { cn, theme } from "../../../utils/theme";
 import InvoiceHeader from "./InvoiceHeader";
 import { useInvoiceDetail } from "../hooks/useInvoiceDetail";
@@ -13,13 +13,15 @@ const headers = [
     "Cantidad",
     "Precio",
     "Descuento",
-    "Total"
+    "Total",
+    " "
 ]
 
 interface InvoiceDetailProps {
-    setIsOpen: (value: boolean) => void
+    setIsOpen: (value: boolean) => void,
+    reload: () => void
 }
-export default function InvoiceDetail({ setIsOpen }: InvoiceDetailProps) {
+export default function InvoiceDetail({ setIsOpen, reload }: InvoiceDetailProps) {
     const [isOpenModal, setIsOpenModal] = useState(false)
     const { 
         invoice,
@@ -28,11 +30,20 @@ export default function InvoiceDetail({ setIsOpen }: InvoiceDetailProps) {
         resetItemInvoice,
         onChangeItemInvoice,
         handleAddNewItem,
+        handleRemoveItem,
         calculateLineTotal,
         calculateTotal,
         saveInvoice,
         updateField
     } = useInvoiceDetail()
+
+    const handleSave = async () => {
+        const response = await saveInvoice()
+        if (response) {
+            reload()
+            setIsOpen(false)
+        }
+    }
 
     return (
         <PageRightComponent
@@ -47,21 +58,28 @@ export default function InvoiceDetail({ setIsOpen }: InvoiceDetailProps) {
             <div className="h-0.5 bg-slate-200 mt-3 mb-3 dark:bg-slate-600" />
             <div className="flex flex-col px-4 py-3">
                 <p className="font-bold text-md dark:text-slate-100">Detalle de la Factura</p>
-                <div className="flex flex-col md:flex-row mt-2">
+                <div className="flex flex-col lg:flex-row mt-2">
                     <div className="flex-1 flex-col">
-                        <div className="flex flex-1 p-2 gap-2 bg-slate-200 text-black/50 dark:bg-slate-800 dark:text-white">
-                            {headers.map((header, index) => {
-                                return <span key={index} className={`${index === 0 ? 'flex-2' : index === 3 ? 'flex-1 hidden md:block' :'flex-1'} px-2 text-sm`}>{header}</span>
-                            })}
+                        <div className="flex bg-slate-200 text-black/50 dark:bg-slate-800 dark:text-white">
+                            {headers.map((header) => (
+                                <span key={header} className={`${header === 'Tratamiento' ? 'flex-2' : 
+                                    header === 'Descuento' ? 'hidden lg:flex-1' :
+                                    header === 'Cantidad' ? 'hidden sm:flex-1' : 'flex-1'}`}>{header}</span>
+                            ))}
                         </div>
                         {invoice && invoice!.items.map((item, index) => {
                             return (
-                                <div key={index} className="flex">
+                                <div key={index} className="flex items-center">
                                     <span className="flex-2">{item.description}</span>
-                                    <span className="flex-1">{item.quantity}</span>
-                                    <span className="flex-1">{item.unitPrice}</span>
-                                    <span className="flex-1 hidden md:block">{item.discount}</span>
-                                    <span className="flex-1">{calculateLineTotal(item)}</span>
+                                    <span className="hidden sm:flex-1">{item.quantity}</span>
+                                    <span className="flex-1">{invoice?.currencyId == 1 ? "C$" : "$"}{item.unitPrice}</span>
+                                    <span className="hidden lg:flex-1">{item.discount}</span>
+                                    <span className="flex-1">{invoice?.currencyId == 1 ? "C$" : "$"}{calculateLineTotal(item)}</span>
+                                    <span className="lg:flex-1">
+                                        <div className="cursor-pointer w-fit p-2 border dark:border-slate-600 dark:hover:bg-slate-700">
+                                            <Trash2  size={18} onClick={() => handleRemoveItem(index)} />
+                                        </div>
+                                    </span>
                                 </div>
                             )
                         })}
@@ -75,10 +93,10 @@ export default function InvoiceDetail({ setIsOpen }: InvoiceDetailProps) {
                             Agregar Tratamiento
                         </button>
                     </div>
-                    <div className="md:w-70 h-fit border border-slate-200 bg-slate-100 ml-2 text-sm dark:bg-slate-800 dark:border-slate-700 dark:text-white">
-                        <div className="border-b-2 border-slate-200 dark:border-slate-600 flex justify-between p-2.5"><span>SubTotal</span><span>{invoice !== null ? calculateTotal() : "0.00"}</span></div>
-                        <div className="border-b-2 border-slate-200 dark:border-slate-600 flex justify-between p-2.5"><span>IVA (0%)</span><span>{invoice !== null ? formatNumber(invoice?.taxTotal) : "0.00"}</span></div>
-                        <div className="flex justify-between p-2.5"><span>Total</span><span className="font-bold">{invoice !== null ? calculateTotal() : "0.00"}</span></div>
+                    <div className="lg:w-50 h-fit border border-slate-200 bg-slate-100 ml-2 text-sm dark:bg-slate-800 dark:border-slate-700 dark:text-white">
+                        <div className="border-b-2 border-slate-200 dark:border-slate-600 flex justify-between p-2.5"><span>SubTotal</span><span>{invoice?.currencyId == 1 ? "C$" : "$"}{invoice !== null ? calculateTotal() : "0.00"}</span></div>
+                        <div className="border-b-2 border-slate-200 dark:border-slate-600 flex justify-between p-2.5"><span>IVA (0%)</span><span>{invoice?.currencyId == 1 ? "C$" : "$"}{invoice !== null ? formatNumber(invoice?.taxTotal) : "0.00"}</span></div>
+                        <div className="flex justify-between p-2.5"><span>Total</span><span className="font-bold">{invoice?.currencyId == 1 ? "C$" : "$"}{invoice !== null ? calculateTotal() : "0.00"}</span></div>
                     </div>
                 </div>
             </div>
@@ -88,9 +106,9 @@ export default function InvoiceDetail({ setIsOpen }: InvoiceDetailProps) {
                     onClick={() => setIsOpen(false)}>
                     Cancelar
                 </button>
-                <ButtonSaveApp label="Factura" onClick={saveInvoice} loading={loading} />
+                <ButtonSaveApp label="Factura" onClick={handleSave} loading={loading} />
             </div>
-            <ThreatmentModal 
+            <ThreatmentModal
                 isModalOpen={isOpenModal}
                 setIsModalOpen={setIsOpenModal}
                 onClick={() => {
@@ -98,6 +116,7 @@ export default function InvoiceDetail({ setIsOpen }: InvoiceDetailProps) {
                     setIsOpenModal(false)
                 }}
                 onChangeItem={onChangeItemInvoice}
+                currency={invoice?.currencyId == 1 ? "C$" : "$"}
                 invoiceItem={itemInvoice} />
         </PageRightComponent>
     )

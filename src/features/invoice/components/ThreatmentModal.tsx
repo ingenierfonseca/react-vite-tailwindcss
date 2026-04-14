@@ -8,13 +8,14 @@ import { formatNumber } from "../../../utils/number.util";
 
 interface ThreatmentModalProps {
     invoiceItem: InvoiceItem,
+    currency: string,
     isModalOpen: boolean,
     setIsModalOpen: (value: boolean) => void,
     onClick: () => void,
     onChangeItem: (field: keyof InvoiceItem, value: any) => void,
 }
 
-export default function ThreatmentModal({ invoiceItem, isModalOpen, setIsModalOpen, onClick, onChangeItem }: ThreatmentModalProps) {
+export default function ThreatmentModal({ invoiceItem, currency, isModalOpen, setIsModalOpen, onClick, onChangeItem }: ThreatmentModalProps) {
     return (
         <Modal isOpen={isModalOpen}
             onClose={() => setIsModalOpen(false)}
@@ -36,7 +37,7 @@ export default function ThreatmentModal({ invoiceItem, isModalOpen, setIsModalOp
                     <NumberInputApp title="Cantidad" value={invoiceItem.quantity} className="md:flex-1 px-2 text-sm" min={1} onChange={(val) => onChangeItem("quantity", val)} />
                     <NumberInputApp title="Precio" value={invoiceItem.unitPrice} className="md:flex-1 px-2 text-sm" min={1} onChange={(val) => onChangeItem("unitPrice", val)} />
                     <NumberInputApp title="Descuento" value={invoiceItem.discount} className="md:flex-1 px-2 text-sm" min={1} onChange={(val) => onChangeItem("discount", val)} />
-                    <span className={`flex-1 px-2 text-sm`}>{calculateLineTotal(invoiceItem)}</span>
+                    <span className={`flex-1 px-2 text-sm md:text-lg dark:text-slate-200`}>Total:{currency}{calculateLineTotal(invoiceItem)}</span>
                 </fieldset>
                 }
             </div>

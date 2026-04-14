@@ -51,7 +51,7 @@ export default function Modal({ title, textBtnConfirm, isOpen, onClose, children
           </button>
           <button
             onClick={clickBtnConfirm}
-            className="px-6 py-2 text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-500 rounded-xl shadow-lg shadow-indigo-600/20 transition-all active:scale-95"
+            className="px-6 py-2 text-sm font-semibold text-white bg-primary hover:bg-indigo-500 rounded-xl shadow-lg shadow-indigo-600/20 transition-all active:scale-95"
           >
             {textBtnConfirm}
           </button>

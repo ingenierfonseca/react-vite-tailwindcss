@@ -3,7 +3,7 @@ import { PaginatedAutocomplete } from "../../../components/commons/PaginatedAuto
 import { CustomerService } from "../../../services/customer/customer.service";
 import DashboardCard from "../../../components/dashboard/DashboardCard";
 import AvatarInfo from "../../../components/commons/AvatarInfo";
-import { Receipt } from "lucide-react";
+import { Filter, Receipt } from "lucide-react";
 import { useState } from "react";
 import PatientBillInfo from "../components/PatientBillInfo";
 import { useCustomerInvoice } from "../hooks/customerInvoice.hook";
@@ -13,7 +13,7 @@ import InvoiceDetail from "../components/InvoiceDetail";
 import { formatDateToMMDameDDYYYY } from "../../../utils/date.util";
 
 export default function Invoice() {
-    const { data, dashboardData, customer, setCustomer } = useCustomerInvoice()
+    const { data, dashboardData, customer, setCustomer, loadDataPage } = useCustomerInvoice()
     const [isOpenTransitionRight, setIsOpenTransitionRight] = useState(false)
     const [isOpenProfileBillInfo, setIsOpenProfileBillInfo] = useState(false)
     const [isOpenMakeInvoice, setIsOpenMakeInvoice] = useState(false)
@@ -66,7 +66,7 @@ export default function Invoice() {
                         iconClassName="hidden md:block" />
                 ))}
             </div>
-            <div className="mt-4 bg-white dark:bg-slate-800 rounded-lg shadow-md p-4">
+            <div className="flex mt-4 gap-2 items-center">
                 <PaginatedAutocomplete
                     label="Paciente"
                     value={0}
@@ -77,6 +77,10 @@ export default function Invoice() {
                     getValue={(item) => item.id}
                     getLabel={(item) => `${item.firstName.trim()} ${item.lastName.trim()}`}
                 />
+                <div className="rounded-lg shadow-md p-3.5 border dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer flex items-center">
+                    <Filter className="inline-block mr-2 text-slate-500 dark:text-slate-300 w-4 h-4 sm:w-6 sm:h-6 md:w-6 md:h-6" />
+                    <span className="text-sm text-slate-500 dark:text-slate-300">Filtros</span>
+                </div>
             </div>
 
             {data && data.data && data?.data.map((customer) => (
@@ -125,8 +129,8 @@ export default function Invoice() {
                     ${isOpenTransitionRight ? 'translate-x-0' : 'translate-x-full'
                 }`}
             >
-                {isOpenProfileBillInfo && <PatientBillInfo customer={customer} setIsOpen={openProfileBillInfo} />}
-                {isOpenMakeInvoice && <InvoiceDetail setIsOpen={openMakeInvoice} />}
+                {isOpenProfileBillInfo && <PatientBillInfo customer={customer} setIsOpen={openProfileBillInfo} reload={loadDataPage} />}
+                {isOpenMakeInvoice && <InvoiceDetail setIsOpen={openMakeInvoice} reload={loadDataPage} />}
             </div>
         </PageComponent>
     )

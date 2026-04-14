@@ -10,9 +10,10 @@ import { CircularProgress } from "@mui/material"
 interface PatientBillInfoProps {
     customer: CustomerInvoiceDTO | null
     setIsOpen: (value: boolean) => void
+    reload: () => void
 }
 
-export default function PatientBillInfo({ customer, setIsOpen }: PatientBillInfoProps) {
+export default function PatientBillInfo({ customer, setIsOpen, reload }: PatientBillInfoProps) {
     const { setCustomer, invoiceData, paymentHistoryData, setReload, loading } = usePatientBill()
     const [isOpenModal, setIsOpenModal] = useState(false)
     
@@ -87,7 +88,7 @@ export default function PatientBillInfo({ customer, setIsOpen }: PatientBillInfo
                 </div>
             </div>
 
-            <PaymentModal customer={customer!} isModalOpen={isOpenModal} setIsModalOpen={setIsOpenModal} onClick={() => setReload((prev) => prev + 1)} />
+            <PaymentModal customer={customer!} isModalOpen={isOpenModal} setIsModalOpen={setIsOpenModal} onClick={() => {setReload((prev) => prev + 1);reload()}} />
         </PageRightComponent>
     )
 }

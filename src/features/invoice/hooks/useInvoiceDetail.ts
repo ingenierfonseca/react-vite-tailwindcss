@@ -5,10 +5,6 @@ import { InvoiceService } from "../../../services/invoice/invoice.service";
 import { invoiceReducer } from "../state/invoice.reducer";
 import { toast } from "react-toastify";
 import { formatNumber } from "../../../utils/number.util";
-//import type { Customer } from "../../../services/customer/customer.type";
-//import { CustomerService } from "../../../services/customer/customer.service";
-//import { mapToDropdown } from "../../../utils/dropdow.util";
-//import type { Paggination } from "../../../services/appointment/appointment.types";
 
 const successMsg = "SUCCESS"
 export const useInvoiceDetail = () => {
@@ -19,19 +15,6 @@ export const useInvoiceDetail = () => {
         error: null
     });
     const [itemInvoice, setItemInvoice] = useState<InvoiceItem>(getInitialInvoiceItem());
-
-    /*const [customers, setCustomers] = useState<Paggination<Customer | null>>();
-    /*const customerOptions = mapToDropdown(
-        (customers?.data ?? []).filter((c): c is Customer => c !== null),
-        c => c.id,
-        c => `${c.firstName} ${c.lastName}`
-    );
-
-    /*useEffect(() => {
-        CustomerService.getAllCustomers()
-            .then(data => setCustomers(data))
-            .catch(err => console.error("Error al cargar clientes:", err));
-    }, []);*/
 
     useEffect(() => {
         if (id === "0" || id === undefined) {
@@ -44,9 +27,6 @@ export const useInvoiceDetail = () => {
             .then(data => dispatch({ type: 'FETCH_SUCCESS', payload: data }))
             .catch(err => dispatch({ type: 'FETCH_ERROR', payload: err }));
     }, [id]);
-
-    // Helpers que envuelven el dispatch
-    //const handleAddItem = () => dispatch({ type: 'ADD_ITEM' });
 
     const resetItemInvoice = () => {
         setItemInvoice(getInitialInvoiceItem());
@@ -74,10 +54,10 @@ export const useInvoiceDetail = () => {
     }
     
     const handleRemoveItem = (index: number) => {
-        if (state.invoice && state.invoice.items.length <= 1) {
+        /*if (state.invoice && state.invoice.items.length <= 1) {
             toast.warn("La factura debe tener al menos un concepto.");
             return;
-        }
+        }*/
         dispatch({ type: 'REMOVE_ITEM', payload: index });
     };
 
@@ -103,10 +83,10 @@ export const useInvoiceDetail = () => {
         return formatNumber(total);
     };
 
-    const saveInvoice = async () => {
+    const saveInvoice = async () : Promise<boolean> => {
         const { invoice } = state;
 
-        if (!invoice) return;
+        if (!invoice) return false;
 
         dispatch({ type: 'FETCH_START' });
         //await fakeRequest();
@@ -116,20 +96,20 @@ export const useInvoiceDetail = () => {
         if (validationMsg !== successMsg) {
             toast.error(validationMsg);
             dispatch({ type: 'FETCH_ERROR', payload: validationMsg });
-            return;
+            return false;
         }
 
         try {
             const data = await InvoiceService.addInvoice(invoice);
             dispatch({ type: 'FETCH_SUCCESS', payload: data });
             toast.success("Factura guardada correctamente");
-            return data;
+            return true;
             
         } catch (err: any) {
             const errorMessage = err.response?.data?.message || "Error al crear la factura";
             dispatch({ type: 'FETCH_ERROR', payload: errorMessage });
             toast.error("Ocurrio un error al crear la factura, Intente mas tarde");
-            throw err;
+            return false;
         }
     };
 
