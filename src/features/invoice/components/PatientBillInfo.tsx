@@ -45,8 +45,8 @@ export default function PatientBillInfo({ customer, setIsOpen, reload }: Patient
                         <p className="text-sm text-slate-600 dark:text-slate-400">{formatDateToMMDameDDYYYY(invoice.dueDate)}</p>
                     </div>
                     <div>
-                        <p className="font-semibold text-lg text-black dark:text-slate-200">${invoice.total.toFixed(2)}</p>
-                        <p className={`text-md px-2 font-semibold rounded-md bg-emerald-300/20 ${invoice.statusId === 2 ? "text-emerald-500" : "text-amber-500"}`}>
+                        <p className="text-right font-semibold text-lg text-black dark:text-slate-200">${invoice.total.toFixed(2)}</p>
+                        <p className={`text-right text-md px-2 font-semibold rounded-md bg-emerald-300/20 ${invoice.statusId === 2 ? "text-emerald-500" : "text-amber-500"}`}>
                             {invoice.status}
                         </p>
                     </div>
@@ -67,8 +67,8 @@ export default function PatientBillInfo({ customer, setIsOpen, reload }: Patient
                         <p className="text-lg text-slate-600 dark:text-slate-400">{payment.paymentTypeName}</p>
                     </div>
                     <div>
-                        <p className="font-semibold text-lg text-black dark:text-slate-200">{formatDateToMMDameDDYYYY(payment.date)}</p>
-                        <p className="font-semibold text-lg text-slate-600 dark:text-slate-400">{payment.invoiceNumber}</p>
+                        <p className="text-right font-semibold text-lg text-black dark:text-slate-200">{formatDateToMMDameDDYYYY(payment.date)}</p>
+                        <p className="text-right font-semibold text-lg text-slate-600 dark:text-slate-400">{payment.invoiceNumber}</p>
                     </div>
                 </div>
             ))}

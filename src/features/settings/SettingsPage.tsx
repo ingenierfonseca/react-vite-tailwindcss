@@ -1,4 +1,3 @@
-import { useState } from "react";
 import PageComponent from "../../components/commons/PageComponent";
 import DashboardCard from "../../components/dashboard/DashboardCard";
 import type { CardModel } from "../../models/card.type";

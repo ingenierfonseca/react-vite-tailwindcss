@@ -1,4 +1,4 @@
-import { Calendar, Pencil, PencilLine, User } from "lucide-react"
+import { Calendar, Pencil, User } from "lucide-react"
 import { PaginatedAutocomplete } from "../../../components/commons/PaginatedAutocomplete"
 import { CustomerService } from "../../../services/customer/customer.service"
 import DashboardCard from "../../../components/dashboard/DashboardCard"
@@ -56,7 +56,7 @@ export default function PatientListPage() {
                 ))}
             </div>
 
-            <div className="mt-4 bg-white dark:bg-slate-800 rounded-lg shadow-md p-4">
+            <div className="mt-4">
                 <PaginatedAutocomplete
                     label="Paciente"
                     value={search}

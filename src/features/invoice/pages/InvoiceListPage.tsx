@@ -50,7 +50,7 @@ export default function Invoice() {
             textButton="Agregar Nueva Factura"
             onclick={() => openMakeInvoice(true)}
         >
-            <div className="flex gap-8">
+            <div className="flex gap-2 md:gap-8">
                 {dashboardData && dashboardData.map((dashboard, index) => (
                     <DashboardCard
                         key={index}

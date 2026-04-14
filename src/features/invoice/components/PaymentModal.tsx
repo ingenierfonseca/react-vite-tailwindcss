@@ -66,7 +66,7 @@ export default function PaymentModal({ customer, isModalOpen, setIsModalOpen, on
                     {invoiceData && invoiceData.length > 0 && (
                         <DropDownApp
                             title="Factura"
-                            data={invoiceData.map((invoice) => ({ id: invoice.id, value: invoice.number }))}
+                            data={invoiceData.filter(i => i.statusId === 1 || i.statusId === 5).map((invoice) => ({ id: invoice.id, value: invoice.number }))}
                             value={payment.invoiceId}
                             onChange={(val) => {
                                 const selectedInvoice = invoiceData.find((inv) => inv.id.toString() === val);
