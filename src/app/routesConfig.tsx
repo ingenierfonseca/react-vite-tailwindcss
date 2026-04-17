@@ -4,6 +4,7 @@ import Odontogram from "../features/odontogram/Odontogram";
 import DashboardPage from "../pages/DashboardPage";
 import PatientListPage from "../features/patients/page/PatientListPage";
 import SettingsPage from "../features/settings/SettingsPage";
+import TreatmentListPage from "../features/administration/treatments/TreatmentListPage";
 
 export const routesConfig = [
   {
@@ -40,5 +41,10 @@ export const routesConfig = [
     path: "/settings",
     title: "Configuración",
     element: <SettingsPage />
+  },
+  {
+    path: "/treatments",
+    title: "Tratamientos",
+    element: <TreatmentListPage />
   }
 ];

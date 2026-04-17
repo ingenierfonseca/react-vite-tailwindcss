@@ -1,9 +1,11 @@
 import { toast } from "react-toastify";
 import Modal from "../../../components/commons/Modal";
 import NumberInputApp from "../../../components/commons/NumberInputApp";
-import TextFieldApp from "../../../components/commons/TextFieldApp";
 import type { InvoiceItem } from "../../../services/invoice/invoice.types";
 import { formatNumber } from "../../../utils/number.util";
+import { PaginatedAutocomplete } from "../../../components/commons/PaginatedAutocomplete";
+import { useState } from "react";
+import { TreatmentService } from "../../../services/treatment/treatment.service";
 
 
 interface ThreatmentModalProps {
@@ -16,6 +18,8 @@ interface ThreatmentModalProps {
 }
 
 export default function ThreatmentModal({ invoiceItem, currency, isModalOpen, setIsModalOpen, onClick, onChangeItem }: ThreatmentModalProps) {
+    const [search, setSearch] = useState('')
+    
     return (
         <Modal isOpen={isModalOpen}
             onClose={() => setIsModalOpen(false)}
@@ -31,14 +35,25 @@ export default function ThreatmentModal({ invoiceItem, currency, isModalOpen, se
                 <p className="text-slate-500 dark:text-slate-400 text-sm">
                     Completa los datos del tratamiento
                 </p>
-                {invoiceItem && 
-                <fieldset className="grid p-2 gap-2 border border-slate-200 dark:border-slate-700">
-                    <TextFieldApp label="Tratamiento" value={invoiceItem.description} className="md:flex-2 px-2 text-sm" onChange={(val) => onChangeItem("description", val)} />
-                    <NumberInputApp title="Cantidad" value={invoiceItem.quantity} className="md:flex-1 px-2 text-sm" min={1} onChange={(val) => onChangeItem("quantity", val)} />
-                    <NumberInputApp title="Precio" value={invoiceItem.unitPrice} className="md:flex-1 px-2 text-sm" min={1} onChange={(val) => onChangeItem("unitPrice", val)} />
-                    <NumberInputApp title="Descuento" value={invoiceItem.discount} className="md:flex-1 px-2 text-sm" min={1} onChange={(val) => onChangeItem("discount", val)} />
-                    <span className={`flex-1 px-2 text-sm md:text-lg dark:text-slate-200`}>Total:{currency}{calculateLineTotal(invoiceItem)}</span>
-                </fieldset>
+                {invoiceItem &&
+                    <fieldset className="grid p-2 gap-2 border border-slate-200 dark:border-slate-700">
+                        <PaginatedAutocomplete
+                            label="Tratamiento"
+                            value={search}
+                            onChange={(value, item) => {
+                                setSearch(value)
+                                onChangeItem("description", item?.name)
+                                onChangeItem("unitPrice", item?.price)
+                            }}
+                            fetchData={TreatmentService.get}
+                            getValue={(item) => item.id}
+                            getLabel={(item) => `${item.name.trim()}`}
+                        />
+                        <NumberInputApp title="Cantidad" value={invoiceItem.quantity} className="md:flex-1 px-2 text-sm" min={1} onChange={(val) => onChangeItem("quantity", val)} />
+                        <NumberInputApp title="Precio" value={invoiceItem.unitPrice} className="md:flex-1 px-2 text-sm" min={1} onChange={(val) => onChangeItem("unitPrice", val)} disabled={true} />
+                        <NumberInputApp title="Descuento" value={invoiceItem.discount} className="md:flex-1 px-2 text-sm" min={1} onChange={(val) => onChangeItem("discount", val)} />
+                        <span className={`flex-1 px-2 text-sm md:text-lg dark:text-slate-200`}>Total:{currency}{calculateLineTotal(invoiceItem)}</span>
+                    </fieldset>
                 }
             </div>
         </Modal>

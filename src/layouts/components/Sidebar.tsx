@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SideBarItem from "./SideBarItem";
 import { getMenuData } from "../../models/menu.type";
 import { BriefcaseMedical } from "lucide-react";
+import { useLocation, useNavigate } from "react-router";
 
 interface SidebarProps {
   collapsed: boolean;
@@ -12,6 +13,20 @@ function Sidebar({collapsed, isMobileMenuOpen}: SidebarProps) {
     const [expandedItems, setExpandedItems] = useState(new Set())
     const isDesktop = window.innerWidth >= 768
     const menuItems = getMenuData();
+    const navigate = useNavigate();
+    const location = useLocation();
+
+    useEffect(() => {
+        const newExpanded = new Set()
+
+        menuItems.forEach(item => {
+            if (item.submenu?.some(sub => location.pathname.includes(sub.path))) {
+            newExpanded.add(item.id)
+            }
+        })
+
+        setExpandedItems(newExpanded)
+    }, [location.pathname])
 
     return (
         <div className={`
@@ -53,14 +68,20 @@ function Sidebar({collapsed, isMobileMenuOpen}: SidebarProps) {
                 {menuItems.map((item) => {
                     return (
                         <div key={item.id}>
-                            <SideBarItem item={item} collapsed={collapsed} isDesktop={isDesktop} expandedItems={expandedItems} setExpandedItems={setExpandedItems} />
-                            {/*!collapsed && item.submenu && expandedItems.has(item.id) && (
-                                <div className="ml-8 mt-2 space-y1">
+                            <SideBarItem item={item} 
+                                collapsed={collapsed}
+                                isDesktop={isDesktop} 
+                                expandedItems={expandedItems} 
+                                setExpandedItems={setExpandedItems} />
+                            {item.submenu && expandedItems.has(item.id) && (
+                                <div className="flex flex-col mt-2 ml-8">
                                     {item.submenu.map((submenuItem) => {
-                                        return <button key={submenuItem.id}>{submenuItem.label}</button>
+                                        return <button key={submenuItem.id} className={`text-left p-3 cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-800/50
+                                            ${location.pathname.includes(submenuItem.path!) ? "text-primary font-bold border-l" : "border-l border-slate-200"}`}
+                                            onClick={() => navigate(submenuItem.path || "/")}>{submenuItem.label}</button>
                                     })}
                                 </div>
-                            )*/}
+                            )}
                         </div>
                     )
                 })}

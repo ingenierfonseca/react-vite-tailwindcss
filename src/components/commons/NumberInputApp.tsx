@@ -8,8 +8,9 @@ interface NumberInputAppProps {
     min?: number
     max?: number
     step?: number
+    disabled?: boolean
 }
-export default function NumberInputApp({ title, value, className, max, onChange }: NumberInputAppProps) {
+export default function NumberInputApp({ title, value, className, max, onChange, disabled = false }: NumberInputAppProps) {
     return (
         <TextField
             className={className}
@@ -17,6 +18,7 @@ export default function NumberInputApp({ title, value, className, max, onChange 
             variant="outlined"
             type="number"
             value={value === 0 ? "" : value}
+            disabled={disabled}
             slotProps={{
                 htmlInput: {
                     min: 0,
