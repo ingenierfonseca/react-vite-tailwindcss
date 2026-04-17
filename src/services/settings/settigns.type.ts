@@ -18,9 +18,9 @@ export function data(): Settings {
         appName: "Clinica Fonseca",
         appLogoUrl: "https://res.cloudinary.com/dzj6l8n0v/image/upload/v1700000000/clinica-fonseca/logo.png",
         appFaviconUrl: "https://res.cloudinary.com/dzj6l8n0v/image/upload/v1700000000/clinica-fonseca/favicon.ico",
-        primaryColor: "#F527EE",
+        primaryColor: "#0e46cb",
         secondaryColor: "#FBBF24",
-        borderColor: "#ED1818",
+        borderColor: "#0e46cb",
         borderHover: "#FBBF24",
         version: "1.0.0"
     }

@@ -1,8 +1,9 @@
-import { Calendar, LayoutDashboard, Receipt, Users, type LucideProps } from "lucide-react";
+import { BarChart3, Calendar, LayoutDashboard, Receipt, Settings, Users, type LucideProps } from "lucide-react";
 
 export interface SubMenuAppModel {
     id: string,
-    label: string
+    label: string,
+    path: string
 }
 
 export interface MenuAppModel {
@@ -38,11 +39,11 @@ export function getMenuData() {
             count: "2.4k",
             path: "/patients"
         },
-        /*{
+        {
             id: "treatments",
             icon: BarChart3,
             label: "Tratamientos y expedientes",   //"Treatments and Records",
-        },*/
+        },
         {
             id: "invoice",
             icon: Receipt,
@@ -60,6 +61,15 @@ export function getMenuData() {
             label: "Odontograma",
             path: "/odontogram",
         },
+        {
+            id: "admin",
+            icon: Settings,
+            label: "Administración",
+            submenu: [
+                { id: "treatments", label: "Tratamientos", path: "treatments" },
+                { id: "appointmentType", label: "Tipos de cita", path: "appointment-type" }
+            ]
+        }
         /*{
             id: "reports",
             icon: BarChart3,

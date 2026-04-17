@@ -1,7 +1,6 @@
 import { ChevronDown } from "lucide-react"
 import type { MenuAppModel } from "../../models/menu.type"
 import { useLocation, useNavigate } from "react-router";
-import { routesConfig } from "../../app/routesConfig";
 
 interface SidebarItemsProps {
     item: MenuAppModel
@@ -13,16 +12,17 @@ interface SidebarItemsProps {
 export default function SideBarItem({ item, collapsed, isDesktop, expandedItems, setExpandedItems }: SidebarItemsProps) {
     const navigate = useNavigate();
     const location = useLocation();
-    const currentRoute = routesConfig.find(
-        (r) => r.path === location.pathname
-    );
+    const isActive =
+        (item.path && location.pathname.includes(item.path)) ||
+        item.submenu?.some((s) => location.pathname.includes(s.path))
     const classItem = `text-slate-600 dark:text-slate-300`
+
     return (//bg-linear-to-r from-blue-500 to-purple-600
         <button
             className={`w-full flex items-center justify-between p-3 rounded-xl
-            cursor-pointer transition-all duration-200 ${location.pathname.includes(item.path!) ?
+            cursor-pointer transition-all duration-200 ${isActive ?
             "bg-primary shadow-lg shadow-primary/25" :
-            "hover:bg-slate-100 dark:hover:bg-slate-800/50"
+            "hover:bg-primary/20 dark:hover:bg-slate-800/50"
             } 'active:scale-95 active:bg-slate-200 dark:active:bg-slate-700'`}
             onClick={() => {
                 const newExpanded = new Set(expandedItems)
@@ -38,13 +38,14 @@ export default function SideBarItem({ item, collapsed, isDesktop, expandedItems,
                     newExpanded.add(item.id)
                     setExpandedItems(newExpanded)
                 }
-                navigate(item.path || "/");
+                if (item.path)
+                    navigate(item.path || "/");
             }}>
             <div className={`flex items-center space-x-3`}>
-                <item.icon className={`w-5 h-5 ${classItem} ${currentRoute?.path === item.path ? "text-white" : ""}`} />
+                <item.icon className={`w-5 h-5 ${classItem} ${isActive ? "text-white" : ""}`} />
                 {(!collapsed || !isDesktop) && (
                     <>
-                        <span className={`font-medium ml-2 ${classItem} ${currentRoute?.path === item.path ? "text-white" : ""}`}>
+                        <span className={`font-medium ml-2 ${classItem} ${isActive ? "text-white" : ""}`}>
                             {item.label.slice(0, 22)}
                         </span>
                         {item.badge && (
@@ -62,7 +63,7 @@ export default function SideBarItem({ item, collapsed, isDesktop, expandedItems,
                 )}
             </div>
             {item.submenu && (
-                <ChevronDown className={`${expandedItems.has(item.id) ? "" : "rotate-280"}} w-4 h-4 transition-transform`} />
+                <ChevronDown className={`${expandedItems.has(item.id) ? "" : "rotate-280"} w-4 h-4 transition-transform ${isActive ? "text-white" : ""}`} />
             )}
         </button>
     )

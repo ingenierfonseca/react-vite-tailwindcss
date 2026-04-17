@@ -69,7 +69,7 @@ export default function PatientListPage() {
 
             {data && data.data && 
             <div className="mt-4 bg-white dark:bg-slate-800 rounded-lg shadow-md">
-                <div className="flex gap-4 mt-4 px-4 py-4 bg-slate-100 dark:bg-slate-700/20">
+                <div className="flex mt-4 px-4 py-2 bg-slate-100 dark:bg-slate-700/20">
                     {headers.map((header) => (
                         <div key={header} className={`
                             ${header === 'Paciente' ? 'flex-2' : ''}
