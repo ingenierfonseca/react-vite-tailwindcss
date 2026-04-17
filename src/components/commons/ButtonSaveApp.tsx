@@ -14,7 +14,7 @@ export default function ButtonSaveApp({ label, onClick, loading, className }: Bu
                 flex items-center justify-center gap-2 disabled:opacity-50
                 mt-4 bg-primary px-4 py-2 font-semibold text-white rounded-sm 
                 self-end cursor-pointer transition-all
-                ${loading ? 'opacity-70 cursor-not-allowed' : 'hover:bg-primary/90'}
+                ${loading ? 'opacity-70 cursor-not-allowed' : 'hover:bg-primary/70 hover:text-white/70'}
             `}
         >
             {loading ? (

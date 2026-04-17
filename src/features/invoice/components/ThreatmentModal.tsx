@@ -48,7 +48,7 @@ export default function ThreatmentModal({ invoiceItem, currency, isModalOpen, se
 const validateFields = (item: InvoiceItem) => {
     const { description, quantity, unitPrice } = item;
     if (!description) {
-        toast.error("El campo descripción es requerido");
+        toast.error("El campo tratamiento es requerido");
         return false;
     }
     if (quantity === undefined || quantity <= 0) {

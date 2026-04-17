@@ -7,13 +7,14 @@ export const useLayout = () => {
     const [error, setError] = useState<any>(null);
 
     useEffect(() => {
-        if (token === null || token === undefined) {
+        //console.log("Token en Layout: null o undefined ", token);
+        //if (token === null || token === undefined) {
             console.log("Token en Layout: null o undefined ", token);
             AuthService.get()
                 .then()
                 .catch(setError)
                 .finally(() => setLoading(false));
-        }
+        //}
     }, []);
 
     return {

@@ -13,8 +13,8 @@ export default function PageComponent({ title, description, textButton, onclick,
         <div className="relative min-h-screen px-4 pt-4 pb-18 z-20 bg-white dark:bg-slate-900">
             <div className="flex">
                 <div>
-                    <h1 className="text-2xl font-bold text-slate-800 dark:text-white">{title}</h1>
-                    <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">{description}</p>
+                    <p className="m-0 leading-none text-2xl font-bold text-slate-800 dark:text-white">{title}</p>
+                    <p className="m-0 leading-none text-sm text-slate-500 dark:text-slate-400 mt-1">{description}</p>
                 </div>
                 <div className="hidden md:block ml-auto">
                     <AddButtonApp onclick={onclick} label={textButton} />

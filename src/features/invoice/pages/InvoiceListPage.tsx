@@ -45,8 +45,8 @@ export default function Invoice() {
 
     return (
         <PageComponent
-            title="Facturas"
-            description="Administra la información de tus facturas"
+            title="Dashboard de Facturación"
+            description="Visión general de las cuentas de pacientes y transacciones"
             textButton="Agregar Nueva Factura"
             onclick={() => openMakeInvoice(true)}
         >
@@ -97,12 +97,12 @@ export default function Invoice() {
                         />
                         <div className="ml-auto">
                             {customer && customer.balances.map((balance, index) => (
-                                <p key={index} className={`sm:text-lg md:text-3xl font-semibold ${getColorByPendingCount(customer!)} flex justify-end`}>
+                                <p key={index} className={`sm:text-lg md:text-2xl font-semibold ${getColorByPendingCount(customer!)} flex justify-end`}>
                                     {balance.symbol}{formatNumber(balance.amount)}
                                 </p>
                             ))}
                             {customer && customer.balances.length === 0 && (
-                                <p className={`sm:text-lg md:text-3xl font-semibold ${getColorByPendingCount(customer!)} flex justify-end`}>C$0.00</p>
+                                <p className={`sm:text-lg md:text-2xl font-semibold ${getColorByPendingCount(customer!)} flex justify-end`}>C$0.00</p>
                             )}
                             <p className="text-sm md:text-lg text-slate-600 dark:text-slate-400 flex justify-end whitespace-nowrap truncate">Deuda  Total</p>
                         </div>

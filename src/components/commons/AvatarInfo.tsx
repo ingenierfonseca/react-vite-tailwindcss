@@ -26,7 +26,7 @@ export default function AvatarInfo({ avatar, name, description, className, onCli
             <div className="ml-4 text-left">
                 <p className="hidden md:block text-2xl font-semibold text-black dark:text-slate-200">{name}</p>
                 <p className="block md:hidden text-lg font-semibold text-black dark:text-slate-200">{shortName}</p>
-                <p className="text-md md:text-lg text-slate-600 dark:text-slate-400">{description}</p>
+                <p className="text-md md:text-lg text-slate-600 dark:text-slate-400">{description.split(":")[0]}:<span className="text-black dark:text-slate-200">{description.split(":")[1]}</span></p>
             </div>
         </button>
     )
