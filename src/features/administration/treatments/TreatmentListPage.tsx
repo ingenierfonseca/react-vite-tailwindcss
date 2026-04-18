@@ -2,7 +2,7 @@ import { ChevronLeft, ChevronRight, EllipsisVertical } from "lucide-react";
 import PageComponent from "../../../components/commons/PageComponent";
 import TreatmentForm from "./components/TreatmentForm";
 import { useTreatments } from "./hooks/useTreatmetns";
-import PaginationButton from "../../../components/commons/PaginationButton";
+import PaginationButton from "../../../components/pagination-data/PaginationButton";
 
 const headers = [
     'Tratamiento', 'Descripcion', 'Precio', 'Estado', ''
@@ -101,7 +101,7 @@ export default function TreatmentListPage() {
 
 
             <div
-                className={`fixed top-0 right-0 h-full md:w-7/12 bg-white dark:bg-slate-800 shadow-2xl z-50 
+                className={`fixed top-0 right-0 h-full w-full md:w-7/12 bg-white dark:bg-slate-800 shadow-2xl z-50 
                     transform transition-transform duration-500 ease-in-out 
                     ${isOpenTransitionRight ? 'translate-x-0' : 'translate-x-full'
                     }`}

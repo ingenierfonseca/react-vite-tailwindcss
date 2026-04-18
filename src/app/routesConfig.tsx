@@ -5,6 +5,7 @@ import DashboardPage from "../pages/DashboardPage";
 import PatientListPage from "../features/patients/page/PatientListPage";
 import SettingsPage from "../features/settings/SettingsPage";
 import TreatmentListPage from "../features/administration/treatments/TreatmentListPage";
+import AppointmentTypeListPage from "../features/administration/apointment-type/AppointmentTypeListPage";
 
 export const routesConfig = [
   {
@@ -46,5 +47,10 @@ export const routesConfig = [
     path: "/treatments",
     title: "Tratamientos",
     element: <TreatmentListPage />
+  },
+  {
+    path: "/appointment-types",
+    title: "Tipo de Citas",
+    element: <AppointmentTypeListPage />
   }
 ];

@@ -3,7 +3,7 @@ import Modal from "../../../components/commons/Modal";
 import NumberInputApp from "../../../components/commons/NumberInputApp";
 import type { InvoiceItem } from "../../../services/invoice/invoice.types";
 import { formatNumber } from "../../../utils/number.util";
-import { PaginatedAutocomplete } from "../../../components/commons/PaginatedAutocomplete";
+import { PaginatedAutocomplete } from "../../../components/pagination-data/PaginatedAutocomplete";
 import { useState } from "react";
 import { TreatmentService } from "../../../services/treatment/treatment.service";
 

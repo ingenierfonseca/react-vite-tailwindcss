@@ -1,5 +1,5 @@
 import { Calendar, Pencil, User } from "lucide-react"
-import { PaginatedAutocomplete } from "../../../components/commons/PaginatedAutocomplete"
+import { PaginatedAutocomplete } from "../../../components/pagination-data/PaginatedAutocomplete"
 import { CustomerService } from "../../../services/customer/customer.service"
 import DashboardCard from "../../../components/dashboard/DashboardCard"
 import PatientProfile from "../components/PatientProfile"

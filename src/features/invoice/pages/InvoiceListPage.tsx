@@ -1,5 +1,5 @@
 import PageComponent from "../../../components/commons/PageComponent";
-import { PaginatedAutocomplete } from "../../../components/commons/PaginatedAutocomplete";
+import { PaginatedAutocomplete } from "../../../components/pagination-data/PaginatedAutocomplete";
 import { CustomerService } from "../../../services/customer/customer.service";
 import DashboardCard from "../../../components/dashboard/DashboardCard";
 import AvatarInfo from "../../../components/commons/AvatarInfo";
@@ -146,51 +146,3 @@ function getColorByPendingCount(customer: CustomerInvoiceDTO) {
     //}
     return "text-emerald-500";
 }
-
-{/*<>
-            <PageList headers={headers} data={data} setIsModalOpen={()=> navigate(`/invoice/0`)} />
-            
-            <Modal isOpen={isModalOpen}
-                onClose={() => navigate(`/invoice/0`)}
-                title="Información de la Factura"
-                textBtnConfirm="Guardar"
-                clickBtnConfirm={()=> saveInvoice}>
-                <div className="space-y-4">
-                    <p className="text-slate-500 dark:text-slate-400 text-sm">
-                        Completa los datos de la factura
-                    </p>
-                    <div className="flex gap-8">
-                        <div className="flex flex-col flex-1">
-                            <p className="font-bold p-1">Seleccione un paciente</p>
-                            <select className={`${cn(theme.dropdown.content)} ${cn(theme.dropdown.item)}`}>
-                                <option value="1">Marlon Fonseca</option>
-                            </select>
-                        </div>
-                        <div className="flex flex-col flex-1">
-                            <p className="font-bold p-1">Seleccione un tratamiento</p>
-                            <select className={`${cn(theme.dropdown.content)} ${cn(theme.dropdown.item)}`}>
-                                <option value="1">Extraccion</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div className="flex gap-8">
-                        <div className="flex-1">
-                            <p>SubTotal</p>
-                            <input
-                                type="text"
-                                placeholder="Nombre del paciente"
-                                className="w-full p-1 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 outline-none focus:ring-2 focus:ring-indigo-500"
-                            />
-                        </div>
-                        <div className="flex-1">
-                            <p>Tax</p>
-                            <input
-                                type="text"
-                                placeholder="Nombre del paciente"
-                                className="w-full p-1 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 outline-none focus:ring-2 focus:ring-indigo-500"
-                            />
-                        </div>
-                    </div>
-                </div>
-            </Modal>
-        </>*/}

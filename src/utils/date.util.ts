@@ -52,3 +52,18 @@ export const formatDateToMMDameDDYYYYTime = new Date().toLocaleString("en-US", {
   minute: "2-digit",
   hour12: true,
 });
+
+export function minutesToTime(minutes: number) {
+  const hours = Math.floor(minutes / 60);
+  const mins = minutes % 60;
+  const secs = 0;
+
+  return `${String(hours).padStart(2, '0')}:` +
+         `${String(mins).padStart(2, '0')}:` +
+         `${String(secs).padStart(2, '0')}`;
+}
+
+export function timeToMinutes(time: string) {
+  const [hours, minutes, seconds] = time.split(':').map(Number);
+  return hours * 60 + minutes + Math.floor(seconds / 60);
+}

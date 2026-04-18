@@ -1,7 +1,7 @@
 import DropDownApp from "../../../components/commons/DropDownApp";
 import type { DropDownAppModel } from "../../../models/dropdownapp.type";
 import type { Invoice } from "../../../services/invoice/invoice.types";
-import { PaginatedAutocomplete } from "../../../components/commons/PaginatedAutocomplete";
+import { PaginatedAutocomplete } from "../../../components/pagination-data/PaginatedAutocomplete";
 import { CustomerService } from "../../../services/customer/customer.service";
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs from 'dayjs';

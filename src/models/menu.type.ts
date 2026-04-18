@@ -67,7 +67,7 @@ export function getMenuData() {
             label: "Administración",
             submenu: [
                 { id: "treatments", label: "Tratamientos", path: "treatments" },
-                { id: "appointmentType", label: "Tipos de cita", path: "appointment-type" }
+                { id: "appointmentType", label: "Tipos de cita", path: "appointment-types" }
             ]
         }
         /*{
