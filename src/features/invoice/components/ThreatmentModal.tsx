@@ -6,11 +6,14 @@ import { formatNumber } from "../../../utils/number.util";
 import { PaginatedAutocomplete } from "../../../components/pagination-data/PaginatedAutocomplete";
 import { useState } from "react";
 import { TreatmentService } from "../../../services/treatment/treatment.service";
+import { ExchangeRateService } from "../../../services/exchange-rate/exchangeRate.service";
+import type { Currency } from "../../../services/types/currency.type";
+import { TextField } from "@mui/material";
 
 
 interface ThreatmentModalProps {
     invoiceItem: InvoiceItem,
-    currency: string,
+    currency: Currency | undefined,
     isModalOpen: boolean,
     setIsModalOpen: (value: boolean) => void,
     onClick: () => void,
@@ -40,19 +43,28 @@ export default function ThreatmentModal({ invoiceItem, currency, isModalOpen, se
                         <PaginatedAutocomplete
                             label="Tratamiento"
                             value={search}
-                            onChange={(value, item) => {
+                            onChange={async (value, item) => {
                                 setSearch(value)
                                 onChangeItem("description", item?.name)
-                                onChangeItem("unitPrice", item?.price)
+
+                                let exchangeRate = 1
+                                if (currency?.id !== item?.currencyId) {
+                                    const response = await ExchangeRateService.getLatest(item?.currencyId??0, currency!.id)
+                                    exchangeRate = response.rate
+                                }
+
+                                onChangeItem("unitPrice", (item?.price! * exchangeRate))
+                                onChangeItem("originalCurrencyId", item?.currencyId)
+                                onChangeItem("originalPrice", item?.price)
                             }}
-                            fetchData={TreatmentService.get}
+                            fetchData={TreatmentService.getActive}
                             getValue={(item) => item.id}
                             getLabel={(item) => `${item.name.trim()}`}
                         />
                         <NumberInputApp title="Cantidad" value={invoiceItem.quantity} className="md:flex-1 px-2 text-sm" min={1} onChange={(val) => onChangeItem("quantity", val)} />
-                        <NumberInputApp title="Precio" value={invoiceItem.unitPrice} className="md:flex-1 px-2 text-sm" min={1} onChange={(val) => onChangeItem("unitPrice", val)} disabled={true} />
+                        <TextField title="Precio" value={invoiceItem.unitPrice.toFixed(2)} className="md:flex-1 px-2 text-sm" onChange={(val) => onChangeItem("unitPrice", val)} disabled={true} />
                         <NumberInputApp title="Descuento" value={invoiceItem.discount} className="md:flex-1 px-2 text-sm" min={1} onChange={(val) => onChangeItem("discount", val)} />
-                        <span className={`flex-1 px-2 text-sm md:text-lg dark:text-slate-200`}>Total:{currency}{calculateLineTotal(invoiceItem)}</span>
+                        <span className={`flex-1 px-2 text-sm md:text-lg dark:text-slate-200`}>Total:{currency?.symbol}{calculateLineTotal(invoiceItem)}</span>
                     </fieldset>
                 }
             </div>
@@ -79,9 +91,9 @@ const validateFields = (item: InvoiceItem) => {
 }
 
 const calculateLineTotal = (item: InvoiceItem) => {
-    const { quantity = 0, unitPrice = 0, tax = 0, discount = 0 } = item;
-    let total = quantity * unitPrice;
-    if (tax) total *= 1 + tax / 100;
-    if (discount) total *= 1 - discount / 100;
+    const { quantity = 0, unitPrice = 0, discount = 0 } = item;
+    let total = quantity * unitPrice - discount;
+    //if (tax) total *= 1 + tax / 100;
+    //if (discount) total *= 1 - discount / 100;
     return formatNumber(total);
 };

@@ -14,7 +14,12 @@ export function createCatalogService<T>(endpoint: string) {
             );
             return data;
         },
-
+        find: async (id: number): Promise<T> => {
+            const { data } = await api.get(
+                `${endpoint}${id}`
+            );
+            return data;
+        },
         post: async (payload: T) => {
             const { data } = await api.post(endpoint, payload);
             return data;

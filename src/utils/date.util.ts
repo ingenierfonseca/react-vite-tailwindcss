@@ -67,3 +67,10 @@ export function timeToMinutes(time: string) {
   const [hours, minutes, seconds] = time.split(':').map(Number);
   return hours * 60 + minutes + Math.floor(seconds / 60);
 }
+
+export function addDays(dateString: string, days: number): string {
+  const date = new Date(dateString);
+  date.setDate(date.getDate() + days);
+
+  return date.toISOString().split("T")[0];
+}

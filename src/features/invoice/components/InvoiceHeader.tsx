@@ -1,5 +1,4 @@
 import DropDownApp from "../../../components/commons/DropDownApp";
-import type { DropDownAppModel } from "../../../models/dropdownapp.type";
 import type { Invoice } from "../../../services/invoice/invoice.types";
 import { PaginatedAutocomplete } from "../../../components/pagination-data/PaginatedAutocomplete";
 import { CustomerService } from "../../../services/customer/customer.service";
@@ -8,34 +7,22 @@ import dayjs from 'dayjs';
 import 'dayjs/locale/es';
 import { TextField } from "@mui/material";
 import { getInvoiceStatusOptions } from "../state/state";
-
-const paymentTerns:DropDownAppModel[] = [
-    {
-        id: 1,
-        value: '30 dias'
-    },
-    {
-        id: 2,
-        value: '15 dias'
-    }
-]
-const moneys: DropDownAppModel[] = [
-    {
-        id: 1,
-        value: 'COR - Peso Nicaraguense'
-    },
-    {
-        id: 2,
-        value: 'USD - Dolares'
-    }
-]
+import { PaymentTermService } from "../../../services/paymentTerm/paymentTerm.service";
+import { useState } from "react";
+import type { PaymentTerm } from "../../../services/paymentTerm/PaymentTerm.type";
+import { addDays } from "../../../utils/date.util";
+import { CurrencyService } from "../../../services/currency/currency.service";
+import type { Currency } from "../../../services/types/currency.type";
 
 interface InvoiceHeaderProps {
     invoice: Invoice | null,
     disabled: boolean
     updateField: (field: keyof Invoice, value: any) => void
+    setCurrency: (currency: Currency) => void
 }
-export default function InvoiceHeader({invoice, disabled, updateField}: InvoiceHeaderProps) {
+export default function InvoiceHeader({ invoice, disabled, updateField, setCurrency }: InvoiceHeaderProps) {
+    const [paymentTerm, setPaymentTerm] = useState<PaymentTerm | null>()
+
     return (
         <fieldset disabled={disabled} className="px-4 py-3">
             <div className="flex flex-col md:flex-row gap-8 mt-4">
@@ -49,44 +36,65 @@ export default function InvoiceHeader({invoice, disabled, updateField}: InvoiceH
                     getValue={(item) => item.id}
                     getLabel={(item) => `${item.firstName.trim()} ${item.lastName.trim()}`}
                 />
-                <DatePicker
-                    className="flex-1"
-                    label="Fecha de Emision"
-                    value={invoice?.issueDate ? dayjs(invoice.issueDate) : null}
-                    onChange={(val) => updateField("issueDate", val)}
+                <PaginatedAutocomplete
+                    label="Terminos de Pago"
+                    value={invoice ? invoice.paymentTermId : undefined}
+                    onChange={(value, item) => {
+                        setPaymentTerm(item)
+                        updateField("paymentTermId", value)
+                        updateField("dueDate", addDays(invoice?.issueDate!, item?.daysToDue!))
+                    }}
+                    fetchData={PaymentTermService.get}
+                    getValue={(item) => item.id}
+                    getLabel={(item) => item.name.trim()}
                 />
             </div>
             <div className="flex flex-col md:flex-row gap-8 mt-6">
                 <TextField
                     className="flex-1"
-                    label="Numero de Factura" 
+                    label="Numero de Factura"
                     variant="outlined"
                     value={invoice ? invoice.number : ''}
                     slotProps={{
-                        inputLabel: { shrink: true } 
+                        inputLabel: { shrink: true }
                     }}
                     disabled={true}
                 />
-                <DropDownApp 
-                    title="Terminos de Pago" 
-                    data={paymentTerns} 
-                    value={1} 
+                <DatePicker
+                    className="flex-1"
+                    label="Fecha de Emision"
+                    value={invoice?.issueDate ? dayjs(invoice.issueDate) : null}
+                    onChange={(val) => {
+                        updateField("issueDate", val)
+                        if (val && paymentTerm?.daysToDue) {
+                            const dueDate = val.add(paymentTerm?.daysToDue, "day");
+                            updateField("dueDate", dueDate)
+                        }
+                    }}
                 />
-                <DropDownApp 
-                    title="Moneda" 
-                    data={moneys} value={invoice ? invoice.currencyId : 1}
-                    onChange={(val) => updateField("currencyId", val)} />
+                <PaginatedAutocomplete
+                    label="Moneda"
+                    value={invoice ? invoice.currencyId : undefined}
+                    onChange={(value, item) => {
+                        setCurrency(item!)
+                        updateField("currencyId", value)
+                    }}
+                    fetchData={CurrencyService.get}
+                    getValue={(item) => item.id}
+                    getLabel={(item) => `${item.symbol}-${item.name.trim()}`}
+                />
             </div>
             <div className="flex flex-col md:flex-row gap-8 mt-4">
                 <DatePicker
                     className="flex-1"
                     label="Vencimiento"
                     value={invoice?.dueDate ? dayjs(invoice.dueDate) : null}
-                    onChange={(val) => updateField("dueDate", val)}
+                    disabled={true}
                 />
-                {invoice && invoice.number && <DropDownApp title="Estado" 
+                {invoice && invoice.number && <DropDownApp title="Estado"
                     data={getInvoiceStatusOptions()} value={invoice.statusId}
                     onChange={(value) => updateField("statusId", value)}
+                    disabled={disabled}
                 />}
             </div>
         </fieldset>

@@ -11,6 +11,11 @@ export const usePatientBill = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<Error | null>(null);
     const [reload, setReload] = useState(1);
+    const [openPopUp, setOpenPopUp] = useState('')
+    const [openPopUpPayment, setOpenPopUpPayment] = useState('')
+    const [isOpenModal, setIsOpenModal] = useState(false)
+    const [isOpenTicket, setIsOpenTicket] = useState(false)
+    const [isOpenInvoicePDF, setIsOpenInvoicePDF] = useState(false)
 
     const loadPageData = async () => {
         InvoiceService.getInvoicesByCustomer(customer!.id)
@@ -43,7 +48,17 @@ export const usePatientBill = () => {
         loading,
         error,
         customer,
+        openPopUp,
+        isOpenModal,
+        isOpenTicket,
+        isOpenInvoicePDF,
+        openPopUpPayment,
         setCustomer,
-        setReload
+        setReload,
+        setOpenPopUp,
+        setOpenPopUpPayment,
+        setIsOpenModal,
+        setIsOpenTicket,
+        setIsOpenInvoicePDF
     };
 }

@@ -1,30 +1,51 @@
 import { useEffect, useReducer, useState } from "react";
-import { useParams } from "react-router";
+//import { useParams } from "react-router";
 import { getInitialInvoice, getInitialInvoiceItem, type Invoice, type InvoiceItem } from "../../../services/invoice/invoice.types";
 import { InvoiceService } from "../../../services/invoice/invoice.service";
 import { invoiceReducer } from "../state/invoice.reducer";
 import { toast } from "react-toastify";
 import { formatNumber } from "../../../utils/number.util";
+import type { Currency } from "../../../services/types/currency.type";
+import { CurrencyService } from "../../../services/currency/currency.service";
+import { ExchangeRateService, type ExchangeRate } from "../../../services/exchange-rate/exchangeRate.service";
 
 const successMsg = "SUCCESS"
 export const useInvoiceDetail = () => {
-    const { id } = useParams<{ id: string }>();
+    //const { id } = useParams<{ id: string }>();
+    const [id, setId] = useState("0")
     const [state, dispatch] = useReducer(invoiceReducer, {
         invoice: null,
         loading: true,
         error: null
     });
     const [itemInvoice, setItemInvoice] = useState<InvoiceItem>(getInitialInvoiceItem());
+    const [currency, setCurrency] = useState<Currency>()
+    /*const [treatments, setTreatments] = useState<TreatmentInvoiceItemDto[]>([])
+    const [treatment, setTreatment] = useState<TreatmentInvoiceItemDto>()
+
+    const addTreatment = (newTreatment: TreatmentInvoiceItemDto) => {
+        setTreatments(prev => [...prev, newTreatment]);
+    };*/
 
     useEffect(() => {
         if (id === "0" || id === undefined) {
-            dispatch({ type: 'FETCH_SUCCESS', payload: getInitialInvoice() });
+            var initInvoiceState = getInitialInvoice()
+            dispatch({ type: 'FETCH_SUCCESS', payload: initInvoiceState });
+            CurrencyService.find(initInvoiceState.currencyId).then(item => {
+                setCurrency(item)
+            })
             return;
         }
 
         dispatch({ type: 'FETCH_START' });
         InvoiceService.getInvoice(id)
-            .then(data => dispatch({ type: 'FETCH_SUCCESS', payload: data }))
+            .then(data => {
+                dispatch({ type: 'FETCH_SUCCESS', payload: data })
+                console.log(`Actualizando currency ${data.currencyId}`)
+                CurrencyService.find(data.currencyId).then(item => {
+                    setCurrency(item)
+                })
+            })
             .catch(err => dispatch({ type: 'FETCH_ERROR', payload: err }));
     }, [id]);
 
@@ -37,7 +58,7 @@ export const useInvoiceDetail = () => {
     }
 
     const handleAddNewItem = () => {
-        dispatch({ 
+        dispatch({
             type: 'ADD_ITEM',
             payload: {
                 id: itemInvoice.id,
@@ -48,11 +69,13 @@ export const useInvoiceDetail = () => {
                 unitPrice: itemInvoice.unitPrice,
                 tax: itemInvoice.tax,
                 discount: itemInvoice.discount,
-                lineTotal: itemInvoice.lineTotal
+                lineTotal: itemInvoice.lineTotal,
+                originalCurrencyId: itemInvoice.originalCurrencyId,
+                originalPrice: itemInvoice.originalPrice
             }
         });
     }
-    
+
     const handleRemoveItem = (index: number) => {
         /*if (state.invoice && state.invoice.items.length <= 1) {
             toast.warn("La factura debe tener al menos un concepto.");
@@ -61,10 +84,10 @@ export const useInvoiceDetail = () => {
         dispatch({ type: 'REMOVE_ITEM', payload: index });
     };
 
-    const updateField = (field: keyof Invoice, value: any) => 
+    const updateField = (field: keyof Invoice, value: any) =>
         dispatch({ type: 'UPDATE_FIELD', payload: { field, value } });
 
-    const onChangeItem = (index: number, field: keyof InvoiceItem, value: any) => 
+    const onChangeItem = (index: number, field: keyof InvoiceItem, value: any) =>
         dispatch({ type: 'UPDATE_ITEM', payload: { index, field, value } });
 
     const calculateLineTotal = (item: InvoiceItem) => {
@@ -83,7 +106,34 @@ export const useInvoiceDetail = () => {
         return formatNumber(total);
     };
 
-    const saveInvoice = async () : Promise<boolean> => {
+    const recalculateItemsCurrency = async (newCurrencyId: number) => {
+        if (!state.invoice?.items || state.invoice.items.length === 0) return;
+        const lastItem = state.invoice.items.findLast(x => x.originalCurrencyId!)
+        
+        if (lastItem) {
+            let exchangeRate: ExchangeRate
+            if (newCurrencyId !== lastItem.originalCurrencyId!)
+                exchangeRate = await ExchangeRateService.getLatest(lastItem.originalCurrencyId!, newCurrencyId);
+
+            const updatedItems = state.invoice.items.map(item => {
+                if (item.originalCurrencyId === newCurrencyId) {
+                    return { ...item, unitPrice: item.originalPrice };
+                }
+
+                const newUnitPrice = item.originalPrice! * exchangeRate.rate;
+
+                return {
+                    ...item,
+                    unitPrice: Number(newUnitPrice.toFixed(2)),
+                    discount: item.discount * exchangeRate.rate
+                };
+            });
+
+            updateField('items', updatedItems);
+        }
+    };
+
+    const saveInvoice = async (): Promise<boolean> => {
         const { invoice } = state;
 
         if (!invoice) return false;
@@ -92,7 +142,7 @@ export const useInvoiceDetail = () => {
         //await fakeRequest();
 
         const validationMsg = validateInvoiceData(invoice);
-        
+
         if (validationMsg !== successMsg) {
             toast.error(validationMsg);
             dispatch({ type: 'FETCH_ERROR', payload: validationMsg });
@@ -104,7 +154,7 @@ export const useInvoiceDetail = () => {
             dispatch({ type: 'FETCH_SUCCESS', payload: data });
             toast.success("Factura guardada correctamente");
             return true;
-            
+
         } catch (err: any) {
             const errorMessage = err.response?.data?.message || "Error al crear la factura";
             dispatch({ type: 'FETCH_ERROR', payload: errorMessage });
@@ -125,7 +175,7 @@ export const useInvoiceDetail = () => {
             return "Debe ingresar una fecha de vencimiento válida";
 
         if (!inv?.items || inv.items.length === 0)
-            return "Debe agregar un detalle a la factura";
+            return "Debe agregar un tratamiento a la factura";
 
         for (const it of inv.items) {
             if (it.description === undefined || it.description.length === 0)
@@ -135,7 +185,7 @@ export const useInvoiceDetail = () => {
             if (it.unitPrice === undefined || it.unitPrice <= 0)
                 return `Debe ingresar un precio unitario para el detalle ${it.description || 'sin nombre'}`;
         }
-        
+
         return successMsg;
     }
 
@@ -158,6 +208,10 @@ export const useInvoiceDetail = () => {
         calculateTotal,
         saveInvoice,
         itemInvoice,
-        resetItemInvoice
+        resetItemInvoice,
+        setId,
+        currency,
+        setCurrency,
+        recalculateItemsCurrency
     };
 };

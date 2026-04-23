@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 import AvatarInfo from "../../../components/commons/AvatarInfo"
 import PageRightComponent from "../../../components/commons/PageRightComponent"
 import type { CustomerInvoiceDTO } from "../../../services/invoice/customerinvoice.dto.type"
@@ -6,16 +6,48 @@ import { usePatientBill } from "../hooks/patientBill.hook"
 import PaymentModal from "./PaymentModal"
 import { formatDateToMMDameDDYYYY } from "../../../utils/date.util"
 import { CircularProgress } from "@mui/material"
+import { Download, EllipsisVertical, Printer, Receipt } from "lucide-react"
+import TickectModal from "./TicketModal"
+import InvoicePrintModal from "./InvoicePrint"
+import { PDFViewer } from '@react-pdf/renderer';
+import InvoicePDF from "./InvoicePDF"
+import ModalInvoice from "../../../components/commons/ModalInvoice"
 
 interface PatientBillInfoProps {
     customer: CustomerInvoiceDTO | null
     setIsOpen: (value: boolean) => void
-    reload: () => void
+    reload: () => void,
+    openInvoiceDetail: (id: string) => void
 }
 
-export default function PatientBillInfo({ customer, setIsOpen, reload }: PatientBillInfoProps) {
-    const { setCustomer, invoiceData, paymentHistoryData, setReload, loading } = usePatientBill()
-    const [isOpenModal, setIsOpenModal] = useState(false)
+const datosEjemplo = {
+    clienteNombre: "Juan Pérez",
+    clienteId: "12345678-K",
+    numeroFactura: "2026-001",
+    items: [
+      { descripcion: "Limpieza Dental Pro", cantidad: 1, precioUnitario: 45.00 },
+      { descripcion: "Resina Simple", cantidad: 2, precioUnitario: 35.00 }
+    ]
+  };
+
+export default function PatientBillInfo({ customer, setIsOpen, reload, openInvoiceDetail }: PatientBillInfoProps) {
+    const {
+        setCustomer, 
+        invoiceData, 
+        paymentHistoryData, 
+        setReload, 
+        loading,
+        openPopUp,
+        openPopUpPayment,
+        isOpenModal,
+        isOpenTicket,
+        isOpenInvoicePDF,
+        setOpenPopUp,
+        setOpenPopUpPayment,
+        setIsOpenModal,
+        setIsOpenTicket,
+        setIsOpenInvoicePDF
+    } = usePatientBill()
     
     useEffect(() => {
         if (customer) {
@@ -44,11 +76,36 @@ export default function PatientBillInfo({ customer, setIsOpen, reload }: Patient
                         <p className="font-bold text-lg text-black dark:text-slate-200">{invoice.number}</p>
                         <p className="text-sm text-slate-600 dark:text-slate-400">{formatDateToMMDameDDYYYY(invoice.dueDate)}</p>
                     </div>
-                    <div>
-                        <p className="text-right font-semibold text-lg text-black dark:text-slate-200">${invoice.total.toFixed(2)}</p>
-                        <p className={`text-right text-md px-2 font-semibold rounded-md bg-emerald-300/20 ${invoice.statusId === 2 ? "text-emerald-500" : "text-amber-500"}`}>
-                            {invoice.status}
-                        </p>
+                    <div className="flex gap-3 relative">
+                        <div>
+                            <p className="text-right font-semibold text-lg text-black dark:text-slate-200">${invoice.total.toFixed(2)}</p>
+                            <p className={`text-right text-md px-2 font-semibold rounded-md bg-emerald-300/20 ${invoice.statusId === 2 ? "text-emerald-500" : "text-amber-500"}`}>
+                                {invoice.status}
+                            </p>
+                        </div>
+                        <div className="flex-1 flex justify-end items-center">
+                            <div className="p-1 hover:bg-slate-200 dark:hover:bg-slate-700 dark:text-slate-200 rounded-full transition-colors" onClick={() => setOpenPopUp(`inv-${invoice.id}`)}><EllipsisVertical /></div>
+                        </div>
+                        {openPopUp === `inv-${invoice.id}` &&(
+                            <div className="absolute flex flex-col right-0 mt-2 mr-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-900 rounded-lg shadow-lg z-50" onMouseLeave={() => setOpenPopUp('')}>
+                                <button
+                                    className="text-left px-2 py-1 hover:bg-slate-100 dark:hover:bg-slate-800 dark:text-slate-200"
+                                    onClick={async () => {
+                                        openInvoiceDetail(invoice.id.toString())
+                                    }}
+                                >
+                                    Ver Factura
+                                </button>
+                                <button
+                                    className="text-left px-2 py-1 hover:bg-slate-100 dark:hover:bg-slate-800 dark:text-slate-200"
+                                    onClick={async () => {
+                                        setIsOpenInvoicePDF(true)
+                                    }}
+                                >
+                                    Imprimir Factura
+                                </button>
+                            </div>
+                        )}
                     </div>
                 </div>
             ))}
@@ -66,9 +123,43 @@ export default function PatientBillInfo({ customer, setIsOpen, reload }: Patient
                         <p className="font-bold text-lg text-black dark:text-slate-200">C${payment.amount.toFixed(2)}</p>
                         <p className="text-lg text-slate-600 dark:text-slate-400">{payment.paymentTypeName}</p>
                     </div>
-                    <div>
-                        <p className="text-right font-semibold text-lg text-black dark:text-slate-200">{formatDateToMMDameDDYYYY(payment.date)}</p>
-                        <p className="text-right font-semibold text-lg text-slate-600 dark:text-slate-400">{payment.invoiceNumber}</p>
+                    <div className="flex gap-3 relative">
+                        <div>
+                            <p className="text-right font-semibold text-lg text-black dark:text-slate-200">{formatDateToMMDameDDYYYY(payment.date)}</p>
+                            <p className="text-right font-semibold text-lg text-slate-600 dark:text-slate-400">{payment.invoiceNumber}</p>
+                        </div>
+                        <div className="flex-1 flex justify-end items-center">
+                            <div className="p-1 hover:bg-slate-200 dark:hover:bg-slate-700 dark:text-slate-200 rounded-full transition-colors" onClick={() => setOpenPopUpPayment(`pay-${payment.id}`)}><EllipsisVertical /></div>
+                        </div>
+                        {openPopUpPayment === `pay-${payment.id}` &&(
+                            <div className="absolute flex flex-col right-0 mt-2 mr-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-900 rounded-lg shadow-lg z-50" onMouseLeave={() => setOpenPopUpPayment('')}>
+                                <button
+                                    className="flex gap-2 text-left px-2 py-1 hover:bg-slate-100 dark:hover:bg-slate-800 dark:text-slate-200"
+                                    onClick={async () => {
+                                        //openInvoiceDetail(invoice.id.toString())
+                                    }}
+                                >
+                                    <Receipt /><span>Ver Pago</span>
+                                </button>
+                                <button
+                                    className="flex gap-2 text-left px-2 py-1 hover:bg-slate-100 dark:hover:bg-slate-800 dark:text-slate-200"
+                                    onClick={async () => {
+                                        //setPayment(payment)
+                                        setIsOpenTicket(true)
+                                    }}
+                                >
+                                    <Printer /><span>Imprimir Pago</span>
+                                </button>
+                                <button
+                                    className="flex gap-2 text-left px-2 py-1 hover:bg-slate-100 dark:hover:bg-slate-800 dark:text-slate-200"
+                                    onClick={async () => {
+                                        //openInvoiceDetail(invoice.id.toString())
+                                    }}
+                                >
+                                    <Download /><span>Descargar Pago</span>
+                                </button>
+                            </div>
+                        )}
                     </div>
                 </div>
             ))}
@@ -89,6 +180,13 @@ export default function PatientBillInfo({ customer, setIsOpen, reload }: Patient
             </div>
 
             <PaymentModal customer={customer!} isModalOpen={isOpenModal} setIsModalOpen={setIsOpenModal} onClick={() => {setReload((prev) => prev + 1);reload()}} />
+            <TickectModal isOpen={isOpenTicket} onClose={() => setIsOpenTicket(false)} title={"Baucher"} textBtnConfirm={"Imprimir"} clickBtnConfirm={() => {}} />
+            <InvoicePrintModal isOpen={false} onClose={() => setIsOpenTicket(false)} title={"Baucher"} textBtnConfirm={"Imprimir"} clickBtnConfirm={() => {}} />
+            <ModalInvoice isOpen={isOpenInvoicePDF} onClose={() => setIsOpenInvoicePDF(false)} title={"Factura"}>
+                <PDFViewer width="100%" height="98%">
+                    <InvoicePDF {...datosEjemplo} />
+                </PDFViewer>
+            </ModalInvoice>
         </PageRightComponent>
     )
 }

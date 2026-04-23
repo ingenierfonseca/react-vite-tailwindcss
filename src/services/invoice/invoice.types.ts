@@ -27,6 +27,8 @@ export interface InvoiceItem {
     tax: number
     discount: number
     lineTotal: number
+    originalCurrencyId?: number
+    originalPrice?: number
 }
 
 export interface InvoiceInfoDTO {

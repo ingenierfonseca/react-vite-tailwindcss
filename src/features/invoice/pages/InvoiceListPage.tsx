@@ -11,12 +11,14 @@ import { formatNumber } from "../../../utils/number.util";
 import type { CustomerInvoiceDTO } from "../../../services/invoice/customerinvoice.dto.type";
 import InvoiceDetail from "../components/InvoiceDetail";
 import { formatDateToMMDameDDYYYY } from "../../../utils/date.util";
+import type { Invoice } from "../../../services/invoice/invoice.types";
 
 export default function Invoice() {
     const { data, dashboardData, customer, setCustomer, loadDataPage } = useCustomerInvoice()
     const [isOpenTransitionRight, setIsOpenTransitionRight] = useState(false)
     const [isOpenProfileBillInfo, setIsOpenProfileBillInfo] = useState(false)
     const [isOpenMakeInvoice, setIsOpenMakeInvoice] = useState(false)
+    const [invoiceId, setInvoiceId] = useState("0")
 
     function openProfileBillInfo(value: boolean) {
         if (value) {
@@ -48,8 +50,10 @@ export default function Invoice() {
             title="Dashboard de Facturación"
             description="Visión general de las cuentas de pacientes y transacciones"
             textButton="Agregar Nueva Factura"
-            onclick={() => openMakeInvoice(true)}
-        >
+            onclick={() => {
+                setInvoiceId("0")
+                openMakeInvoice(true)
+            }}>
             <div className="flex gap-2 md:gap-8">
                 {dashboardData && dashboardData.map((dashboard, index) => (
                     <DashboardCard
@@ -129,8 +133,19 @@ export default function Invoice() {
                     ${isOpenTransitionRight ? 'translate-x-0' : 'translate-x-full'
                 }`}
             >
-                {isOpenProfileBillInfo && <PatientBillInfo customer={customer} setIsOpen={openProfileBillInfo} reload={loadDataPage} />}
-                {isOpenMakeInvoice && <InvoiceDetail setIsOpen={openMakeInvoice} reload={loadDataPage} />}
+                {isOpenProfileBillInfo && <PatientBillInfo 
+                    customer={customer} 
+                    setIsOpen={openProfileBillInfo} 
+                    reload={loadDataPage}
+                    openInvoiceDetail={(id: string) => {
+                        setInvoiceId(id)
+                        openProfileBillInfo(false)
+                        setTimeout(() => {
+                             openMakeInvoice(true)
+                        }, 500);
+                    }} />}
+
+                {isOpenMakeInvoice && <InvoiceDetail idParam={invoiceId} setIsOpen={openMakeInvoice} reload={loadDataPage} />}
             </div>
         </PageComponent>
     )

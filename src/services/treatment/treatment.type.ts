@@ -10,3 +10,12 @@ export interface Treatment {
     durationMinutes: number
     currency?: Currency
 }
+
+export interface TreatmentInvoiceItemDto {
+    id: number
+    name: string
+    currencyId: number
+    price: number
+    quantity: number
+    tax: number
+}
