@@ -32,7 +32,7 @@ export default function InvoiceHeader({ invoice, disabled, updateField, setCurre
                     onChange={(value) =>
                         updateField("customerId", value)
                     }
-                    fetchData={CustomerService.getAllCustomers}
+                    fetchData={CustomerService.get}
                     getValue={(item) => item.id}
                     getLabel={(item) => `${item.firstName.trim()} ${item.lastName.trim()}`}
                 />

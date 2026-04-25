@@ -16,6 +16,7 @@ export const usePatientBill = () => {
     const [isOpenModal, setIsOpenModal] = useState(false)
     const [isOpenTicket, setIsOpenTicket] = useState(false)
     const [isOpenInvoicePDF, setIsOpenInvoicePDF] = useState(false)
+    const [paymentId, setPaymentId] = useState(0)
 
     const loadPageData = async () => {
         InvoiceService.getInvoicesByCustomer(customer!.id)
@@ -53,12 +54,14 @@ export const usePatientBill = () => {
         isOpenTicket,
         isOpenInvoicePDF,
         openPopUpPayment,
+        paymentId,
         setCustomer,
         setReload,
         setOpenPopUp,
         setOpenPopUpPayment,
         setIsOpenModal,
         setIsOpenTicket,
-        setIsOpenInvoicePDF
+        setIsOpenInvoicePDF,
+        setPaymentId
     };
 }

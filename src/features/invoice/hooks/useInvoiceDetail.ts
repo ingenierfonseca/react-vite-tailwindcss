@@ -38,10 +38,9 @@ export const useInvoiceDetail = () => {
         }
 
         dispatch({ type: 'FETCH_START' });
-        InvoiceService.getInvoice(id)
+        InvoiceService.find(Number(id))
             .then(data => {
                 dispatch({ type: 'FETCH_SUCCESS', payload: data })
-                console.log(`Actualizando currency ${data.currencyId}`)
                 CurrencyService.find(data.currencyId).then(item => {
                     setCurrency(item)
                 })
@@ -133,7 +132,7 @@ export const useInvoiceDetail = () => {
         }
     };
 
-    const saveInvoice = async (): Promise<boolean> => {
+    const saveInvoice = async (): Promise<Boolean> => {
         const { invoice } = state;
 
         if (!invoice) return false;
@@ -150,15 +149,19 @@ export const useInvoiceDetail = () => {
         }
 
         try {
-            const data = await InvoiceService.addInvoice(invoice);
+            const request = invoice.id === 0 
+                ? InvoiceService.post(invoice) 
+                : InvoiceService.put(invoice.id, invoice);
+
+            const data = await request;
             dispatch({ type: 'FETCH_SUCCESS', payload: data });
             toast.success("Factura guardada correctamente");
             return true;
 
         } catch (err: any) {
-            const errorMessage = err.response?.data?.message || "Error al crear la factura";
-            dispatch({ type: 'FETCH_ERROR', payload: errorMessage });
-            toast.error("Ocurrio un error al crear la factura, Intente mas tarde");
+            const msg = err.response?.data?.message || err.message || "Error inesperado";
+            dispatch({ type: 'FETCH_ERROR', payload: msg });
+            toast.error(msg);
             return false;
         }
     };

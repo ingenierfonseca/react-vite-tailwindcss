@@ -1,9 +1,12 @@
 export const ENDPOINTS = {
-    TREATMENT: "/treatment/",
-    PATIENT: "/patient/",
     APPOINTMENT: "/appointment/",
     APPOINTMENTTYPE: "/appointmenttype/",
-    PAYMENTTERM: "/paymentterm/",
+    CUSTOMERS: "/customers/",
+    CURRENCY: "/currency/",
     EXCHANGERATE: "/exchangerate/",
-    CURRENCY: "/currency/"
+    INVOICE: "/invoice/",
+    PATIENT: "/patient/",
+    PAYMENT: "/payment/",
+    PAYMENTTERM: "/paymentterm/",
+    TREATMENT: "/treatment/"
 } as const;

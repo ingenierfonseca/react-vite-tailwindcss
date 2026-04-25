@@ -2,11 +2,8 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import type { PaginatedResponse } from "../../models/paginatedResponse";
 import type React from "react";
 import PaginationButton from "./PaginationButton";
+import type { Header } from "../../models/header.type";
 
-export interface Header {
-    header: string
-    className: string
-}
 interface DataTableProps<T> {
     columns: Header[]
     pagination?: PaginatedResponse<T>

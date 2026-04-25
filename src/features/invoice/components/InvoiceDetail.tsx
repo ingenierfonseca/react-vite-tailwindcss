@@ -78,7 +78,6 @@ export default function InvoiceDetail({ setIsOpen, reload, idParam }: InvoiceDet
         const response = await saveInvoice()
         if (response) {
             reload()
-            setIsOpen(false)
         }
     }
 

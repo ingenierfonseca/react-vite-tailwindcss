@@ -13,7 +13,6 @@ export interface Invoice {
     createdAt: string
     statusId: number
     paymentTermId: number
-    createdBy: string
     items: InvoiceItem[]
 }
 
@@ -27,8 +26,8 @@ export interface InvoiceItem {
     tax: number
     discount: number
     lineTotal: number
-    originalCurrencyId?: number
-    originalPrice?: number
+    originalCurrencyId: number
+    originalPrice: number
 }
 
 export interface InvoiceInfoDTO {
@@ -60,7 +59,6 @@ export const getInitialInvoice = (): Invoice => ({
     currencyId: 1,
     createdAt: new Date().toISOString().split('T')[0],
     statusId: 1,
-    createdBy: '',
     paymentTermId: 1,
     items: []
 });
@@ -74,5 +72,7 @@ export const getInitialInvoiceItem = (): InvoiceItem => ({
     unitPrice: 0,
     tax: 0,
     discount: 0,
-    lineTotal: 0
+    lineTotal: 0,
+    originalCurrencyId: 0,
+    originalPrice: 0
 });

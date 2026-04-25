@@ -12,6 +12,7 @@ import type { CustomerInvoiceDTO } from "../../../services/invoice/customerinvoi
 import InvoiceDetail from "../components/InvoiceDetail";
 import { formatDateToMMDameDDYYYY } from "../../../utils/date.util";
 import type { Invoice } from "../../../services/invoice/invoice.types";
+import { ASSETS_URLS } from "../../../config/constants";
 
 export default function Invoice() {
     const { data, dashboardData, customer, setCustomer, loadDataPage } = useCustomerInvoice()
@@ -72,12 +73,12 @@ export default function Invoice() {
             </div>
             <div className="flex mt-4 gap-2 items-center">
                 <PaginatedAutocomplete
-                    label="Paciente"
+                    label="Buscar Paciente"
                     value={0}
                     onChange={(value) => alert(value)
                         //updateField("customerId", value)
                     }
-                    fetchData={() => CustomerService.getAllCustomers({ page: 1, search: '' })}
+                    fetchData={() => CustomerService.get({ page: 1, search: '' })}
                     getValue={(item) => item.id}
                     getLabel={(item) => `${item.firstName.trim()} ${item.lastName.trim()}`}
                 />
@@ -90,10 +91,10 @@ export default function Invoice() {
             {data && data.data && data?.data.map((customer) => (
                 <div key={customer!.id} className="flex flex-col text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-md bg-white my-3 py-2 dark:bg-slate-800 shadow-md active:scale-[0,98] transition-transform">
                     <div className="flex w-full px-4">
-                        <AvatarInfo
-                            avatar={customer!.avatar}
+                        <AvatarInfo className="min-w-0"
+                            avatar={`${ASSETS_URLS.avatars}/${customer!.avatar}`}
                             name={customer!.fullName}
-                            description={`Ultimo Pago: ${customer!.lastPayment ? formatDateToMMDameDDYYYY(customer!.lastPayment) : 'Sin registros'}`}
+                            title={`Ultimo Pago: ${customer!.lastPayment ? formatDateToMMDameDDYYYY(customer!.lastPayment) : 'Sin registros'}`}
                             onClick={() => {
                                 setCustomer(customer)
                                 openProfileBillInfo(true)
