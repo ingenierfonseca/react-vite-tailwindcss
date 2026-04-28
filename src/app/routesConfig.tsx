@@ -6,6 +6,7 @@ import PatientListPage from "../features/patients/page/PatientListPage";
 import SettingsPage from "../features/settings/SettingsPage";
 import TreatmentListPage from "../features/administration/treatments/TreatmentListPage";
 import AppointmentTypeListPage from "../features/administration/apointment-type/AppointmentTypeListPage";
+import PatientBulkUploadPage from "../features/upload-data/patient/PatientBulkUploadPage";
 
 export const routesConfig = [
   {
@@ -52,5 +53,10 @@ export const routesConfig = [
     path: "/appointment-types",
     title: "Tipo de Citas",
     element: <AppointmentTypeListPage />
+  },
+  {
+    path: "/imports/patients",
+    title: "Importacion de Pacientes",
+    element: <PatientBulkUploadPage />
   }
 ];

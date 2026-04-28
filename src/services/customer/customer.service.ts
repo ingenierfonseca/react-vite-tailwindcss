@@ -1,5 +1,6 @@
 import api from "../../api/api";
 import { ENDPOINTS } from "../../api/endpoints";
+import type { CustomerExcelRow } from "../../models/customerExcelRow.type";
 import { createCatalogService } from "../baseCatalogService";
 import type { Customer } from "./customer.type";
 
@@ -11,6 +12,10 @@ export const CustomerService = {
 
     getDashboard: async () => {
         const { data } = await api.get(`${method}${`dashboard`}`);
+        return data;
+    },
+    bulkImport: async (customers: CustomerExcelRow[]) => {
+        const { data } = await api.post(`${method}${`bulk-import`}`, customers);
         return data;
     },
     uploadAvatar: async (id: number, file: any) => {
