@@ -89,14 +89,6 @@ export const useInvoiceDetail = () => {
     const onChangeItem = (index: number, field: keyof InvoiceItem, value: any) =>
         dispatch({ type: 'UPDATE_ITEM', payload: { index, field, value } });
 
-    const calculateLineTotal = (item: InvoiceItem) => {
-        const { quantity = 0, unitPrice = 0, tax = 0, discount = 0 } = item;
-        let total = quantity * unitPrice;
-        if (tax) total *= 1 + tax / 100;
-        if (discount) total *= 1 - discount / 100;
-        return formatNumber(total);
-    };
-
     const calculateTotal = () => {
         const total = state.invoice?.items.reduce((acc, item) => {
             const line = (item.quantity || 0) * (item.unitPrice || 0) * (1 + (item.tax || 0) / 100) * (1 - (item.discount || 0) / 100);
@@ -207,7 +199,6 @@ export const useInvoiceDetail = () => {
         onChangeItem,
         onChangeItemInvoice,
         updateField,
-        calculateLineTotal,
         calculateTotal,
         saveInvoice,
         itemInvoice,

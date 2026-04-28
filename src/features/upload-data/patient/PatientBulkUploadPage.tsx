@@ -1,12 +1,13 @@
 import PageComponent from "../../../components/commons/PageComponent";
 import StepComponent from "../components/StepComponent";
-import { ArrowRight, Check, Download, File, Grid, Info, Upload } from "lucide-react";
+import { ArrowRight, Check, Download, File, Grid, Info } from "lucide-react";
 import type { Header } from "../../../models/header.type";
 import { useImportPatientHook } from "./useImportPatient.hook";
 import { ASSETS_URLS } from "../../../config/constants";
 import ErrorCard from "../components/ErrorCard";
 import { getStatusBadge } from "../components/StatusBadge";
 import PaginatedFoot from "../../../components/pagination-data/PaginatedFoot";
+import SelectFile from "../components/SelectFile";
 
 const headers: Header[] = [
   {
@@ -41,14 +42,13 @@ const headers: Header[] = [
 export default function PatientBulkUploadPage() {
   const {
     stepActive,
-    fileInputRef,
+    fileName,
     previewData,
     errorResume,
     currentItems,
     currentPage,
     totalPages,
     handleChangePage,
-    handleUploadClick,
     handleFileUpload,
     validateData,
     importData
@@ -73,21 +73,9 @@ export default function PatientBulkUploadPage() {
         <div className="w-full md:max-w-100 shrink-0 p-6 border border-slate-300 h-fit dark:border-slate-700 dark:bg-slate-800/50">
           <p className="text-black dark:text-slate-200 font-bold">1. Subir archivo</p>
           <p className="text-xs dark:text-slate-400">Selecciona o arrastra el archivo con los datos de los pacientes</p>
-          <div onClick={handleUploadClick}
-            className="flex flex-col items-center mt-2 p-6 dark:bg-slate-900 rounded-lg border border-sidebar-item border-dashed cursor-pointer">
-            <Upload className="text-sidebar-item" size={50} />
-            <input
-              type="file"
-              ref={fileInputRef}
-              onChange={handleFileUpload}
-              className="hidden"
-              accept=".xlsx, .csv"
-            />
-            <p className="mt-6 font-bold text-black dark:text-slate-200">Arrastra tu archivo aqui</p>
-            <p className="text-xs dark:text-slate-400">o haz click para seleccionar</p>
-            <p className="mt-6 font-semibold text-sidebar-item">Formatos permitidos: .xlsx, .csv</p>
-          </div>
-
+          
+          <SelectFile onFileSelect={handleFileUpload} />
+          
           <div className="flex gap-3 p-2 mt-3 rounded-lg dark:bg-slate-900">
             <div className="flex-1">
               <div className="flex gap-1 items-center dark:text-slate-400">
@@ -117,10 +105,10 @@ export default function PatientBulkUploadPage() {
                 <p className="text-black dark:text-slate-200 font-bold">2. Vista del archivo</p>
                 <p className="text-xs dark:text-slate-400">Revisar los datos antes de importar</p>
               </div>
-              <div className="flex items-center gap-2 ml-auto">
-                <span className="text-sm dark:text-slate-400">Pacientes_importacion.xlsx</span>
-                <div className="h-fit rounded-full bg-green-400"><Check size={14} /></div>
-              </div>
+              {fileName.length !== 0 && <div className="flex items-center gap-2 ml-auto">
+                <span className="text-sm text-green-400 font-bold dark:font-normal">{fileName}</span>
+                <div className="h-fit rounded-full p-0.5 bg-green-400"><Check size={20} /></div>
+              </div>}
             </div>
 
             <div className="flex mt-3 px-2 py-1.5 dark:bg-slate-800/50 border border-slate-300 dark:border-slate-700">

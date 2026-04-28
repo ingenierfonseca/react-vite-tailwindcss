@@ -2,13 +2,13 @@ import { toast } from "react-toastify";
 import Modal from "../../../components/commons/Modal";
 import NumberInputApp from "../../../components/commons/NumberInputApp";
 import type { InvoiceItem } from "../../../services/invoice/invoice.types";
-import { formatNumber } from "../../../utils/number.util";
 import { PaginatedAutocomplete } from "../../../components/pagination-data/PaginatedAutocomplete";
 import { useState } from "react";
 import { TreatmentService } from "../../../services/treatment/treatment.service";
 import { ExchangeRateService } from "../../../services/exchange-rate/exchangeRate.service";
 import type { Currency } from "../../../services/types/currency.type";
 import { TextField } from "@mui/material";
+import { calculateLineTotal } from "../../../utils/invoice.util";
 
 
 interface ThreatmentModalProps {
@@ -100,11 +100,3 @@ const validateFields = (item: InvoiceItem) => {
 
     return true;
 }
-
-const calculateLineTotal = (item: InvoiceItem) => {
-    const { quantity = 0, unitPrice = 0, discount = 0 } = item;
-    let total = quantity * unitPrice - discount;
-    //if (tax) total *= 1 + tax / 100;
-    //if (discount) total *= 1 - discount / 100;
-    return formatNumber(total);
-};

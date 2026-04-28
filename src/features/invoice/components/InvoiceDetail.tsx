@@ -9,6 +9,7 @@ import ThreatmentModal from "./ThreatmentModal";
 import { useEffect, useState } from "react";
 import { InvoiceStatus } from "../state/state";
 import { toast } from "react-toastify";
+import { calculateLineTotal } from "../../../utils/invoice.util";
 
 export interface Header {
     header: string
@@ -57,7 +58,6 @@ export default function InvoiceDetail({ setIsOpen, reload, idParam }: InvoiceDet
         onChangeItemInvoice,
         handleAddNewItem,
         handleRemoveItem,
-        calculateLineTotal,
         calculateTotal,
         saveInvoice,
         updateField,
@@ -138,24 +138,25 @@ export default function InvoiceDetail({ setIsOpen, reload, idParam }: InvoiceDet
                                 </div>
                             )
                         })}
-                        <div className="flex flex-col gap-3 bg-slate-50 my-4 p-6 border w-fit rounded-md border-slate-300 dark:bg-slate-800 dark:border-slate-600">
+                        <button className="flex flex-col gap-3 bg-slate-50 my-4 p-6 border w-fit rounded-md border-slate-300 dark:bg-slate-800 dark:border-slate-600 cursor-pointer"
+                            onClick={() => {
+                                if (invoice?.currencyId == 0) {
+                                    toast.error("Seleccione una moneda antes de continuar")
+                                    return
+                                }
+                                resetItemInvoice()
+                                setIsOpenModal(true)
+                            }}
+                            disabled={disabled || loading}>
                             <div className="flex gap-3">
-                                <button onClick={() => {
-                                    if (invoice?.currencyId == 0) {
-                                        toast.error("Seleccione una moneda antes de continuar")
-                                        return
-                                    }
-                                    resetItemInvoice()
-                                    setIsOpenModal(true)
-                                }}
-                                    disabled={disabled || loading}
-                                    className={`rounded-2xl p-1 text-white disabled:opacity-50 bg-primary dark:text-white dark:hover:bg-slate-700 cursor-pointer`}>
+                                <div
+                                    className={`rounded-2xl p-1 text-white disabled:opacity-50 bg-primary dark:text-white dark:hover:bg-slate-700`}>
                                     <Plus size={16} />
-                                </button>
+                                </div>
                                 <span className="font-semibold dark:text-slate-300">Agregar Tratamiento</span>
                             </div>
                             <span className="text-xs dark:text-slate-300">Añade tratamientos para comenzar</span>
-                        </div>
+                        </button>
                     </div>
                     <div className="lg:w-50 h-fit border border-slate-200 bg-slate-50 ml-2 text-sm dark:bg-slate-900 dark:border-slate-700 dark:text-slate-400">
                         <div className="border-b-2 border-slate-200 dark:border-slate-600 flex justify-between p-2.5"><span>SubTotal</span><span>{currency?.symbol}{invoice !== null ? calculateTotal() : "0.00"}</span></div>

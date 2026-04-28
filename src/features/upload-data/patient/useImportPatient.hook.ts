@@ -1,4 +1,4 @@
-import { useRef, useState, type ChangeEvent } from "react";
+import { useState } from "react";
 import * as XLSX from 'xlsx';
 import { validatePhoneNumber } from "../../../utils/number.util";
 import { validateEmail } from "../../../utils/email.util";
@@ -13,7 +13,7 @@ interface ErrorResume {
 
 export const useImportPatientHook = () => {
     const [stepActive, setStepActive] = useState(1)
-    const fileInputRef = useRef<HTMLInputElement>(null);
+    const [fileName, setFileName] = useState("")
     const [previewData, setPreviewData] = useState<CustomerExcelRow[]>([]);
     const [isProcessing, setIsProcessing] = useState(false);
     const [errorResume, setErrorResume] = useState<ErrorResume>({
@@ -26,13 +26,10 @@ export const useImportPatientHook = () => {
     const [totalPages, setTotalPages] = useState(0)
     const itemsPerPage = 15;
 
-    const handleUploadClick = () => {
-        fileInputRef.current?.click();
-    };
-
-    const handleFileUpload = (event: ChangeEvent<HTMLInputElement>) => {
-        const file = event.target.files?.[0];
+    const handleFileUpload = (file: File) => {
         if (!file) return;
+
+        setFileName(file.name)
 
         setIsProcessing(true);
         const reader = new FileReader();
@@ -66,7 +63,6 @@ export const useImportPatientHook = () => {
                 console.error("Error al procesar Excel:", error);
             } finally {
                 setIsProcessing(false);
-                event.target.value = "";
             }
         };
         reader.readAsArrayBuffer(file);
@@ -156,7 +152,7 @@ export const useImportPatientHook = () => {
 
     return {
         stepActive,
-        fileInputRef,
+        fileName,
         isProcessing,
         previewData,
         errorResume,
@@ -165,7 +161,6 @@ export const useImportPatientHook = () => {
         totalPages,
         handleChangePage,
         setStepActive,
-        handleUploadClick,
         handleFileUpload,
         validateData,
         importData
