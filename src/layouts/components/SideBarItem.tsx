@@ -15,13 +15,13 @@ export default function SideBarItem({ item, collapsed, isDesktop, expandedItems,
     const isActive =
         (item.path && location.pathname.includes(item.path)) ||
         item.submenu?.some((s) => location.pathname.includes(s.path))
-    const classItem = `text-slate-600 dark:text-slate-300`
+    const classItem = `text-sidebar-text dark:text-slate-300`
 
     return (//bg-linear-to-r from-blue-500 to-purple-600
         <button
             className={`w-full flex items-center justify-between p-3 rounded-xl
             cursor-pointer transition-all duration-200 ${isActive ?
-            "bg-primary shadow-lg shadow-primary/25" :
+            "bg-sidebar-item shadow-lg shadow-primary/25" :
             "hover:bg-primary/20 dark:hover:bg-slate-800/50"
             } 'active:scale-95 active:bg-slate-200 dark:active:bg-slate-700'`}
             onClick={() => {
@@ -42,10 +42,10 @@ export default function SideBarItem({ item, collapsed, isDesktop, expandedItems,
                     navigate(item.path || "/");
             }}>
             <div className={`flex items-center space-x-3`}>
-                <item.icon className={`w-5 h-5 ${classItem} ${isActive ? "text-white" : ""}`} />
+                <item.icon className={`w-5 h-5 ${classItem} ${isActive ? "text-sidebar-text-active" : ""}`} />
                 {(!collapsed || !isDesktop) && (
                     <>
-                        <span className={`font-medium ml-2 ${classItem} ${isActive ? "text-white" : ""}`}>
+                        <span className={`font-medium ml-2 ${classItem} ${isActive ? "text-sidebar-text-active" : ""}`}>
                             {item.label.slice(0, 22)}
                         </span>
                         {item.badge && (

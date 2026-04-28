@@ -35,7 +35,7 @@ function Sidebar({collapsed, isMobileMenuOpen}: SidebarProps) {
             ${isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"}
             md:translate-x-0
             ${collapsed ? "md:w-20" : "md:w-72"} 
-             bg-white/80 dark:bg-slate-900/80
+             bg-sidebar dark:bg-slate-900/80
             backdrop-blur-xl border-r border-slate-200/50 dark:border-slate-700/50
             z-50`}
         >

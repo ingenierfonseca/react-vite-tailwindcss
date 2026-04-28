@@ -11,7 +11,7 @@ const headers: Header[] = [
     },
     {
         header: 'Descripcion',
-        className: 'hidden md:flex-3'
+        className: 'hidden sm:block flex-3'
     },
     {
         header: 'Duración Minutos',
@@ -30,7 +30,8 @@ export default function AppointmentTypeListPage() {
         setItem,
         setOpenPopUp,
         setCurrentPage,
-        pages
+        pages,
+        resetItem
     } = useAppointmentTypes()
 
     return (
@@ -38,7 +39,10 @@ export default function AppointmentTypeListPage() {
             title="Tipos de Citas"
             description="Administra los tipos de cita en esta clínica"
             textButton="Agregar Tipo de Cita"
-            onclick={() => { }}>
+            onclick={() => {
+                resetItem()
+                openCreate(true)
+            }}>
             <PaginatedDataTable
                 columns={headers}
                 pagination={data}
@@ -48,9 +52,9 @@ export default function AppointmentTypeListPage() {
                 {/* Cuerpo de la tabla */}
                 <div className="divide-y divide-slate-200 dark:divide-slate-600">
                     {data?.data?.map((item, index) => (
-                        <div key={item.id} className={`flex px-4 py-3 gap-2 items-center ${index % 2 !== 0 ? 'dark:bg-slate-800' : ''} hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors`}>
+                        <div key={item.id} className={`flex px-4 py-3 gap-2 items-center ${index % 2 !== 0 ? 'bg-slate-200 dark:bg-slate-800' : ''} hover:bg-slate-300 dark:hover:bg-slate-800/50 transition-colors`}>
                             <span className="flex-3 dark:text-slate-200">{item.name}</span>
-                            <span className="hidden md:flex-3 dark:text-slate-200">{item.description}</span>
+                            <span className="hidden sm:block flex-3 dark:text-slate-200">{item.description}</span>
                             <span className="flex-1 dark:text-slate-200">{item.time}</span>
                             {/* Menú de Acciones */}
                             <div className="flex-1 flex justify-end relative">

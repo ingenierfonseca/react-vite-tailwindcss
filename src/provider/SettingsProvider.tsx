@@ -21,6 +21,10 @@ export function SettingsProvider({ children }: SettingsProviderProps) {
           // Aplicamos el color a la variable de Tailwind v4
           document.documentElement.style.setProperty('--color-primary-dynamic', data.primaryColor);
           document.documentElement.style.setProperty('--color-border-dynamic', data.borderColor);
+          document.documentElement.style.setProperty('--color-sidebar-dynamic', data.bgSidebar);
+          document.documentElement.style.setProperty('--color-sidebar-item-dynamic', data.bgSidebarItem);
+          document.documentElement.style.setProperty('--color-sidebar-text-dynamic', data.sidebarItemText);
+          document.documentElement.style.setProperty('--color-sidebar-text-active-dynamic', data.sidebarItemTextActive);
         }
       } catch (error) {
         console.error("Error cargando configuración", error);

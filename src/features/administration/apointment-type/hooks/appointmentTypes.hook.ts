@@ -3,7 +3,23 @@ import { AppointmentTypeService } from "../../../../services/appointment-type/ap
 import type { AppointmentType } from "../../../../services/types/appointmentType.type";
 
 export const useAppointmentTypes = () => {
-    return useCatalog<AppointmentType>({
+    const { setItem, ...rest } =  useCatalog<AppointmentType>({
         fetchFn: AppointmentTypeService.get
     })
+
+    const resetItem = () => {
+        setItem({
+            id: 0,
+            name: '',
+            description: '',
+            time: '00:00:00',
+            timeMinutes: 0
+        })
+    }
+
+    return {
+        resetItem,
+        setItem,
+        ...rest
+    }
 };

@@ -6,7 +6,11 @@
   /* bg-primary, text-primary, etc. */
   --color-primary: var(--color-primary-dynamic, #f97316);
   --color-primary-foreground: var(--color-primary-fg-dynamic, #ffffff);
-  --color-border: var(--color-border-dynamic, #f97316); /* Ejemplo de color para bordes */
+  --color-border: var(--color-border-dynamic, #f97316);
+  --color-sidebar: var(--color-sidebar-dynamic, #f97316);
+  --color-sidebar-item: var(--color-sidebar-item-dynamic, #f97316);
+  --color-sidebar-text: var(--color-sidebar-text-dynamic, #fff);
+  --color-sidebar-text-active: var(--color-sidebar-text-active-dynamic, #fff);
 }
 
 /* Variables que cambiarás con JS desde tu API de .NET */
@@ -14,4 +18,8 @@
   --color-primary-dynamic: #f97316; /* Naranja por defecto */
   --color-primary-fg-dynamic: #ffffff;
   --color-border-dynamic: #f97316; /* Naranja por defecto */
+  --color-sidebar-dynamic: #f97316; /* Naranja por defecto */
+  --color-sidebar-item-dynamic: #f97316;
+  --color-sidebar-text-dynamic: #fff;
+  --color-sidebar-text-active-dynamic: #fff; 
 }

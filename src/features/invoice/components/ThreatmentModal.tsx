@@ -4,8 +4,9 @@ import NumberInputApp from "../../../components/commons/NumberInputApp";
 import type { InvoiceItem } from "../../../services/invoice/invoice.types";
 import { formatNumber } from "../../../utils/number.util";
 import { PaginatedAutocomplete } from "../../../components/pagination-data/PaginatedAutocomplete";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { TreatmentService } from "../../../services/treatment/treatment.service";
+import type { Treatment } from "../../../services/treatment/treatment.type";
 
 
 interface ThreatmentModalProps {
@@ -17,8 +18,20 @@ interface ThreatmentModalProps {
     onChangeItem: (field: keyof InvoiceItem, value: any) => void,
 }
 
-export default function ThreatmentModal({ invoiceItem, currency, isModalOpen, setIsModalOpen, onClick, onChangeItem }: ThreatmentModalProps) {
+export default function ThreatmentModal({ 
+    invoiceItem, currency, isModalOpen, setIsModalOpen, onClick, onChangeItem 
+}: ThreatmentModalProps) {
     const [search, setSearch] = useState('')
+    const [treatment, setTreatment] = useState<Treatment | null>()
+
+    /*useEffect(() => {
+        const newPrice = calculatePrice(
+            invoiceItem.unitPrice,
+            currency,
+            treatment?.currency?.symbol ?? currency
+        );
+        onChangeItem("unitPrice", newPrice);
+    }, [invoiceItem.unitPrice, currency, treatment]);*/
     
     return (
         <Modal isOpen={isModalOpen}
@@ -43,15 +56,30 @@ export default function ThreatmentModal({ invoiceItem, currency, isModalOpen, se
                             onChange={(value, item) => {
                                 setSearch(value)
                                 onChangeItem("description", item?.name)
-                                onChangeItem("unitPrice", item?.price)
+                                onChangeItem("unitPrice", calculatePrice(item?.price??0, currency, item?.currency?.symbol ?? currency))
+                                setTreatment(item)
                             }}
                             fetchData={TreatmentService.get}
                             getValue={(item) => item.id}
                             getLabel={(item) => `${item.name.trim()}`}
                         />
-                        <NumberInputApp title="Cantidad" value={invoiceItem.quantity} className="md:flex-1 px-2 text-sm" min={1} onChange={(val) => onChangeItem("quantity", val)} />
-                        <NumberInputApp title="Precio" value={invoiceItem.unitPrice} className="md:flex-1 px-2 text-sm" min={1} onChange={(val) => onChangeItem("unitPrice", val)} disabled={true} />
-                        <NumberInputApp title="Descuento" value={invoiceItem.discount} className="md:flex-1 px-2 text-sm" min={1} onChange={(val) => onChangeItem("discount", val)} />
+                        <NumberInputApp
+                            title="Cantidad" 
+                            value={invoiceItem.quantity} 
+                            className="md:flex-1 px-2 text-sm" min={1} 
+                            onChange={(val) => onChangeItem("quantity", val)} 
+                            shrink={true} />
+                        <NumberInputApp 
+                            title="Precio" 
+                            value={invoiceItem.unitPrice} 
+                            className="md:flex-1 px-2 text-sm" min={1} 
+                            onChange={(val) => onChangeItem("unitPrice", val)} 
+                            shrink={true} />
+                        <NumberInputApp 
+                            title="Descuento" 
+                            value={invoiceItem.discount} 
+                            className="md:flex-1 px-2 text-sm" min={1} 
+                            onChange={(val) => onChangeItem("discount", val)} />
                         <span className={`flex-1 px-2 text-sm md:text-lg dark:text-slate-200`}>Total:{currency}{calculateLineTotal(invoiceItem)}</span>
                     </fieldset>
                 }
@@ -84,4 +112,15 @@ const calculateLineTotal = (item: InvoiceItem) => {
     if (tax) total *= 1 + tax / 100;
     if (discount) total *= 1 - discount / 100;
     return formatNumber(total);
+};
+
+const calculatePrice = (price: number, invoiceCurrency: string, treatmentCurrency: string) => {
+    if (invoiceCurrency === treatmentCurrency)
+        return price;
+    else {
+        if (invoiceCurrency === 'C$' && treatmentCurrency === '$')
+            return (price*36.5)
+        else
+            return (price/36.5)
+    }
 };
