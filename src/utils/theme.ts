@@ -13,7 +13,7 @@ const inputDefault = "w-full px-3 py-2 appearance-none border border-slate-300 b
 export const theme = {
   // Estilos para Botones
   button: {
-    base: "text-white px-3 py-2 bg-grey-300 border border-slate-300 text-black font-bold cursor-pointer",
+    base: "text-white px-4 py-2 bg-grey-300 border border-slate-300 text-black cursor-pointer",
     variant: {
       primary: "bg-blue-800 text-white",
       secondary: "bg-slate-100 text-slate-900 hover:bg-slate-200 dark:bg-slate-800 dark:text-white dark:hover:bg-slate-700",

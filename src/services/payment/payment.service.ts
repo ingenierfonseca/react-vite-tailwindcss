@@ -1,10 +1,5 @@
-import api from "../../api/api";
 import type { Payment } from "./payment.type";
+import { ENDPOINTS } from "../../api/endpoints";
+import { createCatalogService } from "../baseCatalogService";
 
-const method = `/payment/`
-export const PaymentService = {
-    addInvoice: async (payload: Payment | null) => {
-        const { data } = await api.post(`${method}`, payload);
-        return data;
-    },
-};
+export const PaymentService = createCatalogService<Payment>(ENDPOINTS.PAYMENT);

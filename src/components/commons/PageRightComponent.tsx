@@ -1,3 +1,5 @@
+import { X } from "lucide-react"
+
 interface PageRightComponentProps {
     title: string,
     onClick: () => void
@@ -11,9 +13,9 @@ export default function PageRightComponent({ title, onClick, children }: PageRig
                 <p className="text-xl md:text-2xl font-semibold text-black dark:text-white">{title}</p>
                 <button 
                     onClick={onClick}
-                    className="text-slate-500 hover:text-red-500 text-2xl ml-auto"
+                    className="p-1 rounded-2xl text-slate-500 bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 ml-auto"
                     >
-                    &times;
+                    <X />
                 </button>
             </div>
             {children}

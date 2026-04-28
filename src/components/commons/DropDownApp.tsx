@@ -6,8 +6,9 @@ interface DropDownAppProps {
     data: DropDownAppModel[]
     value: string | number
     onChange?: (value: string) => void
+    disabled?: boolean
 }
-export default function DropDownApp({title, data, value, onChange}: DropDownAppProps) {
+export default function DropDownApp({title, data, value, onChange, disabled = false}: DropDownAppProps) {
     const handleChange = (event: SelectChangeEvent<string | number>) => {
         const newValue = event.target.value;
         if (onChange) {
@@ -16,7 +17,7 @@ export default function DropDownApp({title, data, value, onChange}: DropDownAppP
     };
 
     return (
-        <FormControl className="flex-1">
+        <FormControl disabled={disabled} className="flex-1">
             <InputLabel id="demo-simple-select-label">{title}</InputLabel>
             <Select
                 labelId="demo-simple-select-label"

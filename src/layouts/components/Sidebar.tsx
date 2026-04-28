@@ -41,7 +41,7 @@ function Sidebar({collapsed, isMobileMenuOpen}: SidebarProps) {
         >
             <div className={`${collapsed ? "py-6 pl-6 " : "p-6 "} border-b border-slate-200/50 dark:border-slate-700/50`}>
                 <div className="flex items-center space-x-3">
-                    <div className="w-10 h-10 bg-primary rounded-xl
+                    <div className="w-10 h-10 bg-sidebar-item rounded-xl
                     flex items-center justify-center shadow-lg">
                         <BriefcaseMedical className="w-6 h-6 text-white" />
                     </div>
@@ -53,9 +53,9 @@ function Sidebar({collapsed, isMobileMenuOpen}: SidebarProps) {
                                 <h3 className="text-xl font-bold text-slate-800 dark:text-white">
                                     Clinical
                                 </h3>
-                                <span className="text-primary text-lg">SuiteNova</span>
+                                <span className="text-sidebar-item text-lg">SuiteNova</span>
                             </div>
-                            <p className="text-xs text-slate-500 dark:text-slate-400">
+                            <p className="text-xs text-slate-500 dark:text-slate-300">
                                 Admin Panel
                             </p>
                         </div>
@@ -77,7 +77,7 @@ function Sidebar({collapsed, isMobileMenuOpen}: SidebarProps) {
                                 <div className="flex flex-col mt-2 ml-8">
                                     {item.submenu.map((submenuItem) => {
                                         return <button key={submenuItem.id} className={`text-left p-3 cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-800/50
-                                            ${location.pathname.includes(submenuItem.path!) ? "text-primary font-bold border-l" : "border-l border-slate-200"}`}
+                                            ${location.pathname.includes(submenuItem.path!) ? "text-sidebar-item font-bold border-l" : "text-slate-400 border-l border-slate-200"}`}
                                             onClick={() => navigate(submenuItem.path || "/")}>{submenuItem.label}</button>
                                     })}
                                 </div>

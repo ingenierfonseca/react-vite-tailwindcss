@@ -6,17 +6,19 @@ interface PageComponentProps {
     description: string,
     textButton: string,
     onclick: () => void,
-    children: React.ReactNode
+    children: React.ReactNode,
+    secondaryButton?: React.ReactNode
 }
-export default function PageComponent({ title, description, textButton, onclick, children }: PageComponentProps) {
+export default function PageComponent({ title, description, textButton, onclick, children, secondaryButton }: PageComponentProps) {
     return (
         <div className="relative min-h-screen px-4 pt-4 pb-18 z-20 bg-white dark:bg-slate-900">
-            <div className="flex">
+            <div className="flex mb-2">
                 <div>
                     <p className="m-0 leading-none text-2xl font-bold text-slate-800 dark:text-white">{title}</p>
                     <p className="m-0 leading-none text-sm text-slate-500 dark:text-slate-400 mt-1">{description}</p>
                 </div>
-                <div className="hidden md:block ml-auto">
+                <div className="hidden md:flex gap-2 ml-auto">
+                    {secondaryButton}
                     <AddButtonApp onclick={onclick} label={textButton} />
                 </div>
             </div>

@@ -36,9 +36,13 @@ export const useQuickPayment = () => {
         try {
             setLoading(true);
             setError(null);
-            await PaymentService.addInvoice(payment);
-        } catch (error) {
-            setError(error as Error);
+            await PaymentService.post(payment).then(setPayment);
+            return { success: true }
+        } catch (error: any) {
+            const msg = error.response?.data?.message || error.message || "Error inesperado";
+            const errorObject = new Error(msg);
+            setError(errorObject);
+            return { success: false, error: errorObject }
         } finally {
             setLoading(false);
         }
@@ -54,6 +58,7 @@ export const useQuickPayment = () => {
         setCustomer,
         onUpdateField,
         setInvoice,
+        setPayment,
         registerPayment
     };
 }

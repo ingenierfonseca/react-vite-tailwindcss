@@ -11,12 +11,15 @@ import { formatNumber } from "../../../utils/number.util";
 import type { CustomerInvoiceDTO } from "../../../services/invoice/customerinvoice.dto.type";
 import InvoiceDetail from "../components/InvoiceDetail";
 import { formatDateToMMDameDDYYYY } from "../../../utils/date.util";
+import type { Invoice } from "../../../services/invoice/invoice.types";
+import { ASSETS_URLS } from "../../../config/constants";
 
 export default function Invoice() {
     const { data, dashboardData, customer, setCustomer, loadDataPage } = useCustomerInvoice()
     const [isOpenTransitionRight, setIsOpenTransitionRight] = useState(false)
     const [isOpenProfileBillInfo, setIsOpenProfileBillInfo] = useState(false)
     const [isOpenMakeInvoice, setIsOpenMakeInvoice] = useState(false)
+    const [invoiceId, setInvoiceId] = useState("0")
 
     function openProfileBillInfo(value: boolean) {
         if (value) {
@@ -48,8 +51,10 @@ export default function Invoice() {
             title="Dashboard de Facturación"
             description="Visión general de las cuentas de pacientes y transacciones"
             textButton="Agregar Nueva Factura"
-            onclick={() => openMakeInvoice(true)}
-        >
+            onclick={() => {
+                setInvoiceId("0")
+                openMakeInvoice(true)
+            }}>
             <div className="flex gap-2 md:gap-8">
                 {dashboardData && dashboardData.map((dashboard, index) => (
                     <DashboardCard
@@ -68,12 +73,12 @@ export default function Invoice() {
             </div>
             <div className="flex mt-4 gap-2 items-center">
                 <PaginatedAutocomplete
-                    label="Paciente"
+                    label="Buscar Paciente"
                     value={0}
                     onChange={(value) => alert(value)
                         //updateField("customerId", value)
                     }
-                    fetchData={() => CustomerService.getAllCustomers({ page: 1, search: '' })}
+                    fetchData={() => CustomerService.get({ page: 1, search: '' })}
                     getValue={(item) => item.id}
                     getLabel={(item) => `${item.firstName.trim()} ${item.lastName.trim()}`}
                 />
@@ -86,10 +91,10 @@ export default function Invoice() {
             {data && data.data && data?.data.map((customer) => (
                 <div key={customer!.id} className="flex flex-col text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-md bg-white my-3 py-2 dark:bg-slate-800 shadow-md active:scale-[0,98] transition-transform">
                     <div className="flex w-full px-4">
-                        <AvatarInfo
-                            avatar={customer!.avatar}
+                        <AvatarInfo className="min-w-0"
+                            avatar={`${ASSETS_URLS.avatars}/${customer!.avatar}`}
                             name={customer!.fullName}
-                            description={`Ultimo Pago: ${customer!.lastPayment ? formatDateToMMDameDDYYYY(customer!.lastPayment) : 'Sin registros'}`}
+                            title={`Ultimo Pago: ${customer!.lastPayment ? formatDateToMMDameDDYYYY(customer!.lastPayment) : 'Sin registros'}`}
                             onClick={() => {
                                 setCustomer(customer)
                                 openProfileBillInfo(true)
@@ -129,8 +134,19 @@ export default function Invoice() {
                     ${isOpenTransitionRight ? 'translate-x-0' : 'translate-x-full'
                 }`}
             >
-                {isOpenProfileBillInfo && <PatientBillInfo customer={customer} setIsOpen={openProfileBillInfo} reload={loadDataPage} />}
-                {isOpenMakeInvoice && <InvoiceDetail setIsOpen={openMakeInvoice} reload={loadDataPage} />}
+                {isOpenProfileBillInfo && <PatientBillInfo 
+                    customer={customer} 
+                    setIsOpen={openProfileBillInfo} 
+                    reload={loadDataPage}
+                    openInvoiceDetail={(id: string) => {
+                        setInvoiceId(id)
+                        openProfileBillInfo(false)
+                        setTimeout(() => {
+                             openMakeInvoice(true)
+                        }, 500);
+                    }} />}
+
+                {isOpenMakeInvoice && <InvoiceDetail idParam={invoiceId} setIsOpen={openMakeInvoice} reload={loadDataPage} />}
             </div>
         </PageComponent>
     )

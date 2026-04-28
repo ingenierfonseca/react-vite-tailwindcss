@@ -2,9 +2,11 @@ import {
   Autocomplete,
   TextField,
   CircularProgress,
+  InputAdornment,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useAsyncAutocomplete } from "../../hooks/useAsyncAutoComplete";
+import { SearchIcon } from "lucide-react";
 
 type Props<T> = {
   label: string;
@@ -108,6 +110,11 @@ export function PaginatedAutocomplete<T>({
         slotProps={{
         input: {
           ...params.InputProps,
+          startAdornment: (
+            <InputAdornment position="start">
+              <SearchIcon />
+            </InputAdornment>
+          ),
           endAdornment: (
             <>
               {loading ? <CircularProgress color="inherit" size={18} /> : null}

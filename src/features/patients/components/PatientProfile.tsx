@@ -1,6 +1,7 @@
 import { Car } from "lucide-react";
 import type { Customer } from "../../../services/customer/customer.type";
 import CardInfo from "./CardInfo";
+import { ASSETS_URLS } from "../../../config/constants";
 
 const cardinfo = [
     {
@@ -43,9 +44,9 @@ export default function PatientProfile({ customer, setIsOpen }: PatientProfilePr
                 </button>
             </div>
             <div className="flex mt-2 gap-2">
-                {customer.avatar ? (
+                {customer.avatar && !customer.avatar.includes('null') ? (
                     <img 
-                        src={customer.avatar}
+                        src={`${ASSETS_URLS.avatars}/${customer.avatar}`}
                         alt={`${customer.firstName} ${customer.lastName}`}
                         className="w-1/2 h-1/2 rounded-md object-cover"
                     />

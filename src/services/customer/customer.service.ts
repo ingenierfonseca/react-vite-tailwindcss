@@ -1,32 +1,31 @@
 import api from "../../api/api";
-import type { PaginatedResponse } from "../../models/paginatedResponse";
+import { ENDPOINTS } from "../../api/endpoints";
+import type { CustomerExcelRow } from "../../models/customerExcelRow.type";
+import { createCatalogService } from "../baseCatalogService";
 import type { Customer } from "./customer.type";
 
-const method = `/customers/`
+const method = ENDPOINTS.CUSTOMERS
+const baseService = createCatalogService<Customer>(method);
+
 export const CustomerService = {
+    ...baseService,
+
     getDashboard: async () => {
         const { data } = await api.get(`${method}${`dashboard`}`);
         return data;
     },
-    getAllCustomers: async ({
-        page,
-        search
-    }: { 
-        page: number; search: string
-     }): Promise<PaginatedResponse<Customer>> => {
-        const { data } = await api.get(`${method}?pageNumber=${page}${search ? `&search=${search}` : ''}`);
+    bulkImport: async (customers: CustomerExcelRow[]) => {
+        const { data } = await api.post(`${method}${`bulk-import`}`, customers);
         return data;
     },
-    getCustomer: async (id:string) => {
-        const { data } = await api.get(`${method}${id}`);
-        return data;
-    },
-    addCustomer: async (payload: Customer | null) => {
-        const { data } = await api.post(`${method}`, payload);
-        return data;
-    },
-    updateCustomer: async (id: number, payload: Customer | null) => {
-        const { data } = await api.put(`${method}${id}`, payload);
+    uploadAvatar: async (id: number, file: any) => {
+        const formData = new FormData();
+        formData.append('file', file);
+        const { data } = await api.post(`${method}${id}${'/upload-avatar'}`, formData, {
+            headers: {
+                "Content-Type": undefined
+            }
+        });
         return data;
     }
 };

@@ -17,7 +17,7 @@ export const usePatient = () => {
 
     const loadCustomers = async () => {
         setLoading(true)
-        CustomerService.getAllCustomers({ page: currentPage, search })
+        CustomerService.get({ page: currentPage, search })
             .then(setData)
             .catch(setError)
             .finally(() => setLoading(false));

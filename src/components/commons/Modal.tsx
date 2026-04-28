@@ -5,11 +5,12 @@ interface ModalProps {
   onClose: () => void;
   title: string;
   children: React.ReactNode;
+  foot?: React.ReactNode;
   textBtnConfirm: string,
   clickBtnConfirm: () => void;
 }
 
-export default function Modal({ title, textBtnConfirm, isOpen, onClose, children, clickBtnConfirm }: ModalProps) {
+export default function Modal({ title, textBtnConfirm, isOpen, onClose, children, foot, clickBtnConfirm }: ModalProps) {
   if (!isOpen) return null;
 
   return (
@@ -43,9 +44,10 @@ export default function Modal({ title, textBtnConfirm, isOpen, onClose, children
 
         {/* Pie del Modal (Opcional) */}
         <div className="flex justify-end gap-3 p-6 bg-slate-50 dark:bg-slate-800/50">
+          {foot && foot}
           <button 
             onClick={onClose}
-            className="px-4 py-2 text-sm font-semibold text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-xl transition-all"
+            className="px-4 py-2 text-sm font-semibold border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-xl transition-all"
           >
             Cancelar
           </button>

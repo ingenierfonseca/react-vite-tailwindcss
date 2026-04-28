@@ -1,8 +1,9 @@
 import { EllipsisVertical } from "lucide-react";
 import PageComponent from "../../../components/commons/PageComponent";
-import PaginatedDataTable, { type Header } from "../../../components/pagination-data/PaginatedDataTable";
+import PaginatedDataTable from "../../../components/pagination-data/PaginatedDataTable";
 import { useAppointmentTypes } from "./hooks/appointmentTypes.hook";
 import AppointmentTypeForm from "./components/AppointmentTypeForm";
+import type { Header } from "../../invoice/components/InvoiceDetail";
 
 const headers: Header[] = [
     {

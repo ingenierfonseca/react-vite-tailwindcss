@@ -1,16 +1,28 @@
 import { TextField } from "@mui/material"
-import { useEffect, useRef, useState, type ChangeEvent } from "react"
+import { useEffect } from "react"
 import type { Customer } from "../../../services/customer/customer.type"
 import { usePatientCreateEdit } from "../hooks/patient.create.hook"
 import TextFieldApp from "../../../components/commons/TextFieldApp"
 import ButtonSaveApp from "../../../components/commons/ButtonSaveApp"
+import { ASSETS_URLS } from "../../../config/constants"
 interface PatientCreateProps {
     customerParam?: Customer
     setIsOpen: (value: boolean) => void
     reload: () => void
 }
 export default function PatientCreate({ customerParam, setIsOpen, reload }: PatientCreateProps) {
-    const { customer, setCustomer, savePatient, loading } = usePatientCreateEdit()
+    const { 
+        customer,
+        setCustomer,
+        savePatient,
+        uploadAvatar,
+        loading,
+        selectedImage,
+        fileInputRef,
+        handleUploadClick,
+        handleFileChange
+    } = usePatientCreateEdit()
+
     useEffect(() => {
         if (customerParam) {
             setCustomer(customerParam)
@@ -28,25 +40,14 @@ export default function PatientCreate({ customerParam, setIsOpen, reload }: Pati
         }
     }, [customerParam])
 
-    const fileInputRef = useRef<HTMLInputElement>(null);
-    const [selectedImage, setSelectedImage] = useState<File | null>(null);
-
-    const handleUploadClick = () => {
-        fileInputRef.current?.click();
-    };
-
-    const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
-        const file = event.target.files?.[0];
-        if (file) {
-            setSelectedImage(file);
-        }
-    };
-
     const handleSave = async () => {
         const response = await savePatient()
         if (response) {
-            reload()
-            setIsOpen(false)
+            const responseUpload = await uploadAvatar()
+            if (responseUpload) {
+                reload()
+                setIsOpen(false)
+            }
         }
     }
 
@@ -66,7 +67,7 @@ export default function PatientCreate({ customerParam, setIsOpen, reload }: Pati
                     <div className="flex flex-col items-center">
                         <div className="relative group">
                             <img
-                                src={selectedImage ? URL.createObjectURL(selectedImage) : customer?.avatar || './src/assets/landscape-placeholder.svg'}
+                                src={selectedImage ? URL.createObjectURL(selectedImage) : (customer?.avatar !== undefined && customer?.avatar !== null) ? `${ASSETS_URLS.avatars}/${customer?.avatar}` : './src/assets/landscape-placeholder.svg'}
                                 alt={`${customer?.firstName} ${customer?.lastName}`}
                                 className="w-32 h-32 rounded-lg object-cover border-2 border-primary/20 shadow-sm transition-all group-hover:border-primary"
                             />

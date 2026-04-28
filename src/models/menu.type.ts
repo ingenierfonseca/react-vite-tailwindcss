@@ -1,4 +1,4 @@
-import { BarChart3, Calendar, LayoutDashboard, Receipt, Settings, Users, type LucideProps } from "lucide-react";
+import { BarChart3, Calendar, LayoutDashboard, Receipt, Settings, Upload, Users, type LucideProps } from "lucide-react";
 
 export interface SubMenuAppModel {
     id: string,
@@ -68,6 +68,14 @@ export function getMenuData() {
             submenu: [
                 { id: "treatments", label: "Tratamientos", path: "treatments" },
                 { id: "appointmentType", label: "Tipos de cita", path: "appointment-types" }
+            ]
+        },
+        {
+            id: "import",
+            icon: Upload,
+            label: "Carga de Datos",
+            submenu: [
+                { id: "patients", label: "Importar Pacientes", path: "imports/patients" }
             ]
         }
         /*{

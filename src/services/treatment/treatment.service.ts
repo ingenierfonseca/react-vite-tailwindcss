@@ -13,6 +13,15 @@ export const TreatmentService = {
         const { data } = await api.get(`${method}?pageNumber=${page}${search ? `&search=${search}` : ''}`);
         return data;
     },
+    getActive: async ({
+        page,
+        search
+    }: { 
+        page: number; search: string
+     }): Promise<PaginatedResponse<Treatment>> => {
+        const { data } = await api.get(`${method}active?pageNumber=${page}${search ? `&search=${search}` : ''}`);
+        return data;
+    },
     post: async (payload: Treatment | null) => {
         const { data } = await api.post(`${method}`, payload);
         return data;
