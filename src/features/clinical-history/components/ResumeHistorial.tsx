@@ -118,7 +118,7 @@ export default function ResumeHistorial() {
                                 <p className="text-sm text-black dark:text-muted-foreground font-medium">Miercoles, 28 de Mayo 2026</p>
                                 <div className="flex gap-4 items-center">
                                     <p className="font-medium text-2xl dark:text-slate-200">10:00 AM</p>
-                                    <LabelBadge label="Confirmada" color="text-green-600" bg="bg-green-400/10" />
+                                    <LabelBadge label="Confirmada" className="text-green-600 bg-green-400/10" />
                                 </div>
                                 <p className="mt-3 dark:text-slate-300 font-medium">Revisión y ajuste</p>
                                 <p className="dark:text-slate-400">Consultorio 2 . Dra. Melissa Fonseca</p>
@@ -152,10 +152,9 @@ export default function ResumeHistorial() {
                                     </div>
 
                                     
-                                    <LabelBadge 
+                                    <LabelBadge
                                         label={plan.status} 
-                                        color={style.badgeText} 
-                                        bg={style.bg} 
+                                        className={`${style.badgeText} ${style.bg} dark:bg-primary-dark/10`} 
                                     />
                                 </div>
                                 )
@@ -203,7 +202,7 @@ export default function ResumeHistorial() {
                                 <p className="text-sm text-black dark:text-muted-foreground font-medium">Miercoles, 28 de Mayo 2026</p>
                                 <div className="flex gap-4 items-center">
                                     <p className="font-medium text-2xl dark:text-slate-200">10:00 AM</p>
-                                    <LabelBadge label="Confirmada" color="text-green-600" bg="bg-green-400/10" />
+                                    <LabelBadge label="Confirmada" className="text-green-600 bg-green-400/10" />
                                 </div>
                                 <p className="mt-3 dark:text-slate-300 font-medium">Revisión y ajuste</p>
                                 <p className="dark:text-slate-400">Consultorio 2 . Dra. Melissa Fonseca</p>

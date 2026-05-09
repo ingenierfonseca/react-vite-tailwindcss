@@ -11,7 +11,6 @@ import type { Header } from "../../../models/header.type"
 import DashboardCardII from "../../../components/dashboard/DashboardCardII"
 import { ASSETS_URLS } from "../../../config/constants"
 import ClinicalAssessment from "../components/ClinicalAssessment"
-import TreatmentEvolution from "../components/TreatmentEvolution"
 
 const headers:Header[]  = [
     {
@@ -49,7 +48,7 @@ export default function PatientListPage() {
         isOpenProfileInfo,
         isOpenCreateOrEdit,
         isOpenSession,
-        isOpenSessionPlan,
+        //isOpenSessionPlan,
         openProfileInfo,
         openCreate,
         openClinicalAssessment,
@@ -160,7 +159,6 @@ export default function PatientListPage() {
                 }`}
             >
                 {customer && isOpenSession && <ClinicalAssessment setIsOpen={openClinicalAssessment} customer={customer} />}
-                {customer && isOpenSessionPlan && <TreatmentEvolution setIsOpen={openClinicalAssessment} customer={customer} />}
             </div>
         </PageComponent>
     )

@@ -73,14 +73,14 @@ export const useSessionPlanHook = () => {
     }, [])
 
     const handleSave = async () => {
-        //const response = await saveSession()
-        //if (response) {
+        const response = await saveSession()
+        if (response) {
             const responseUpload = await saveSessionPlan()
             if (responseUpload) {
                 //reload()
                 //setIsOpen(false)
             }
-        //}
+        }
     }
 
     const saveSession = async (): Promise<boolean> => {

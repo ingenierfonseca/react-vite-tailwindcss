@@ -105,9 +105,9 @@ export default function ClinicalAssessment({ customer, setIsOpen }: ClinicalAsse
                                 toast.error("Tiene que agregar un plan de tratamiento para continuar")
                                 return
                             }
-                            //if (step === 2) {
-                            //handleSave()
-                            //} else
+                            if (step === 2) {
+                                handleSave()
+                            } else
                             setStep(step + 1)
                         }}
                     />

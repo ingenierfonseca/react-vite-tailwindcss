@@ -3,7 +3,7 @@ import type { SessionPlan, TreatmentPlanItem } from "@/services/treatment-plan/t
 import { formatNumber } from "@/utils/number.util";
 import { TextField } from "@mui/material";
 import dayjs from "dayjs";
-import { BrickWall, Calendar, Check, Clock, Play } from "lucide-react";
+import { BrickWall, Calendar, Clock, Play } from "lucide-react";
 import ItemHeaderIcon from "./ItemHeaderIcon";
 import LabelBadge from "@/components/commons/LabelBadge";
 
