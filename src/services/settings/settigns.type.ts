@@ -6,6 +6,7 @@ export interface Settings {
     appLogoUrl: string
     appFaviconUrl: string
     primaryColor: string
+    primaryDarkColor: string
     secondaryColor: string
     borderColor: string
     borderHover: string
@@ -23,6 +24,7 @@ export function data(): Settings {
         appLogoUrl: "https://res.cloudinary.com/dzj6l8n0v/image/upload/v1700000000/clinica-fonseca/logo.png",
         appFaviconUrl: "https://res.cloudinary.com/dzj6l8n0v/image/upload/v1700000000/clinica-fonseca/favicon.ico",
         primaryColor: "#16236d",
+        primaryDarkColor: "#556ade",
         secondaryColor: "#FBBF24",
         borderColor: "#0e46cb",
         borderHover: "#FBBF24",

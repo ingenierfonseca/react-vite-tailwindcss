@@ -4,9 +4,10 @@ import Odontogram from "../features/odontogram/Odontogram";
 import DashboardPage from "../pages/DashboardPage";
 import PatientListPage from "../features/patients/page/PatientListPage";
 import SettingsPage from "../features/settings/SettingsPage";
-import TreatmentListPage from "../features/administration/treatments/TreatmentListPage";
+//import TreatmentListPage from "../features/administration/treatments/TreatmentListPage";
 import AppointmentTypeListPage from "../features/administration/apointment-type/AppointmentTypeListPage";
 import PatientBulkUploadPage from "../features/upload-data/patient/PatientBulkUploadPage";
+import CustomerClinicalHistoryDashboard from "@/features/clinical-history/CustomerClinicalHistoryPage";
 
 export const routesConfig = [
   {
@@ -44,11 +45,11 @@ export const routesConfig = [
     title: "Configuración",
     element: <SettingsPage />
   },
-  {
+  /*{
     path: "/treatments",
     title: "Tratamientos",
     element: <TreatmentListPage />
-  },
+  },*/
   {
     path: "/appointment-types",
     title: "Tipo de Citas",
@@ -58,5 +59,10 @@ export const routesConfig = [
     path: "/imports/patients",
     title: "Importacion de Pacientes",
     element: <PatientBulkUploadPage />
+  },
+  {
+    path: "/treatments",
+    title: "Historial clinico",
+    element: <CustomerClinicalHistoryDashboard />
   }
 ];

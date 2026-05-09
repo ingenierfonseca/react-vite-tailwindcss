@@ -43,6 +43,7 @@ export function getMenuData() {
             id: "treatments",
             icon: BarChart3,
             label: "Tratamientos y expedientes",   //"Treatments and Records",
+            path: "treatments"
         },
         {
             id: "invoice",

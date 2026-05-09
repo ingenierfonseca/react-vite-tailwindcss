@@ -4,12 +4,13 @@ import AddButtonApp, { FloatingAddButton } from "./AddButtonApp"
 interface PageComponentProps {
     title: string,
     description: string,
+    showButton?: boolean,
     textButton: string,
     onclick: () => void,
     children: React.ReactNode,
     secondaryButton?: React.ReactNode
 }
-export default function PageComponent({ title, description, textButton, onclick, children, secondaryButton }: PageComponentProps) {
+export default function PageComponent({ title, description, textButton, onclick, children, secondaryButton, showButton = true }: PageComponentProps) {
     return (
         <div className="relative min-h-screen px-4 pt-4 pb-18 z-20 bg-white dark:bg-slate-900">
             <div className="flex mb-2">
@@ -19,7 +20,7 @@ export default function PageComponent({ title, description, textButton, onclick,
                 </div>
                 <div className="hidden md:flex gap-2 ml-auto">
                     {secondaryButton}
-                    <AddButtonApp onclick={onclick} label={textButton} />
+                    {showButton && <AddButtonApp onclick={onclick} label={textButton} />}
                 </div>
             </div>
             {children}

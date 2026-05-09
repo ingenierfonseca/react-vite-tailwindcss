@@ -1,4 +1,4 @@
-import { FileCheck, Plus, Trash2 } from "lucide-react";
+import { FileCheck, Trash2 } from "lucide-react";
 import { cn, theme } from "../../../utils/theme";
 import InvoiceHeader from "./InvoiceHeader";
 import { useInvoiceDetail } from "../hooks/useInvoiceDetail";
@@ -10,6 +10,7 @@ import { useEffect, useState } from "react";
 import { InvoiceStatus } from "../state/state";
 import { toast } from "react-toastify";
 import { calculateLineTotal } from "../../../utils/invoice.util";
+import AddTreatmentPlan from "./AddTreatmentPlan";
 
 export interface Header {
     header: string
@@ -138,7 +139,8 @@ export default function InvoiceDetail({ setIsOpen, reload, idParam }: InvoiceDet
                                 </div>
                             )
                         })}
-                        <button className="flex flex-col gap-3 bg-slate-50 my-4 p-6 border w-fit rounded-md border-slate-300 dark:bg-slate-800 dark:border-slate-600 cursor-pointer"
+                        <AddTreatmentPlan
+                            disabled={disabled || loading}
                             onClick={() => {
                                 if (invoice?.currencyId == 0) {
                                     toast.error("Seleccione una moneda antes de continuar")
@@ -147,16 +149,7 @@ export default function InvoiceDetail({ setIsOpen, reload, idParam }: InvoiceDet
                                 resetItemInvoice()
                                 setIsOpenModal(true)
                             }}
-                            disabled={disabled || loading}>
-                            <div className="flex gap-3">
-                                <div
-                                    className={`rounded-2xl p-1 text-white disabled:opacity-50 bg-primary dark:text-white dark:hover:bg-slate-700`}>
-                                    <Plus size={16} />
-                                </div>
-                                <span className="font-semibold dark:text-slate-300">Agregar Tratamiento</span>
-                            </div>
-                            <span className="text-xs dark:text-slate-300">Añade tratamientos para comenzar</span>
-                        </button>
+                        />
                     </div>
                     <div className="lg:w-50 h-fit border border-slate-200 bg-slate-50 ml-2 text-sm dark:bg-slate-900 dark:border-slate-700 dark:text-slate-400">
                         <div className="border-b-2 border-slate-200 dark:border-slate-600 flex justify-between p-2.5"><span>SubTotal</span><span>{currency?.symbol}{invoice !== null ? calculateTotal() : "0.00"}</span></div>

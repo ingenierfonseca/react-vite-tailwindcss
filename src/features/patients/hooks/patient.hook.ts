@@ -7,8 +7,11 @@ export const usePatient = () => {
     const [data, setData] = useState<PaginatedResponse<Customer | null>>();
     const [dashboardData, setDashboardData] = useState<CustomerDashboard[]>();
     const [isOpenTransitionRight, setIsOpenTransitionRight] = useState(false)
+    const [isOpenTransition, setIsOpenTransition] = useState(false)
     const [isOpenProfileInfo, setIsOpenProfileInfo] = useState(false)
     const [isOpenCreateOrEdit, setIsOpenCreateOrEdit] = useState(false)
+    const [isOpenSession, setIsOpenSession] = useState(false)
+    const [isOpenSessionPlan, setIsOpenSessionPlan] = useState(false)
     const [customer, setCustomer] = useState<Customer | null>(null)
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<any>(null);
@@ -47,6 +50,7 @@ export const usePatient = () => {
             }, 500);
         }
     }
+
     function openCreate(value: boolean) {
         if (value) {
             setIsOpenTransitionRight(value)
@@ -55,6 +59,26 @@ export const usePatient = () => {
             setIsOpenTransitionRight(false)
             setTimeout(() => {
                 setIsOpenCreateOrEdit(false)
+            }, 500);
+        }
+    }
+
+    function openClinicalAssessment(value: boolean) {
+        setIsOpenTransition(value)
+        setIsOpenSession(value)
+    }
+
+    function openSessionTreatmentPlan(value: boolean) {
+        if (isOpenSession)
+            openClinicalAssessment(false)
+        
+        if (value) {
+            setIsOpenTransition(value)
+            setIsOpenSessionPlan(value)
+        } else {
+            setIsOpenTransition(false)
+            setTimeout(() => {
+                setIsOpenSessionPlan(false)
             }, 500);
         }
     }
@@ -70,9 +94,14 @@ export const usePatient = () => {
         search,
         setSearch,
         isOpenTransitionRight,
+        isOpenTransition,
         isOpenProfileInfo,
         isOpenCreateOrEdit,
+        isOpenSession,
+        isOpenSessionPlan,
         openProfileInfo,
-        openCreate
+        openCreate,
+        openClinicalAssessment,
+        openSessionTreatmentPlan
     };
 };

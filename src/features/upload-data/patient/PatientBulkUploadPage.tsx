@@ -62,7 +62,7 @@ export default function PatientBulkUploadPage() {
       onclick={() => {
         alert("Nuevo")
       }}
-      secondaryButton={<SecondaryButton />}>
+      secondaryButton={<SecondaryButton className={""} />}>
       <div className="flex mt-5 px-6 py-3 border border-slate-300 dark:border-slate-700 dark:bg-slate-800/50">
         <StepComponent stepActive={stepActive} stepNumber={1} title="Subir archivo" subTitle="Selecciona tu archivo" />
         <StepComponent stepActive={stepActive} stepNumber={2} title="Vista previa" subTitle="Revisa los datos" />
@@ -96,6 +96,8 @@ export default function PatientBulkUploadPage() {
               <p className="text-[12px] dark:text-slate-400">UTF-8 recomendado</p>
             </div>
           </div>
+
+          <SecondaryButton className="mt-3 justify-center" />
         </div>
 
         {stepActive > 1 && <div className="flex-2 flex flex-col gap-3">
@@ -180,12 +182,15 @@ export default function PatientBulkUploadPage() {
   );
 }
 
-function SecondaryButton() {
+interface SecondaryButton {
+  className: string
+}
+function SecondaryButton({className}: SecondaryButton) {
   return (
-    <a className="flex gap-2 items-center rounded-lg border px-3 dark:border-slate-700 dark:text-slate-200 hover:bg-slate-300 dark:hover:bg-slate-800"
+    <a className={`${className} hidden md:flex gap-2 min-w-0 py-2.5 items-center rounded-lg border px-3 dark:border-slate-700 dark:text-slate-200 hover:bg-slate-300 dark:hover:bg-slate-800`}
       href={ASSETS_URLS.fileImportPatient}
       download="planpacientes_importaciontilla.xlsx">
-      <Download />Descargar plantilla
+      <Download /><p className="truncate">Descargar plantilla</p>
     </a>
   )
 }

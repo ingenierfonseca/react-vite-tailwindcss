@@ -2,6 +2,7 @@ import { Car } from "lucide-react";
 import type { Customer } from "../../../services/customer/customer.type";
 import CardInfo from "./CardInfo";
 import { ASSETS_URLS } from "../../../config/constants";
+import PageRightComponent from "@/components/commons/PageRightComponent";
 
 const cardinfo = [
     {
@@ -29,20 +30,16 @@ const cardinfo = [
 interface PatientProfileProps {
     customer: Customer;
     setIsOpen: (value: boolean) => void;
+    setIsOpenTransition: (value: boolean) => void;
+    openSessionTreatmentPlan: (value: boolean) => void;
 }
 
-export default function PatientProfile({ customer, setIsOpen }: PatientProfileProps) {
+export default function PatientProfile({ customer, setIsOpen, setIsOpenTransition, openSessionTreatmentPlan }: PatientProfileProps) {
+    console.log("Abriendo customer profile")
     return (
-        <div className="w-full/2 h-screen py-5 px-4 overflow-y-auto overflow-x-hidden [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
-            <div className="flex">
-                <p className="font-semibold text-black dark:text-white">Perfil del Paciente</p>
-                <button 
-                    onClick={() => setIsOpen(false)}
-                    className="text-slate-500 hover:text-red-500 text-2xl ml-auto"
-                    >
-                    &times;
-                </button>
-            </div>
+        <PageRightComponent
+            title={"Perfil del Paciente"}
+            onClick={() => setIsOpen(false)}>
             <div className="flex mt-2 gap-2">
                 {customer.avatar && !customer.avatar.includes('null') ? (
                     <img 
@@ -102,12 +99,13 @@ export default function PatientProfile({ customer, setIsOpen }: PatientProfilePr
             <div className="mt-4 rounded-md p-2 border dark:border-slate-300">
                 <p className="font-semibold text-black dark:text-white">Acciones Rapidas</p>
                 <div className="grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-4 mt-4">
-                    <button className="flex-1 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">Agendar Cita</button>
-                    <button className="flex-1 px-4 py-2 border border-slate-300 text-black dark:text-white rounded-md hover:bg-slate-600">Agregar Nota de Tratamiento</button>
-                    <button className="flex-1 px-4 py-2 border border-slate-300 text-black dark:text-white rounded-md hover:bg-slate-600">Actualizar Información</button>
-                    <button className="flex-1 px-4 py-2 border border-slate-300 text-black dark:text-white rounded-md hover:bg-slate-600">Ver Facturas</button>
+                    <button className="flex-1 px-4 py-2 bg-primary text-white rounded-md hover:bg-primary/90">Agendar Cita</button>
+                    <button className="flex-1 px-4 py-2 border border-slate-300 text-black dark:text-white rounded-md hover:bg-slate-300 dark:hover:bg-slate-700" onClick={() => setIsOpenTransition(true)}>Iniciar Diagnóstico</button>
+                    <button className="flex-1 px-4 py-2 border border-slate-300 text-black dark:text-white rounded-md hover:bg-slate-300 dark:hover:bg-slate-700" onClick={() => openSessionTreatmentPlan(true)}>Continuar Plan de Tratamiento</button>
+                    <button className="flex-1 px-4 py-2 border border-slate-300 text-black dark:text-white rounded-md hover:bg-slate-300 dark:hover:bg-slate-700">Actualizar Información</button>
+                    <button className="flex-1 px-4 py-2 border border-slate-300 text-black dark:text-white rounded-md hover:bg-slate-300 dark:hover:bg-slate-700">Ver Facturas</button>
                 </div>
             </div>
-        </div>
+        </PageRightComponent>
     )
 }

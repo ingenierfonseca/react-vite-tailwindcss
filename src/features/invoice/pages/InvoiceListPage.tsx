@@ -50,10 +50,11 @@ export default function Invoice() {
         <PageComponent
             title="Dashboard de Facturación"
             description="Visión general de las cuentas de pacientes y transacciones"
+            showButton={false}
             textButton="Agregar Nueva Factura"
             onclick={() => {
-                setInvoiceId("0")
-                openMakeInvoice(true)
+                /*setInvoiceId("0")
+                openMakeInvoice(true)*/
             }}>
             <div className="flex gap-2 md:gap-8">
                 {dashboardData && dashboardData.map((dashboard, index) => (

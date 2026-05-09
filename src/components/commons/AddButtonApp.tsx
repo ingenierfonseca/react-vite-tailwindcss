@@ -1,5 +1,6 @@
-import { Plus } from "lucide-react";
+import { ArrowLeft, ArrowRight, Plus, Save } from "lucide-react";
 
+const classNameBnt = "flex min-w-0 p-3 cursor-pointer bg-primary rounded-md items-center text-white text-sm font-semibold shadow-md hover:scale-[1.02] active:scale-[0.98] transition"
 interface AddButtonAppProps {
     label: string,
     onclick: () => void
@@ -8,9 +9,42 @@ export default function AddButtonApp({ label, onclick }: AddButtonAppProps) {
     return (
         <button
             onClick={onclick}
-            className="flex p-3 cursor-pointer bg-primary rounded-md items-center text-white text-sm font-semibold shadow-md hover:scale-[1.02] active:scale-[0.98] transition">
+            className={classNameBnt}>
             <Plus className="mr-2" />
-            {label}
+            <p className="truncate">{label}</p>
+        </button>
+    )
+}
+
+export function SaveButtonApp({ label, onclick }: AddButtonAppProps) {
+    return (
+        <button
+            onClick={onclick}
+            className={classNameBnt}>
+            <Save className="mr-2" />
+            <p className="truncate">{label}</p>
+        </button>
+    )
+}
+
+export function NextButtonApp({ label, onclick }: AddButtonAppProps) {
+    return (
+        <button
+            onClick={onclick}
+            className={classNameBnt}>
+            <p className="truncate">{label}</p>
+            <ArrowRight className="mr-2" />
+        </button>
+    )
+}
+
+export function BackButtonApp({ label, onclick }: AddButtonAppProps) {
+    return (
+        <button
+            onClick={onclick}
+            className={classNameBnt}>
+                <ArrowLeft className="mr-2" />
+            <p className="truncate">{label}</p>
         </button>
     )
 }

@@ -24,25 +24,20 @@ export default function ThreatmentModal({
     invoiceItem, currency, isModalOpen, setIsModalOpen, onClick, onChangeItem 
 }: ThreatmentModalProps) {
     const [search, setSearch] = useState('')
-
-    /*useEffect(() => {
-        const newPrice = calculatePrice(
-            invoiceItem.unitPrice,
-            currency,
-            treatment?.currency?.symbol ?? currency
-        );
-        onChangeItem("unitPrice", newPrice);
-    }, [invoiceItem.unitPrice, currency, treatment]);*/
     
     return (
         <Modal isOpen={isModalOpen}
-            onClose={() => setIsModalOpen(false)}
+            onClose={() => {
+                setSearch("")
+                setIsModalOpen(false)
+            }}
             title="Información del Tratamiento"
             textBtnConfirm="Agregar"
             clickBtnConfirm={() => {
                 if (validateFields(invoiceItem)) {
                     onClick()
                     setIsModalOpen(false)
+                    setSearch("")
                 }
             }}>
             <div className="space-y-4">
@@ -74,7 +69,7 @@ export default function ThreatmentModal({
                         />
                         <NumberInputApp title="Cantidad" value={invoiceItem.quantity} className="md:flex-1 px-2 text-sm" min={1} onChange={(val) => onChangeItem("quantity", val)} shrink={true} />
                         <TextField title="Precio" value={invoiceItem.unitPrice.toFixed(2)} className="md:flex-1 px-2 text-sm" onChange={(val) => onChangeItem("unitPrice", val)} disabled={true} />
-                        <NumberInputApp title="Descuento" value={invoiceItem.discount} className="md:flex-1 px-2 text-sm" min={1} onChange={(val) => onChangeItem("discount", val)} />
+                        <NumberInputApp title="Descuento" value={invoiceItem.discount} className="md:flex-1 px-2 text-sm" min={1} onChange={(val) => onChangeItem("discount", val)} shrink={true} />
                         <span className={`flex-1 px-2 text-sm md:text-lg dark:text-slate-200`}>Total:{currency?.symbol}{calculateLineTotal(invoiceItem)}</span>
                     </fieldset>
                 }

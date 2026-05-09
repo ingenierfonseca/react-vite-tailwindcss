@@ -10,6 +10,8 @@ import PageComponent from "../../../components/commons/PageComponent"
 import type { Header } from "../../../models/header.type"
 import DashboardCardII from "../../../components/dashboard/DashboardCardII"
 import { ASSETS_URLS } from "../../../config/constants"
+import ClinicalAssessment from "../components/ClinicalAssessment"
+import TreatmentEvolution from "../components/TreatmentEvolution"
 
 const headers:Header[]  = [
     {
@@ -35,18 +37,23 @@ const headers:Header[]  = [
 ]
 export default function PatientListPage() {
     const { 
-        data, 
-        dashboardData, 
-        customer, 
-        setCustomer, 
-        loadCustomers, 
-        search, 
+        data,
+        dashboardData,
+        customer,
+        setCustomer,
+        loadCustomers,
+        search,
         setSearch,
-        isOpenCreateOrEdit,
-        isOpenProfileInfo,
         isOpenTransitionRight,
+        isOpenTransition,
+        isOpenProfileInfo,
+        isOpenCreateOrEdit,
+        isOpenSession,
+        isOpenSessionPlan,
+        openProfileInfo,
         openCreate,
-        openProfileInfo
+        openClinicalAssessment,
+        openSessionTreatmentPlan
     } = usePatient()
 
     return (
@@ -143,8 +150,17 @@ export default function PatientListPage() {
                     ${isOpenTransitionRight ? 'translate-x-0' : 'translate-x-full'
                 }`}
             >
-                {isOpenProfileInfo && <PatientProfile setIsOpen={openProfileInfo} customer={customer!} />}
+                {isOpenProfileInfo && <PatientProfile setIsOpen={openProfileInfo} customer={customer!} setIsOpenTransition={openClinicalAssessment} openSessionTreatmentPlan={openSessionTreatmentPlan} />}
                 {isOpenCreateOrEdit && <PatientCreate setIsOpen={openCreate} customerParam={customer!} reload={loadCustomers} />}
+            </div>
+            <div
+                className={`fixed top-0 right-0 h-full md:w-7/12 bg-white dark:bg-slate-800 shadow-2xl z-51 
+                    transform transition-transform duration-500 ease-in-out 
+                    ${isOpenTransition ? 'translate-x-0' : 'translate-x-full'
+                }`}
+            >
+                {customer && isOpenSession && <ClinicalAssessment setIsOpen={openClinicalAssessment} customer={customer} />}
+                {customer && isOpenSessionPlan && <TreatmentEvolution setIsOpen={openClinicalAssessment} customer={customer} />}
             </div>
         </PageComponent>
     )
