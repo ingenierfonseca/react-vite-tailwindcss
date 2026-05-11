@@ -13,6 +13,7 @@ import { PDFViewer } from '@react-pdf/renderer';
 import InvoicePDF from "./InvoicePDF"
 import ModalInvoice from "../../../components/commons/ModalInvoice"
 import { ASSETS_URLS } from "../../../config/constants"
+import { InvoiceStatus } from "../state/state"
 
 interface PatientBillInfoProps {
     customer: CustomerInvoiceDTO | null
@@ -173,7 +174,7 @@ export default function PatientBillInfo({ customer, setIsOpen, reload, openInvoi
                             setPaymentId(0)
                             setIsOpenModal(true)
                         }} 
-                        disabled={invoiceData?.filter(inv => inv.statusId === 1 || inv.statusId === 5).length === 0}>
+                        disabled={invoiceData?.filter(inv => inv.statusId === InvoiceStatus.PENDING || inv.statusId === InvoiceStatus.OVERDUE || inv.statusId === InvoiceStatus.PARTIAL).length === 0}>
                         Agregar Pago
                     </button>
                 </div>

@@ -11,12 +11,7 @@ import type { InvoiceInfoDTO } from "../../../services/invoice/invoice.types";
 import { formatNumber } from "../../../utils/number.util";
 import { Download, Printer } from "lucide-react";
 import { PaymentService } from "../../../services/payment/payment.service";
-
-const paymentTypes = [
-    { id: 1, value: "Efectivo" },
-    { id: 2, value: "Tarjeta de Credito/Debito" },
-    { id: 3, value: "Transferencia Bancaria" }
-];
+import { InvoiceStatus, PaymentTypes } from "../state/state";
 
 interface PaymentModalProps {
     id: number
@@ -29,7 +24,6 @@ interface PaymentModalProps {
 export default function PaymentModal({ id, customer, isModalOpen, setIsModalOpen, onClick }: PaymentModalProps) {
     const { invoiceData, invoice, payment, onUpdateField, setCustomer, setPayment, setInvoice, registerPayment } = useQuickPayment();
     const [disabled, setDisabled] = useState((id !== 0))
-    console.log("disabled:", disabled, id)
 
     useEffect(() => {
         if (id == 0) return
@@ -81,7 +75,7 @@ export default function PaymentModal({ id, customer, isModalOpen, setIsModalOpen
                     {invoiceData && invoiceData.length > 0 && (
                         <DropDownApp
                             title="Factura"
-                            data={invoiceData.filter(i => {return id!==0 || (i.statusId === 1 || i.statusId === 5)}).map((invoice) => ({ id: invoice.id, value: invoice.number }))}
+                            data={invoiceData.filter(i => {return id!==0 || (i.statusId === InvoiceStatus.PENDING || i.statusId === InvoiceStatus.OVERDUE || i.statusId === InvoiceStatus.PARTIAL)}).map((invoice) => ({ id: invoice.id, value: invoice.number }))}
                             value={payment.invoiceId}
                             onChange={(val) => {
                                 const selectedInvoice = invoiceData.find((inv) => inv.id.toString() === val);
@@ -94,17 +88,22 @@ export default function PaymentModal({ id, customer, isModalOpen, setIsModalOpen
                     )}
 
                     {invoice && (
-                        <TextFieldApp label="Saldo Pendiente" value={`${invoice.currency}${formatNumber(invoice.total)}`} className="md:flex-2 px-2 text-sm" disabled={true} onChange={() => { }} />
+                        <TextFieldApp label="Saldo Pendiente" value={`${invoice.currency}${formatNumber(invoice.pendingBalance)}`} className="md:flex-2 px-2 text-sm" disabled={true} onChange={() => { }} />
                     )}
 
                     <DropDownApp
                         title="Metodo de Pago"
-                        data={paymentTypes} value={payment.paymentTypeId}
+                        data={PaymentTypes} value={payment.paymentTypeId}
                         onChange={(val) => onUpdateField("paymentTypeId", val)}
                         disabled={disabled} />
 
-                    <NumberInputApp title="Monto" value={payment.amount} className="md:flex-1 px-2 text-sm" min={1} onChange={(val) => onUpdateField("amount", val)}
-                        disabled={disabled} />
+                    <NumberInputApp 
+                        title="Monto" 
+                        value={payment.amount} 
+                        className="md:flex-1 px-2 text-sm" min={1} 
+                        onChange={(val) => onUpdateField("amount", val)}
+                        disabled={disabled}
+                        shrink={true} />
                 </fieldset>
             </div>
         </Modal>

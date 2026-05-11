@@ -43,6 +43,7 @@ export interface InvoiceInfoDTO {
     status: string
     paymentTerm: string
     statusId: number
+    pendingBalance: number
 }
 
 export const getInitialInvoice = (): Invoice => ({
