@@ -40,3 +40,15 @@ export interface SessionPlanItem {
     status: string
     order: number
 }
+
+export interface RequestSessionPlanMaster {
+    sessionId: number
+    name: string
+    status: string
+    currencyId: number
+    //startDate: string
+    //endDate: string
+    //totalEstimatedPrice: number
+    comments: string
+    plansIds: number[]
+}

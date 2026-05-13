@@ -36,7 +36,9 @@ export default function ClinicalAssessment({ customer, setIsOpen }: ClinicalAsse
         setSessionPlan,
         handleSave,
         isStartTreatmentPlan,
-        setIsStartTreatmentPlan
+        setIsStartTreatmentPlan,
+        addPlanId,
+        setCurrency
     } = useSessionPlanHook()
 
     useEffect(() => {
@@ -81,6 +83,7 @@ export default function ClinicalAssessment({ customer, setIsOpen }: ClinicalAsse
                                 items={items}
                                 setIsOpenModal={setIsOpenModal}
                                 updateSessionPlan={updateSessionPlan}
+                                setCurrency={setCurrency}
                             />
                         </Card>
 
@@ -134,6 +137,7 @@ export default function ClinicalAssessment({ customer, setIsOpen }: ClinicalAsse
                             status: "Pendiente"
                         }))
                     ]);
+                    addPlanId(plan.id);
                 }} />
         </PageRightComponent>
     )

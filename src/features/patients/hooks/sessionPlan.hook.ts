@@ -4,6 +4,7 @@ import type { ClinicalSession } from "@/services/clinical-session/clinicalSessio
 import { DoctorService } from "@/services/doctor/doctor.service"
 import { SessionPlanService } from "@/services/session-plan/sessionPlan.service"
 import type { SessionPlan, TreatmentPlanItem } from "@/services/treatment-plan/treatmentPlan.type"
+import type { Currency } from "@/services/types/currency.type"
 import { mapToDropdown } from "@/utils/dropdow.util"
 import { useEffect, useState } from "react"
 import { toast } from "react-toastify"
@@ -17,6 +18,8 @@ export const useSessionPlanHook = () => {
         reasonForVisit: "",
         clinicalNotes: "",
     })
+    const [plansIds, setPlansIds] = useState<number[]>([])
+    const [currency, setCurrency] = useState<Currency>()
     const [doctors, setDoctors] = useState<DropDownAppModel[]>()
     const [isOpenModal, setIsOpenModal] = useState(false)
     const [sessionPlan, setSessionPlan] = useState<SessionPlan>({
@@ -33,6 +36,10 @@ export const useSessionPlanHook = () => {
     const [items, setItems] = useState<TreatmentPlanItem[]>([]);
     const [step, setStep] = useState(1);
     const [isStartTreatmentPlan, setIsStartTreatmentPlan] = useState(false)
+
+    const addPlanId = (id: number) => {
+        setPlansIds(prev => [...prev, id])
+    }
 
     const updateSession = <K extends keyof ClinicalSession>(
         key: K,
@@ -151,7 +158,9 @@ export const useSessionPlanHook = () => {
         setIsOpenModal,
         setStep,
         setSessionPlan,
+        addPlanId,
         handleSave,
-        setIsStartTreatmentPlan
+        setIsStartTreatmentPlan,
+        setCurrency
     }
 }

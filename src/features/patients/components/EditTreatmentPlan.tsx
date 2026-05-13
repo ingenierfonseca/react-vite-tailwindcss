@@ -1,5 +1,8 @@
+import { PaginatedAutocomplete } from "@/components/pagination-data/PaginatedAutocomplete";
 import AddTreatmentPlan from "@/features/invoice/components/AddTreatmentPlan";
+import { CurrencyService } from "@/services/currency/currency.service";
 import type { SessionPlan, TreatmentPlanItem } from "@/services/treatment-plan/treatmentPlan.type";
+import type { Currency } from "@/services/types/currency.type";
 import { formatNumber } from "@/utils/number.util";
 import { TextField } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers";
@@ -9,12 +12,13 @@ interface EditTreatmentPlanProps {
     sessionPlan: SessionPlan,
     items: TreatmentPlanItem[]
     setIsOpenModal: (value: boolean) => void
+    setCurrency: (currency: Currency) => void
     updateSessionPlan: <K extends keyof SessionPlan>(
         key: K,
         value: SessionPlan[K]
     ) => void;
 }
-export default function EditTreatmentPlan({ sessionPlan, items, setIsOpenModal, updateSessionPlan }: EditTreatmentPlanProps) {
+export default function EditTreatmentPlan({ sessionPlan, items, setIsOpenModal, updateSessionPlan, setCurrency }: EditTreatmentPlanProps) {
     const maxLength = 300;
     return (
         <div className="p-4 flex flex-col">
@@ -27,12 +31,14 @@ export default function EditTreatmentPlan({ sessionPlan, items, setIsOpenModal, 
                     label="Fecha de inicio"
                     value={sessionPlan?.startDate ? dayjs(sessionPlan.startDate) : null}
                     onChange={(val) => updateSessionPlan("startDate", val ? val.toISOString() : "")}
+                    disabled={true}
                 />
                 <DatePicker
                     className="flex-1"
                     label="Fecha de fin"
                     value={sessionPlan?.endDate ? dayjs(sessionPlan.endDate) : null}
                     onChange={(val) => updateSessionPlan("endDate", val ? val.toISOString() : "")}
+                    disabled={true}
                 />
                 <TextField
                     className="flex-1"
@@ -42,6 +48,31 @@ export default function EditTreatmentPlan({ sessionPlan, items, setIsOpenModal, 
                     slotProps={{
                         inputLabel: { shrink: true }
                     }}
+                    disabled={true}
+                />
+            </div>
+            <div className="flex gap-3 mt-3">
+                <PaginatedAutocomplete
+                    label="Moneda"
+                    //value={invoice ? invoice.currencyId : undefined}
+                    onChange={(item) => {
+                        setCurrency(item!)
+                        //updateField("currencyId", value)
+                    }}
+                    fetchData={CurrencyService.get}
+                    getValue={(item) => item.id}
+                    getLabel={(item) => `${item.symbol}-${item.name.trim()}`}
+                />
+
+                <TextField
+                    className="flex-1"
+                    label="Precio estimado"
+                    variant="outlined"
+                    value={`${formatNumber(sessionPlan?.totalEstimatedPrice) ?? '0'}`}
+                    slotProps={{
+                        inputLabel: { shrink: true }
+                    }}
+                    disabled={true}
                 />
             </div>
             <div className="mt-3">
