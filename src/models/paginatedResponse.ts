@@ -5,3 +5,9 @@ export interface PaginatedResponse<T> {
     pageSize: number;
     totalItems: number;
 }
+
+export interface Result<T> {
+    isSuccess: boolean;
+    value: T;
+    errorMessage: string;
+}

@@ -127,7 +127,7 @@ export default function PatientListPage() {
                     <div className="flex-1">{formatDateDDMMYYYY(patient!.nextAppointment)}</div>
                     <div className="flex-1">${patient!.balanceDue.toFixed(2)}</div>*/}
                         <div className="flex-1 flex justify-end items-center gap-2">
-                            <button className="w-8 h-8 bg-primary/10 p-1 text-primary px-2 rounded-sm hover:bg-primary/30 cursor-pointer">
+                            <button className="w-8 h-8 bg-primary/10 p-1 text-primary dark:bg-primary-dark/10 dark:text-primary-dark px-2 rounded-sm hover:bg-primary/30 cursor-pointer">
                                 <Calendar size={18} />
                             </button>
                             <button

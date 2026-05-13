@@ -3,6 +3,7 @@ import type { Customer } from "../../../services/customer/customer.type";
 import CardInfo from "./CardInfo";
 import { ASSETS_URLS } from "../../../config/constants";
 import PageRightComponent from "@/components/commons/PageRightComponent";
+import { formatPhoneNumber } from "@/utils/number.util";
 
 const cardinfo = [
     {
@@ -56,12 +57,12 @@ export default function PatientProfile({ customer, setIsOpen, setIsOpenTransitio
                 )}
                 <div className="flex-1">
                     <div>
-                        <p className="font-medium text-black dark:text-white">
+                        <p className="text-lg font-medium text-black dark:text-white">
                             {customer.firstName} {customer.lastName}
                         </p>
-                        <p className="text-sm">Edad: {customer.age}</p>
-                        <p className="text-sm">Tel: {customer.phone}</p>
-                        <p className="text-sm">Email: {customer.email}</p>
+                        <p className="dark:text-slate-400">Edad: {customer.age} {customer.age > 1 ? 'años' : 'año'}</p>
+                        <p className="dark:text-slate-400">Tel: {formatPhoneNumber(customer.phone)}</p>
+                        <p className="dark:text-slate-400">Email: {customer.email}</p>
                     </div>
                 </div>
             </div>

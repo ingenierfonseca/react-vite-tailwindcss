@@ -74,7 +74,7 @@ export default function ClinicalAssessment({ customer, setIsOpen }: ClinicalAsse
                             </div>
                         </Card>
 
-                        {/* Card 1 */}
+                        {/* Card 2 */}
                         <Card className="w-full shrink-0">
                             <EditTreatmentPlan
                                 sessionPlan={sessionPlan!}
@@ -84,12 +84,12 @@ export default function ClinicalAssessment({ customer, setIsOpen }: ClinicalAsse
                             />
                         </Card>
 
-                        {/* Card 2 */}
+                        {/* Card 3 */}
                         <Card className="w-full shrink-0">
                             <ResumeTreatmentPlan sessionPlan={sessionPlan!} items={items} isStartTreatmentPlan={isStartTreatmentPlan} setIsStartTreatmentPlan={setIsStartTreatmentPlan} />
                         </Card>
 
-                        {/* Card 3 */}
+                        {/* Card 4 */}
                         <Card className="w-full shrink-0">
                             <TreatmentEvolution sessionPlan={sessionPlan!} items={items} />
                         </Card>
@@ -100,12 +100,11 @@ export default function ClinicalAssessment({ customer, setIsOpen }: ClinicalAsse
                     <NextButtonApp
                         label={step === 3 ? "Guardar" : "Continuar"}
                         onclick={() => {
-                            console.log("step", step)
                             if (step === 2 && items.length === 0) {
                                 toast.error("Tiene que agregar un plan de tratamiento para continuar")
                                 return
                             }
-                            if (step === 2) {
+                            if (step === 3) {
                                 handleSave()
                             } else
                             setStep(step + 1)
@@ -124,7 +123,9 @@ export default function ClinicalAssessment({ customer, setIsOpen }: ClinicalAsse
                             endDate: dayjs(sessionPlan.startDate)
                                 .add(plan.estimatedDurationMonths, "month")
                                 .toISOString(),
-                            totalEstimatedPrice: plan.basePrice
+                            totalEstimatedPrice: plan.basePrice,
+                            currencyId: plan.currencyId,
+                            currency: plan.currency
                         }));
                     }
                     setItems(prev => [

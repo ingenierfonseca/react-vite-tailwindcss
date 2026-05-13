@@ -1,5 +1,5 @@
 import api from "../api/api";
-import type { PaginatedResponse } from "../models/paginatedResponse";
+import type { PaginatedResponse, Result } from "../models/paginatedResponse";
 
 interface GetParams {
     page: number;
@@ -24,7 +24,10 @@ export function createCatalogService<T>(endpoint: string) {
             const { data } = await api.post(endpoint, payload);
             return data;
         },
-
+        post_: async (payload: T): Promise<Result<T>> => {
+            const { data } = await api.post(endpoint, payload);
+            return data;
+        },
         put: async (id: number, payload: T) => {
             const { data } = await api.put(`${endpoint}${id}`, payload);
             return data;
