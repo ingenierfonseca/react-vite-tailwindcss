@@ -1,9 +1,10 @@
 import type { DropDownAppModel } from "@/models/dropdownapp.type"
+import type { Result } from "@/models/result.type"
 import { ClinicalSessionService } from "@/services/clinical-session/clinicalSession.service"
 import type { ClinicalSession } from "@/services/clinical-session/clinicalSession.type"
 import { DoctorService } from "@/services/doctor/doctor.service"
 import { SessionPlanService } from "@/services/session-plan/sessionPlan.service"
-import type { SessionPlan, TreatmentPlanItem } from "@/services/treatment-plan/treatmentPlan.type"
+import type { RequestSessionPlanMaster, SessionPlan, TreatmentPlanItem } from "@/services/treatment-plan/treatmentPlan.type"
 import type { Currency } from "@/services/types/currency.type"
 import { mapToDropdown } from "@/utils/dropdow.util"
 import { useEffect, useState } from "react"
@@ -29,6 +30,7 @@ export const useSessionPlanHook = () => {
         status: "Pendiente",
         startDate: new Date().toISOString().split('T')[0],
         endDate: "",
+        currencyId: 2,
         totalEstimatedPrice: 0,
         comments: "",
         items: []
@@ -45,7 +47,7 @@ export const useSessionPlanHook = () => {
         key: K,
         value: ClinicalSession[K]
     ) => {
-        setSessionPlan(prev => ({
+        setSession(prev => ({
             ...prev,
             [key]: value,
         }));
@@ -80,56 +82,63 @@ export const useSessionPlanHook = () => {
     }, [])
 
     const handleSave = async () => {
-        const response = await saveSession()
-        if (response) {
-            const responseUpload = await saveSessionPlan()
-            if (responseUpload) {
+        const resultSession = await saveSession()
+        if (resultSession.isSuccess) {
+            updateSession("id", resultSession.value.id)
+            updateSessionPlan("sessionId", resultSession.value.id)
+            sessionPlan.sessionId = resultSession.value.id;
+            const responseSessionPlan = await saveSessionPlan()
+            if (responseSessionPlan) {
+                if (isStartTreatmentPlan)
+                    setStep(4)
                 //reload()
                 //setIsOpen(false)
             }
         }
     }
 
-    const saveSession = async (): Promise<boolean> => {
-        var success = false;
-        //setLoading(true);
-        //setError(null);
-
-        //if (validatePatient() === false) {
-            //setLoading(false);
-            //return success;
-        //}
+    const saveSession = async (): Promise<Result<ClinicalSession>> => {
+        var result: Result<ClinicalSession> = {
+            isSuccess: false,
+            value: session,
+            errorMessage: ""
+        }
 
         try {
             if (session?.id) {
                 await ClinicalSessionService.put(session.id, session);
-                toast.success("Paciente actualizado correctamente");
+                toast.success("Diagnostico actualizado correctamente");
             } else {
-                await ClinicalSessionService.post(session!);
-                toast.success("Paciente creado correctamente");
+                result = await ClinicalSessionService.post_(session!);
+                toast.success("Diagnostico creado correctamente");
             }
-            success = true;
         } catch (err: any) {console.log("error", err)
             const errorMessage = err.response?.data?.message || "Error al crear el diagnostico";
-            //setError(errorMessage);
             toast.error(errorMessage);
-            success = false;
-            throw err;
+            result.errorMessage = errorMessage;
         } finally {
-            //setLoading(false);
-            return success;
+            return result;
         }
     };
 
     const saveSessionPlan = async (): Promise<boolean> => {
         var success = false;
         try {
+            let requesSessionPlan: RequestSessionPlanMaster = {
+                sessionId: session.id,
+                name: sessionPlan.name,
+                status: sessionPlan.status,
+                currencyId: currency?.id!,
+                plansIds: plansIds,
+                comments: sessionPlan.comments
+            };
+
             if (sessionPlan?.id) {
-                await SessionPlanService.put(sessionPlan.id, sessionPlan);
-                toast.success("Paciente actualizado correctamente");
+                await SessionPlanService.put(sessionPlan.id, requesSessionPlan);
+                toast.success("Plan de tratamiento actualizado correctamente");
             } else {
-                await SessionPlanService.post(sessionPlan!);
-                toast.success("Paciente creado correctamente");
+                await SessionPlanService.post(requesSessionPlan);
+                toast.success("Plan de tratamiento creado correctamente");
             }
             success = true;
         } catch (err: any) {

@@ -9,3 +9,10 @@ export function validatePhoneNumber(phone: string): boolean {
   const phoneRegex = /^\d{8}$/;
   return phoneRegex.test(phone);
 }
+
+export function formatPhoneNumber(phone: string): string {
+  if (phone.trim().length === 8) {
+    return `${phone.slice(0, 4)}-${phone.slice(4)}`;
+  }
+  return phone;
+}

@@ -24,7 +24,7 @@ export default function EditTreatmentPlan({ sessionPlan, items, setIsOpenModal, 
         <div className="p-4 flex flex-col">
             <p className="text-2xl font-medium dark:text-slate-200 mt-3">Plan de tratamiento propuesto</p>
             <p className="text-slate-600 dark:text-slate-400 mb-3">Selecciona el tipo de tratamiento y configura los detalles</p>
-            <p className="text-lg mb-3">{sessionPlan?.name}</p>
+            <p className="text-lg mb-3 dark:text-slate-200">{sessionPlan?.name}</p>
             <div className="flex gap-3">
                 <DatePicker
                     className="flex-1"
@@ -40,21 +40,11 @@ export default function EditTreatmentPlan({ sessionPlan, items, setIsOpenModal, 
                     onChange={(val) => updateSessionPlan("endDate", val ? val.toISOString() : "")}
                     disabled={true}
                 />
-                <TextField
-                    className="flex-1"
-                    label="Precio estimado"
-                    variant="outlined"
-                    value={`${formatNumber(sessionPlan?.totalEstimatedPrice) ?? '0'}`}
-                    slotProps={{
-                        inputLabel: { shrink: true }
-                    }}
-                    disabled={true}
-                />
             </div>
             <div className="flex gap-3 mt-3">
                 <PaginatedAutocomplete
                     label="Moneda"
-                    //value={invoice ? invoice.currencyId : undefined}
+                    value={sessionPlan?.currencyId}
                     onChange={(item) => {
                         setCurrency(item!)
                         //updateField("currencyId", value)
@@ -68,7 +58,7 @@ export default function EditTreatmentPlan({ sessionPlan, items, setIsOpenModal, 
                     className="flex-1"
                     label="Precio estimado"
                     variant="outlined"
-                    value={`${formatNumber(sessionPlan?.totalEstimatedPrice) ?? '0'}`}
+                    value={`${sessionPlan?.currency?.symbol ?? ""} ${formatNumber(sessionPlan?.totalEstimatedPrice) ?? '0'}`}
                     slotProps={{
                         inputLabel: { shrink: true }
                     }}

@@ -20,7 +20,7 @@ export default function ThreatmentPlanModal({
     const [treatmentPlan, setTreatmentPlan] = useState<TreatmentPlan>()
     const [selectedItems, setSelectedItems] = useState<TreatmentPlanItem[]>([]);
 
-    const handleCheck = (item: TreatmentPlanItem) => (
+    /*const handleCheck = (item: TreatmentPlanItem) => (
         event: React.ChangeEvent<HTMLInputElement>
     ) => {
         if (event.target.checked) {
@@ -28,7 +28,7 @@ export default function ThreatmentPlanModal({
         } else {
             setSelectedItems(prev => prev.filter(i => i.id !== item.id));
         }
-    };
+    };*/
 
     return (
         <Modal isOpen={isModalOpen}
@@ -40,7 +40,7 @@ export default function ThreatmentPlanModal({
             textBtnConfirm="Agregar"
             clickBtnConfirm={() => {
                 onClick(treatmentPlan!, selectedItems)
-                //setIsModalOpen(false)
+                setIsModalOpen(false)
                 setSearch("")
                 setTreatmentPlan(undefined)
             }}>
@@ -56,7 +56,7 @@ export default function ThreatmentPlanModal({
                         }}
                         fetchData={TreatmentPlanService.getActive}
                         getValue={(item) => item.id}
-                        getLabel={(item) => `${item.title.trim()}`}
+                        getLabel={(item) => `${item.title.trim()}-(${item.version})`}
                     />
                     <TextField title="Duracion" value={`${treatmentPlan?.estimatedDurationMonths ?? ''} Meses`} className="md:flex-1 px-2 text-sm" disabled={true} />
                     <FormGroup className="px-2">
@@ -68,16 +68,16 @@ export default function ThreatmentPlanModal({
                                         label={`${item.order} ${item.name}`}
                                         className="dark:text-slate-400"
                                         control={
-                                            <Checkbox
+                                            <Checkbox className="dark:text-primary-dark!"
                                                 defaultValue={item.id}
                                                 checked={selectedItems.some(i => i.id === item.id)}
-                                                onChange={handleCheck(item)}
+                                                //onChange={handleCheck(item)}
                                             />
                                         }
                                     />
                                 ))}
                     </FormGroup>
-                    <span className={`flex-1 px-2 text-sm md:text-lg dark:text-slate-200`}>Total: ${formatNumber(treatmentPlan?.basePrice ?? 0)}</span>
+                    <span className={`flex-1 px-2 text-sm md:text-lg dark:text-slate-200`}>Total: {treatmentPlan?.currency?.symbol} {formatNumber(treatmentPlan?.basePrice ?? 0)}</span>
                 </fieldset>
             </div>
         </Modal>

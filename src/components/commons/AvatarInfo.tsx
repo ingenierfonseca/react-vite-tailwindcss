@@ -30,7 +30,7 @@ export default function AvatarInfo({ avatar, name, title, subTitle, className, o
                 <p className="hidden md:block text-2xl font-semibold px-2 text-black dark:text-slate-200 truncate">{name}</p>
                 <p className="block md:hidden text-lg font-semibold px-2 text-black dark:text-slate-200 truncate">{shortName}</p>
                 <p className="px-2 text-md md:text-lg text-slate-600 dark:text-slate-400 truncate">{title}</p>
-                <p className="w-fit px-2 bg-primary/5 dark:bg-primary/10 text-primary dark:brightness-125 rounded">{subTitle}</p>
+                <p className="w-fit px-2 bg-primary/5 dark:bg-primary/10 text-primary dark:text-primary-dark rounded">{subTitle}</p>
             </div>
         </button>
     )
