@@ -33,6 +33,10 @@ export default function ResumeTreatmentPlan({ sessionPlan, items, isStartTreatme
                 <p className="flex-2 text-lg dark:text-slate-400">${formatNumber(sessionPlan?.totalEstimatedPrice)}</p>
             </div>
             <div className="flex">
+                <p className="flex-1 font-medium text-lg dark:text-slate-200">Moneda</p>
+                <p className="flex-2 text-lg dark:text-slate-400">{sessionPlan?.currency?.name}</p>
+            </div>
+            <div className="flex">
                 <p className="flex-1 font-medium text-lg dark:text-slate-200">Tratamientos</p>
                 <div className="flex-2 flex flex-col">
                     {items.map((item) => (

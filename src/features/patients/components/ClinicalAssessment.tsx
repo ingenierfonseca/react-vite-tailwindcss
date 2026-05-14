@@ -99,7 +99,7 @@ export default function ClinicalAssessment({ customer, setIsOpen }: ClinicalAsse
                     </div>
                 </div>
                 <div className="flex gap-3 ml-auto">
-                    {step > 1 && <BackButtonApp label="Volver" onclick={() => setStep(step - 1)} />}
+                    {step > 1 && step < 4 && <BackButtonApp label="Volver" onclick={() => setStep(step - 1)} />}
                     <NextButtonApp
                         label={step === 3 ? "Guardar" : "Continuar"}
                         onclick={() => {

@@ -11,6 +11,7 @@ import { SearchIcon } from "lucide-react";
 type Props<T> = {
   label: string;
   value?: string | number | null;
+  disabled?: boolean;
   onChange?: (value: any, item: T | null) => void;
   fetchData: (params: {
     page: number;
@@ -27,6 +28,7 @@ type Props<T> = {
 export function PaginatedAutocomplete<T>({
   label,
   value,
+  disabled,
   onChange,
   fetchData,
   getValue,
@@ -63,6 +65,7 @@ export function PaginatedAutocomplete<T>({
       options={options}
       value={selected}
       loading={loading}
+      disabled={disabled}
 
       onChange={(_, newValue) => {
         setSelected(newValue);

@@ -52,6 +52,7 @@ export default function EditTreatmentPlan({ sessionPlan, items, setIsOpenModal, 
                     fetchData={CurrencyService.get}
                     getValue={(item) => item.id}
                     getLabel={(item) => `${item.symbol}-${item.name.trim()}`}
+                    disabled={true}
                 />
 
                 <TextField
@@ -86,6 +87,7 @@ export default function EditTreatmentPlan({ sessionPlan, items, setIsOpenModal, 
                     label="Notas del plan"
                     multiline
                     rows={4}
+                    value={sessionPlan.comments ?? ""}
                     onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
                         if (e.target.value.length <= maxLength) {
                             updateSessionPlan("comments", e.target.value)

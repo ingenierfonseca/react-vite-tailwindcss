@@ -57,7 +57,7 @@ export const useSessionPlanHook = () => {
         key: K,
         value: SessionPlan[K]
     ) => {
-        setSession(prev => ({
+        setSessionPlan(prev => ({
             ...prev,
             [key]: value,
         }));
@@ -87,7 +87,7 @@ export const useSessionPlanHook = () => {
             updateSession("id", resultSession.value.id)
             updateSessionPlan("sessionId", resultSession.value.id)
             sessionPlan.sessionId = resultSession.value.id;
-            const responseSessionPlan = await saveSessionPlan()
+            const responseSessionPlan = await saveSessionPlan(session.id != 0 ? session.id : resultSession.value.id)
             if (responseSessionPlan) {
                 if (isStartTreatmentPlan)
                     setStep(4)
@@ -106,8 +106,9 @@ export const useSessionPlanHook = () => {
 
         try {
             if (session?.id) {
-                await ClinicalSessionService.put(session.id, session);
+                //await ClinicalSessionService.put(session.id, session);
                 toast.success("Diagnostico actualizado correctamente");
+                result.isSuccess = true;
             } else {
                 result = await ClinicalSessionService.post_(session!);
                 toast.success("Diagnostico creado correctamente");
@@ -121,11 +122,11 @@ export const useSessionPlanHook = () => {
         }
     };
 
-    const saveSessionPlan = async (): Promise<boolean> => {
+    const saveSessionPlan = async (sessionId: number): Promise<boolean> => {
         var success = false;
         try {
             let requesSessionPlan: RequestSessionPlanMaster = {
-                sessionId: session.id,
+                sessionId: sessionId,
                 name: sessionPlan.name,
                 status: sessionPlan.status,
                 currencyId: currency?.id!,
