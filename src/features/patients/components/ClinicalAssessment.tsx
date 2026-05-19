@@ -14,7 +14,6 @@ import dayjs from "dayjs";
 import { toast } from "react-toastify";
 import { useSessionPlanHook } from "../hooks/sessionPlan.hook";
 import { useEffect } from "react";
-import TreatmentEvolution from "./TreatmentEvolution";
 
 interface ClinicalAssessmentProps {
     customer: Customer;
@@ -35,8 +34,6 @@ export default function ClinicalAssessment({ customer, setIsOpen }: ClinicalAsse
         setStep,
         setSessionPlan,
         handleSave,
-        isStartTreatmentPlan,
-        setIsStartTreatmentPlan,
         addPlanId,
         setCurrency
     } = useSessionPlanHook()
@@ -89,12 +86,7 @@ export default function ClinicalAssessment({ customer, setIsOpen }: ClinicalAsse
 
                         {/* Card 3 */}
                         <Card className="w-full shrink-0">
-                            <ResumeTreatmentPlan sessionPlan={sessionPlan!} items={items} isStartTreatmentPlan={isStartTreatmentPlan} setIsStartTreatmentPlan={setIsStartTreatmentPlan} />
-                        </Card>
-
-                        {/* Card 4 */}
-                        <Card className="w-full shrink-0">
-                            <TreatmentEvolution sessionPlan={sessionPlan!} items={items} />
+                            <ResumeTreatmentPlan sessionPlan={sessionPlan!} items={items} />
                         </Card>
                     </div>
                 </div>

@@ -1,16 +1,14 @@
 import type { SessionPlan, TreatmentPlanItem } from "@/services/treatment-plan/treatmentPlan.type";
 import { formatNumber } from "@/utils/number.util";
-import { Checkbox, FormControlLabel, TextField } from "@mui/material";
+import { TextField } from "@mui/material";
 import dayjs from "dayjs";
 import { Check } from "lucide-react";
 
 interface ResumeTreatmentPlanProps {
     sessionPlan: SessionPlan
-    items: TreatmentPlanItem[],
-    isStartTreatmentPlan: boolean,
-    setIsStartTreatmentPlan: (value: boolean) => void
+    items: TreatmentPlanItem[]
 }
-export default function ResumeTreatmentPlan({ sessionPlan, items, isStartTreatmentPlan, setIsStartTreatmentPlan }: ResumeTreatmentPlanProps) {
+export default function ResumeTreatmentPlan({ sessionPlan, items }: ResumeTreatmentPlanProps) {
     const durationInMonths =
         sessionPlan.startDate && sessionPlan.endDate
             ? Math.round(dayjs(sessionPlan.endDate).diff(dayjs(sessionPlan.startDate), "month", true))
@@ -62,17 +60,6 @@ export default function ResumeTreatmentPlan({ sessionPlan, items, isStartTreatme
                     disabled={true}
                 />
             </div>
-
-            <FormControlLabel
-                label={`Iniciar plan de tratamiento`}
-                className="dark:text-slate-400"
-                control={
-                    <Checkbox
-                        checked={isStartTreatmentPlan}
-                        onChange={(e) => setIsStartTreatmentPlan(e.target.checked)}
-                    />
-                }
-            />
             <p className="dark:text-slate-400">Si marca esta opcion podrá continuar e iniciar el plan de tratamiento</p>
         </div>
     )

@@ -2,15 +2,15 @@ import { useEffect, useState } from "react";
 import { InvoiceService } from "../../../services/invoice/invoice.service";
 import type { CustomerInvoiceDTO } from "../../../services/invoice/customerinvoice.dto.type";
 import type { InvoiceInfoDTO } from "../../../services/invoice/invoice.types";
-import type { Payment } from "../../../services/payment/payment.type";
+import type { Payment, RequestPayment } from "../../../services/payment/payment.type";
 import { PaymentService } from "../../../services/payment/payment.service";
 
 export const useQuickPayment = () => {
     const [invoiceData, setInvoiceData] = useState<InvoiceInfoDTO[]>();
     const [invoice, setInvoice] = useState<InvoiceInfoDTO>();
     const [customer, setCustomer] = useState<CustomerInvoiceDTO | null>();
-    const [payment, setPayment] = useState<Payment>({ id: 0, amount: 0, invoiceId: 0, customerId: 0, paymentTypeId: 1 });
-
+    const [payment, setPayment] = useState<Payment>({id: 0, amount: 0, currencyId: 0, customerId: 0, invoiceId: 0, paymentTypeId: 0});
+    const [transactionId, setTransactionId] = useState(1)
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<Error | null>(null);
 
@@ -36,7 +36,15 @@ export const useQuickPayment = () => {
         try {
             setLoading(true);
             setError(null);
-            await PaymentService.post(payment).then(setPayment);
+            var request: RequestPayment = {
+                amount: payment.amount,
+                currencyId: payment.currencyId,
+                customerId: payment.customerId,
+                invoiceId: payment.invoiceId,
+                paymentTypeId: payment.paymentTypeId,
+                operationTypeId: transactionId
+            }
+            await PaymentService.post(request).then(setPayment);
             return { success: true }
         } catch (error: any) {
             const msg = error.response?.data?.message || error.message || "Error inesperado";
@@ -55,10 +63,12 @@ export const useQuickPayment = () => {
         customer,
         payment,
         invoice,
+        transactionId,
         setCustomer,
         onUpdateField,
         setInvoice,
         setPayment,
+        setTransactionId,
         registerPayment
     };
 }

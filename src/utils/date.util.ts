@@ -74,3 +74,11 @@ export function addDays(dateString: string, days: number): string {
 
   return date.toISOString().split("T")[0];
 }
+
+export function calculateMonthsBetweenDates(startDate: string, endDate: string): number {
+  const start = new Date(startDate);
+  const end = new Date(endDate);
+  const yearsDifference = end.getFullYear() - start.getFullYear();
+  const monthsDifference = end.getMonth() - start.getMonth();
+  return yearsDifference * 12 + monthsDifference;
+}

@@ -13,7 +13,6 @@ import { PDFViewer } from '@react-pdf/renderer';
 import InvoicePDF from "./InvoicePDF"
 import ModalInvoice from "../../../components/commons/ModalInvoice"
 import { ASSETS_URLS } from "../../../config/constants"
-import { InvoiceStatus } from "../state/state"
 
 interface PatientBillInfoProps {
     customer: CustomerInvoiceDTO | null
@@ -68,7 +67,7 @@ export default function PatientBillInfo({ customer, setIsOpen, reload, openInvoi
                 className={"mt-6"}
                 avatar={`${ASSETS_URLS.avatars}/${customer!.avatar}`}
                 name={customer?.fullName || ""}
-                title={`Edad: ${customer?.age} . Ultima Visita: ${customer?.lastVisit ? customer.lastVisit : 'No ha realizado visitas'}`}
+                title={`Edad: ${customer?.age} . Ultima Visita: ${customer?.lastVisit ? formatDateToMMDameDDYYYY(customer.lastVisit) : 'No ha realizado visitas'}`}
                 onClick={() => { }}
             />
             <div className="w-full h-0.5 bg-slate-700 mb-12" />
@@ -174,7 +173,7 @@ export default function PatientBillInfo({ customer, setIsOpen, reload, openInvoi
                             setPaymentId(0)
                             setIsOpenModal(true)
                         }} 
-                        disabled={invoiceData?.filter(inv => inv.statusId === InvoiceStatus.PENDING || inv.statusId === InvoiceStatus.OVERDUE || inv.statusId === InvoiceStatus.PARTIAL).length === 0}>
+                        disabled={customer?.balance === 0}>
                         Agregar Pago
                     </button>
                 </div>

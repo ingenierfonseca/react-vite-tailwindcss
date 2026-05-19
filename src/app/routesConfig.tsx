@@ -8,6 +8,7 @@ import SettingsPage from "../features/settings/SettingsPage";
 import AppointmentTypeListPage from "../features/administration/apointment-type/AppointmentTypeListPage";
 import PatientBulkUploadPage from "../features/upload-data/patient/PatientBulkUploadPage";
 import CustomerClinicalHistoryDashboard from "@/features/clinical-history/CustomerClinicalHistoryPage";
+import TreatmentListPage from "@/features/administration/treatments/TreatmentListPage";
 
 export const routesConfig = [
   {
@@ -45,11 +46,11 @@ export const routesConfig = [
     title: "Configuración",
     element: <SettingsPage />
   },
-  /*{
+  {
     path: "/treatments",
     title: "Tratamientos",
     element: <TreatmentListPage />
-  },*/
+  },
   {
     path: "/appointment-types",
     title: "Tipo de Citas",
@@ -61,7 +62,7 @@ export const routesConfig = [
     element: <PatientBulkUploadPage />
   },
   {
-    path: "/treatments",
+    path: "/patients/:id/treatment-history/:treatmentId",
     title: "Historial clinico",
     element: <CustomerClinicalHistoryDashboard />
   }

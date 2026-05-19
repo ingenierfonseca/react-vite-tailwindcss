@@ -4,33 +4,10 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Calendar, Check, CheckCircle2Icon, Clock } from "lucide-react";
 import { SkeletonIndicatorLoader } from "./SkeletonComponent";
-
-const treatmentPlan = [
-    {
-        treatment: "Diagnóstico y planificación",
-        status: "Completo"
-    },
-    {
-        treatment: "Colocación de aparatologia",
-        status: "Completo"
-    },
-    {
-        treatment: "Alineación y nivelación",
-        status: "En proceso"
-    },
-    {
-        treatment: "Cierre de espacios",
-        status: "Pendiente"
-    },
-    {
-        treatment: "Detalle y acabado",
-        status: "Pendiente"
-    },
-    {
-        treatment: "Detención",
-        status: "Pendiente"
-    }
-]
+import type { SessionPlan, SessionPlanItem } from "@/services/treatment-plan/treatmentPlan.type";
+import { useEffect, useState } from "react";
+import { formatNumber } from "@/utils/number.util";
+import { calculateMonthsBetweenDates } from "@/utils/date.util";
 
 const notes = [
     {
@@ -44,38 +21,50 @@ const notes = [
         note: "Ajuste de arco. Se cambia a alambre NiTi0.016."
     }
 ]
-export default function ResumeHistorial() {
+
+interface ResumeHistoryTabProps {
+    treatment?: SessionPlan;
+}
+
+export default function ResumeHistoryTab({ treatment }: ResumeHistoryTabProps) {
+    const [progress, setProgress] = useState<ProgressInfo>({ percentage: 0, nextPlan: null, currentPlan: null, currentId: 0, estimatedMonths: 0, transcurredMonths: 0 })
     const loading = true
+
+    useEffect(() => {
+            if (treatment) 
+                setProgress(getProgress(treatment!))
+    }, [treatment])
+
     return (
         <div className="flex flex-col gap-4">
-            <div className="grid grid-cols-[repeat(auto-fit,minmax(400px,1fr))] gap-4">
+            <div className="flex flex-wrap gap-4 w-full">
                 {/* Progress */}
-                <Card className="col-span-full md:col-span-1">
+                <Card className="flex-[1_1_450px] min-w-0">
                     <CardContent className="p-4 space-y-4">
                         <div className="flex items-center justify-between">
                             <h2 className="text-lg font-medium dark:text-slate-200">Progreso del tratamiento</h2>
                         </div>
                         <div className="flex gap-3 md:gap-10">
-                            <ProgressComponent size={150} sizeText={30} value={65} label={"Completado"} />
+                            <ProgressComponent size={150} sizeText={30} value={progress.percentage} label={"Completado"} />
                             <div className="w-full flex flex-col gap-3">
                                 <div className="flex">
                                     <div className="flex-1">
                                         <p className="dark:text-slate-400">Tiempo transcurrido</p>
-                                        <p className="text-md font-medium text-black md:text-lg dark:text-slate-200">16 meses</p>
+                                        <p className="text-md font-medium text-black md:text-lg dark:text-slate-200">{progress.transcurredMonths} {progress.transcurredMonths === 1 ? "mes" : "meses"}</p>
                                     </div>
                                     <div className="flex-1">
                                         <p className="dark:text-slate-400">Tiempo estimado</p>
-                                        <p className="text-md md:text-lg font-medium text-black dark:text-slate-200">24 meses</p>
+                                        <p className="text-md md:text-lg font-medium text-black dark:text-slate-200">{progress.estimatedMonths} {progress.estimatedMonths === 1 ? "mes" : "meses"}</p>
                                     </div>
                                 </div>
                                 <div>
                                     <p className="dark:text-slate-400">Siguiente objetivo</p>
-                                    <p className="text-md font-medium text-black dark:text-slate-200">Alineación y nivelación</p>
+                                    <p className="text-md font-medium text-black dark:text-slate-200">{progress.nextPlan?.templateItem.name || "Ninguno"}</p>
                                 </div>
                                 <div className="flex flex-col">
-                                    <p className="text-md font-medium text-black dark:text-slate-200">Etapa actual: Alineación</p>
-                                    <Progress value={65} />
-                                    <p className="ml-auto dark:text-slate-400">3 de 6 etapas completadas</p>
+                                    <p className="text-md font-medium text-black dark:text-slate-200">{progress.currentPlan?.templateItem.name || "Ninguno"}</p>
+                                    <Progress value={progress.percentage} />
+                                    <p className="ml-auto dark:text-slate-400">{progress.currentId} de {treatment?.items.length} etapas completadas</p>
                                 </div>
                             </div>
                         </div>
@@ -83,7 +72,7 @@ export default function ResumeHistorial() {
                 </Card>
 
                 {/* Evloution */}
-                <Card className="col-span-2">
+                <Card className="flex-[2_1_900px] min-w-0">
                     <CardContent className="p-4 space-y-4">
                         <div className="flex items-center justify-between">
                             <h2 className="text-lg font-medium dark:text-slate-200">Evolución del tratamiento</h2>
@@ -124,7 +113,7 @@ export default function ResumeHistorial() {
                                 <p className="dark:text-slate-400">Consultorio 2 . Dra. Melissa Fonseca</p>
                             </div>
                         </div>
-                    
+
                     </CardContent>
                 </Card>
 
@@ -135,32 +124,32 @@ export default function ResumeHistorial() {
                             <h2 className="text-lg font-medium dark:text-slate-200">Plan de tratamiento</h2>
                         </div>
                         <div className="flex flex-col gap-2">
-                            {treatmentPlan.map((plan, index) => {
+                            {treatment && treatment?.items.map((plan, index) => {
                                 const style = STATUS_STYLES[plan.status] || STATUS_STYLES["Default"];
                                 const isComplete = plan.status === "Completo";
                                 const isInProcess = plan.status === "En proceso";
 
                                 return (
-                                <div key={index} className="flex justify-between items-center gap-4">
-                                    <div className="flex items-center gap-2">
-                                        <div className={`rounded-full ${isComplete ? `${style.bg} ${style.text}` : "bg-primary"}`}>
-                                            {isComplete && <Check />}
-                                            {isInProcess && <p className="h-5 w-5 flex justify-center text-slate-200">{index}</p>}
-                                            {plan.status === "Pendiente" && <p className="h-5 w-5 flex justify-center bg-white border border-slate-400 rounded-full"></p>}
+                                    <div key={index} className="flex justify-between items-center gap-4">
+                                        <div className="flex items-center gap-2">
+                                            <div className={`rounded-full ${isComplete ? `${style.bg} ${style.text}` : "bg-primary"}`}>
+                                                {isComplete && <Check />}
+                                                {isInProcess && <p className="h-5 w-5 flex justify-center text-slate-200">{index + 1}</p>}
+                                                {plan.status === "Pendiente" && <p className="h-5 w-5 flex justify-center bg-white border border-slate-400 rounded-full"></p>}
+                                            </div>
+                                            <p className={`${isInProcess ? "text-primary dark:text-slate-200" : "dark:text-slate-400"}`}>{index + 1}. {plan.templateItem.name}</p>
                                         </div>
-                                        <p className={`${isInProcess ? "text-primary dark:text-slate-200" : "dark:text-slate-400"}`}>{index}. {plan.treatment}</p>
-                                    </div>
 
-                                    
-                                    <LabelBadge
-                                        label={plan.status} 
-                                        className={`${style.badgeText} ${style.bg} dark:bg-primary-dark/10`} 
-                                    />
-                                </div>
+
+                                        <LabelBadge
+                                            label={plan.status}
+                                            className={`${style.badgeText} ${style.bg} dark:bg-primary-dark/10`}
+                                        />
+                                    </div>
                                 )
                             })}
                         </div>
-                    
+
                     </CardContent>
                 </Card>
 
@@ -173,7 +162,7 @@ export default function ResumeHistorial() {
                         <div className="flex flex-col gap-4">
                             <div className="flex justify-between">
                                 <p className="dark:text-slate-400">Total del tratamiento</p>
-                                <p className="text-black dark:text-slate-200 font-medium">$2,800.00</p>
+                                <p className="text-black dark:text-slate-200 font-medium">${formatNumber(treatment?.totalEstimatedPrice!)}</p>
                             </div>
                             <div className="flex justify-between">
                                 <p className="dark:text-slate-400">Pagado</p>
@@ -208,7 +197,7 @@ export default function ResumeHistorial() {
                                 <p className="dark:text-slate-400">Consultorio 2 . Dra. Melissa Fonseca</p>
                             </div>
                         </div>
-                    
+
                     </CardContent>
                 </Card>
 
@@ -229,7 +218,7 @@ export default function ResumeHistorial() {
                                 </div>
                             ))}
                         </div>
-                    
+
                     </CardContent>
                 </Card>
 
@@ -274,25 +263,86 @@ export default function ResumeHistorial() {
 }
 
 interface StatusStyle {
-  text: string;
-  bg: string;
-  badgeText: string;
+    text: string;
+    bg: string;
+    badgeText: string;
 }
 
 const STATUS_STYLES: Record<string, StatusStyle> = {
-  "Completo": {
-    text: "text-green-600",
-    bg: "bg-green-400/10",
-    badgeText: "text-green-500"
-  },
-  "En proceso": {
-    text: "text-primary",
-    bg: "bg-primary/10",
-    badgeText: "text-primary dark:text-slate-200"
-  },
-  "Default": {
-    text: "text-slate-500",
-    bg: "bg-slate-400/10",
-    badgeText: "text-slate-500"
-  }
+    "Completo": {
+        text: "text-green-600",
+        bg: "bg-green-400/10",
+        badgeText: "text-green-500"
+    },
+    "En proceso": {
+        text: "text-primary",
+        bg: "bg-primary/10",
+        badgeText: "text-primary dark:text-slate-200"
+    },
+    "Default": {
+        text: "text-slate-500",
+        bg: "bg-slate-400/10",
+        badgeText: "text-slate-500"
+    }
 };
+
+interface ProgressInfo {
+    percentage: number;
+    currentPlan: SessionPlanItem | null;
+    currentId: number;
+    nextPlan: SessionPlanItem | null;
+    estimatedMonths: number;
+    transcurredMonths: number;
+}
+
+function getProgress(treatment: SessionPlan): ProgressInfo {
+    const items = treatment.items;
+
+    const defaultProgress: ProgressInfo = {
+        percentage: 0,
+        currentPlan: null,
+        currentId: -1,
+        nextPlan: null,
+        estimatedMonths: 0,
+        transcurredMonths: 0
+    };
+
+    if (items.length === 0) return defaultProgress;
+
+    // 2. Cálculo de tiempos (Una sola vez)
+    const start = treatment.startDate!;
+    const estimatedMonths = calculateMonthsBetweenDates(start, treatment.endDate!);
+    const transcurredMonths = calculateMonthsBetweenDates(start, new Date().toISOString());
+
+    // 3. Una sola pasada (Single Pass) para encontrar todo
+    let completedCount = 0;
+    let currentPlan: SessionPlanItem | null = null;
+    let nextPlan: SessionPlanItem | null = null;
+    let currentIndex = -1;
+
+    for (let i = 0; i < items.length; i++) {
+        const item = items[i];
+        const status = item.status.toLowerCase();
+
+        if (status === 'completado') {
+            completedCount++;
+        } else if (!currentPlan) {
+            currentPlan = item;
+            currentIndex = i;
+
+            if (item.status.toLowerCase() === 'pendiente')
+                nextPlan = item;
+            else //if (i + 1 < items.length)
+                nextPlan = items[i + 1] || null;
+        }
+    }
+
+    return {
+        percentage: Math.round((completedCount / items.length) * 100),
+        currentPlan,
+        currentId: currentIndex,
+        nextPlan,
+        estimatedMonths,
+        transcurredMonths: Math.max(0, transcurredMonths) // Evita negativos si la fecha es futura
+    };
+}

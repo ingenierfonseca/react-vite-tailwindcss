@@ -102,13 +102,13 @@ export default function Invoice() {
                             }}
                         />
                         <div className="ml-auto">
-                            {customer && customer.balances.map((balance, index) => (
+                            {/*customer && customer.balances.map((balance, index) => (
                                 <p key={index} className={`sm:text-lg md:text-2xl font-semibold ${getColorByPendingCount(customer!)} flex justify-end`}>
                                     {balance.symbol}{formatNumber(balance.amount)}
                                 </p>
-                            ))}
-                            {customer && customer.balances.length === 0 && (
-                                <p className={`sm:text-lg md:text-2xl font-semibold ${getColorByPendingCount(customer!)} flex justify-end`}>C$0.00</p>
+                            ))*/}
+                            {customer && (
+                                <p className={`sm:text-lg md:text-2xl font-semibold ${getColorByPendingCount(customer!)} flex justify-end`}>{customer.currency}{formatNumber(customer.balance)}</p>
                             )}
                             <p className="text-sm md:text-lg text-slate-600 dark:text-slate-400 flex justify-end whitespace-nowrap truncate">Deuda  Total</p>
                         </div>

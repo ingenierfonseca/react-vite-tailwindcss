@@ -112,7 +112,7 @@ export default function PatientListPage() {
                             avatar={`${ASSETS_URLS.avatars}/${patient!.avatar}`}
                             name={patient!.firstName + " " + patient!.lastName}
                             title={`${patient!.email}`}
-                            subTitle={`ID: PAC-${String(patient!.id).padStart(4, '0')}`}
+                            subTitle={`ID: ${patient!.dni}`}//PAC-${String(patient!.id).padStart(4, '0')}
                             onClick={() => {
                                 setCustomer(patient)
                                 openProfileInfo(true)

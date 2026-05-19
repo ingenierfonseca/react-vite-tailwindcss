@@ -76,7 +76,7 @@ function Sidebar({collapsed, isMobileMenuOpen}: SidebarProps) {
                             {item.submenu && expandedItems.has(item.id) && (
                                 <div className="flex flex-col mt-2 ml-8">
                                     {item.submenu.map((submenuItem) => {
-                                        return <button key={submenuItem.id} className={`text-left p-3 cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-800/50
+                                        return <button key={submenuItem.id} className={`text-left p-3 cursor-pointer hover:bg-sidebar-item/20 dark:hover:bg-slate-800/50
                                             ${location.pathname.includes(submenuItem.path!) ? "text-sidebar-item font-bold border-l" : "text-slate-400 border-l border-slate-200"}`}
                                             onClick={() => navigate(submenuItem.path || "/")}>{submenuItem.label}</button>
                                     })}

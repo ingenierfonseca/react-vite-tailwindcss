@@ -80,6 +80,10 @@ export const usePatientCreateEdit = () => {
             toast.error("No se ha inicializado el paciente");
             return false;
         }
+        if (customer?.dni.length === 0) {
+            toast.error("La Identificación del Paciente es requerida");
+            return false;
+        }
         if (customer?.firstName.length === 0) {
             toast.error("El Nombre del Paciente es requerido");
             return false;

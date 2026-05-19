@@ -4,6 +4,11 @@ import CardInfo from "./CardInfo";
 import { ASSETS_URLS } from "../../../config/constants";
 import PageRightComponent from "@/components/commons/PageRightComponent";
 import { formatPhoneNumber } from "@/utils/number.util";
+import { useEffect, useState } from "react";
+import { SessionPlanService } from "@/services/session-plan/sessionPlan.service";
+import type { SessionPlan } from "@/services/treatment-plan/treatmentPlan.type";
+import { formatDateToMMDameDDYYYY } from "@/utils/date.util";
+import { useNavigate } from "react-router";
 
 const cardinfo = [
     {
@@ -36,14 +41,26 @@ interface PatientProfileProps {
 }
 
 export default function PatientProfile({ customer, setIsOpen, setIsOpenTransition, openSessionTreatmentPlan }: PatientProfileProps) {
-    console.log("Abriendo customer profile")
+    const [treatmentHistory, setTreatmentHistory] = useState<SessionPlan[]>([])
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        SessionPlanService.getTreatmentHistory(customer.id)
+            .then((response) => {
+                setTreatmentHistory(response)
+            })
+            .catch((error) => {
+                console.error("Error fetching treatment history:", error);
+            });
+    }, [customer.id])
+
     return (
         <PageRightComponent
             title={"Perfil del Paciente"}
             onClick={() => setIsOpen(false)}>
             <div className="flex mt-2 gap-2">
                 {customer.avatar && !customer.avatar.includes('null') ? (
-                    <img 
+                    <img
                         src={`${ASSETS_URLS.avatars}/${customer.avatar}`}
                         alt={`${customer.firstName} ${customer.lastName}`}
                         className="w-1/2 h-1/2 rounded-md object-cover"
@@ -69,7 +86,7 @@ export default function PatientProfile({ customer, setIsOpen, setIsOpenTransitio
 
             <div className="grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-4 w-full mt-4">
                 {cardinfo.map((info, index) => (
-                    <CardInfo 
+                    <CardInfo
                         key={index}
                         title={info.title}
                         description={info.description}
@@ -82,19 +99,26 @@ export default function PatientProfile({ customer, setIsOpen, setIsOpenTransitio
 
             <div className="mt-4 rounded-md p-2 border dark:border-slate-300">
                 <p className="font-semibold text-black dark:text-white">Treatment history</p>
-                <div className="flex mt-4 p-2 rounded-md bg-slate-50 dark:bg-slate-700">
-                    <div className="w-10 h-10 p-2 rounded-full dark:bg-slate-300 flex items-center justify-center">
-                        <p>MF</p>
+                {treatmentHistory.length === 0 ? (
+                    <p className="text-sm text-gray-500 mt-2">No treatment history available.</p>
+                ) : (
+                treatmentHistory.map((treatment) => (
+                    <div key={treatment.id}
+                        className="flex mt-4 p-2 rounded-md bg-slate-100 dark:bg-slate-900 cursor-pointer dark:hover:bg-slate-700 hover:bg-slate-200 transition-colors"
+                        onClick={() => navigate(`/patients/${customer.id}/treatment-history/${treatment.id}`)}>
+                        <div className="w-10 h-10 p-2 rounded-full dark:bg-slate-300 flex items-center justify-center">
+                            <p>MF</p>
+                        </div>
+                        <div className="mx-2">
+                            <p className="text-sm text-black dark:text-white">{treatment.name}</p>
+                            <p className="text-xs dark:text-slate-300">Dra. Melissa Fonseca</p>
+                            <p className="text-xs dark:text-slate-400">{treatment.comments}</p>
+                        </div>
+                        <div className="ml-auto">
+                            <p className="text-xs text-gray-500 dark:text-slate-400">{formatDateToMMDameDDYYYY(treatment.startDate)}</p>
+                        </div>
                     </div>
-                    <div className="mx-2">
-                        <p className="text-sm text-black dark:text-white">Rutina de Limpieza y Examinacion</p>
-                        <p className="text-xs">Dra. Melissa Fonseca</p>
-                        <p className="text-xs">Excelent oral igiene, No cavities detected. Recomended 6-month follow-up.</p>
-                    </div>
-                    <div className="mr-auto">
-                        <p className="text-xs text-gray-500">12/12/2023</p>
-                    </div>
-                </div>
+                )))}
             </div>
 
             <div className="mt-4 rounded-md p-2 border dark:border-slate-300">

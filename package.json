@@ -17,6 +17,7 @@
     "@mui/material": "^7.3.9",
     "@mui/system": "^7.3.9",
     "@mui/x-date-pickers": "^8.27.2",
+    "@radix-ui/react-alert-dialog": "^1.1.15",
     "@react-pdf/renderer": "^4.5.1",
     "@tailwindcss/vite": "^4.2.2",
     "@types/three": "^0.183.1",

@@ -8,9 +8,11 @@ import type { RequestSessionPlanMaster, SessionPlan, TreatmentPlanItem } from "@
 import type { Currency } from "@/services/types/currency.type"
 import { mapToDropdown } from "@/utils/dropdow.util"
 import { useEffect, useState } from "react"
+import { useNavigate } from "react-router"
 import { toast } from "react-toastify"
 
 export const useSessionPlanHook = () => {
+    const navigate = useNavigate();
     const [session, setSession] = useState<ClinicalSession>({
         id: 0,
         customerId: 0,
@@ -37,7 +39,6 @@ export const useSessionPlanHook = () => {
     })
     const [items, setItems] = useState<TreatmentPlanItem[]>([]);
     const [step, setStep] = useState(1);
-    const [isStartTreatmentPlan, setIsStartTreatmentPlan] = useState(false)
 
     const addPlanId = (id: number) => {
         setPlansIds(prev => [...prev, id])
@@ -88,11 +89,8 @@ export const useSessionPlanHook = () => {
             updateSessionPlan("sessionId", resultSession.value.id)
             sessionPlan.sessionId = resultSession.value.id;
             const responseSessionPlan = await saveSessionPlan(session.id != 0 ? session.id : resultSession.value.id)
-            if (responseSessionPlan) {
-                if (isStartTreatmentPlan)
-                    setStep(4)
-                //reload()
-                //setIsOpen(false)
+            if (responseSessionPlan.isSuccess) {
+                navigate(`/patients/${session.customerId}/treatment-history/${responseSessionPlan.value.id}`)
             }
         }
     }
@@ -106,7 +104,6 @@ export const useSessionPlanHook = () => {
 
         try {
             if (session?.id) {
-                //await ClinicalSessionService.put(session.id, session);
                 toast.success("Diagnostico actualizado correctamente");
                 result.isSuccess = true;
             } else {
@@ -122,8 +119,12 @@ export const useSessionPlanHook = () => {
         }
     };
 
-    const saveSessionPlan = async (sessionId: number): Promise<boolean> => {
-        var success = false;
+    const saveSessionPlan = async (sessionId: number): Promise<Result<SessionPlan>> => {
+        var result: Result<SessionPlan> = {
+            isSuccess: false,
+            value: sessionPlan,
+            errorMessage: ""
+        };
         try {
             let requesSessionPlan: RequestSessionPlanMaster = {
                 sessionId: sessionId,
@@ -138,19 +139,18 @@ export const useSessionPlanHook = () => {
                 await SessionPlanService.put(sessionPlan.id, requesSessionPlan);
                 toast.success("Plan de tratamiento actualizado correctamente");
             } else {
-                await SessionPlanService.post(requesSessionPlan);
+                result = await SessionPlanService.post(requesSessionPlan);
                 toast.success("Plan de tratamiento creado correctamente");
             }
-            success = true;
+            result.isSuccess = true;
         } catch (err: any) {
             const errorMessage = err.response?.data?.message || "Error al crear el plan de tratamiento";
-            //setError(errorMessage);
+
             toast.error(errorMessage);
-            success = false;
+            result.errorMessage = errorMessage;
             throw err;
         } finally {
-            //setLoading(false);
-            return success;
+            return result;
         }
     }
 
@@ -161,7 +161,6 @@ export const useSessionPlanHook = () => {
         items,
         isOpenModal,
         step,
-        isStartTreatmentPlan,
         updateSession,
         updateSessionPlan,
         setItems,
@@ -170,7 +169,6 @@ export const useSessionPlanHook = () => {
         setSessionPlan,
         addPlanId,
         handleSave,
-        setIsStartTreatmentPlan,
         setCurrency
     }
 }

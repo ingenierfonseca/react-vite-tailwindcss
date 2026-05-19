@@ -42,9 +42,8 @@ export interface SessionPlanItem {
     id: number
     sessionPlanMasterId: number
     treatmentPlanTemplateItemId: number
-    name: string
     status: string
-    order: number
+    templateItem: TreatmentPlanItem
 }
 
 export interface RequestSessionPlanMaster {
@@ -52,9 +51,28 @@ export interface RequestSessionPlanMaster {
     name: string
     status: string
     currencyId: number
-    //startDate: string
-    //endDate: string
-    //totalEstimatedPrice: number
     comments: string
     plansIds: number[]
 }
+
+export interface RequestStatusUpdate {
+    id: number
+    itemId: number
+    status: string
+}
+
+export const PlanStatus = Object.freeze({
+    PENDING: 'Pendiente',
+    INPROCESS: 'En Proceso',
+    COMPLETED: 'Completado',
+    CANCELLED: 'Cancelado',
+    SUSPENDED: 'Suspendido'
+});
+
+/*export const PlanStatusLabels = {
+    PlanStatus.PENDING,
+    PlanStatus.INPROCESS,
+    PlanStatus.COMPLETED,
+    PlanStatus.CANCELLED,
+    PlanStatus.SUSPENDED
+};*/

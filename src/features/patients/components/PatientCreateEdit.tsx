@@ -29,6 +29,7 @@ export default function PatientCreate({ customerParam, setIsOpen, reload }: Pati
         } else {
             setCustomer({
                 id: 0,
+                dni: '',
                 firstName: '',
                 lastName: '',
                 age: 0,
@@ -89,7 +90,15 @@ export default function PatientCreate({ customerParam, setIsOpen, reload }: Pati
                             Subir Foto
                         </button>
                     </div>
-                    <div className="flex-2 flex flex-col">
+                    <div className="flex-2 flex flex-col gap-3">
+                        <TextFieldApp
+                            className="flex-1"
+                            label="Identificación"
+                            value={customer?.dni}
+                            maxLength={20}
+                            onChange={(value) => setCustomer({ ...customer!, dni: value })}
+                            disabled={customer && customer.id ? true : false}
+                        />
                         <TextFieldApp
                             className="flex-1"
                             label="Nombre del Paciente"

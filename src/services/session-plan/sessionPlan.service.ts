@@ -1,7 +1,7 @@
 import api from "@/api/api";
 import { ENDPOINTS } from "../../api/endpoints";
 import { createCatalogService } from "../baseCatalogService";
-import type { RequestSessionPlanMaster, SessionPlan } from "../treatment-plan/treatmentPlan.type";
+import type { RequestSessionPlanMaster, RequestStatusUpdate, SessionPlan } from "../treatment-plan/treatmentPlan.type";
 import type { Result } from "@/models/result.type";
 
 const method = ENDPOINTS.SESSIONPLAN
@@ -14,8 +14,16 @@ export const SessionPlanService =  {
         const { data } = await api.post(`${method}`, requestSessionPlan);
         return data;
     },
-    put: async (id: number, requestSessionPlan: RequestSessionPlanMaster): Promise<Result<SessionPlan>> => {
-        const { data } = await api.put(`${method}/${id}`, requestSessionPlan);
+    put: async (id: number, request: RequestSessionPlanMaster): Promise<Result<SessionPlan>> => {
+        const { data } = await api.put(`${method}${id}`, request);
+        return data;
+    },
+    updateItemStatus: async (request: RequestStatusUpdate): Promise<Result<SessionPlan>> => {
+        const { data } = await api.post(`${method}change-status`, request);
+        return data;
+    },
+    getTreatmentHistory: async (customerId: number): Promise<SessionPlan[]> => {
+        const { data } = await api.get(`${method}treatment-history/${customerId}`);
         return data;
     }
 }
