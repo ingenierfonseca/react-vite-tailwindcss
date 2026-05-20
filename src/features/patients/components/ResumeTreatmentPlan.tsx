@@ -60,7 +60,6 @@ export default function ResumeTreatmentPlan({ sessionPlan, items }: ResumeTreatm
                     disabled={true}
                 />
             </div>
-            <p className="dark:text-slate-400">Si marca esta opcion podrá continuar e iniciar el plan de tratamiento</p>
         </div>
     )
 }

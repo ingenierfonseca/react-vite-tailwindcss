@@ -14,6 +14,8 @@ import dayjs from "dayjs";
 import { toast } from "react-toastify";
 import { useSessionPlanHook } from "../hooks/sessionPlan.hook";
 import { useEffect } from "react";
+import { ConfirmDialog } from "@/components/alert-modal/ConfirmDialog";
+import { Loader, Save } from "lucide-react";
 
 interface ClinicalAssessmentProps {
     customer: Customer;
@@ -27,6 +29,7 @@ export default function ClinicalAssessment({ customer, setIsOpen }: ClinicalAsse
         items,
         isOpenModal,
         step,
+        loading,
         updateSession,
         updateSessionPlan,
         setItems,
@@ -92,8 +95,8 @@ export default function ClinicalAssessment({ customer, setIsOpen }: ClinicalAsse
                 </div>
                 <div className="flex gap-3 ml-auto">
                     {step > 1 && step < 4 && <BackButtonApp label="Volver" onclick={() => setStep(step - 1)} />}
-                    <NextButtonApp
-                        label={step === 3 ? "Guardar" : "Continuar"}
+                    {step != 3 && <NextButtonApp
+                        label={"Continuar"}
                         onclick={() => {
                             if (step === 2 && items.length === 0) {
                                 toast.error("Tiene que agregar un plan de tratamiento para continuar")
@@ -104,7 +107,28 @@ export default function ClinicalAssessment({ customer, setIsOpen }: ClinicalAsse
                             } else
                             setStep(step + 1)
                         }}
-                    />
+                    />}
+                    {step === 3 && 
+                        <ConfirmDialog 
+                            onConfirm={loading ? () => {} : handleSave}
+                            title="Registrar plan"
+                            description="¿Está seguro de que desea registrar este plan de tratamiento?"
+                            trigger={ 
+                                <button
+                                disabled={loading}
+                                className="flex min-w-0 p-3 cursor-pointer bg-primary rounded-md items-center text-white text-sm font-semibold shadow-md hover:scale-[1.02] active:scale-[0.98] transition">
+                                    {!loading && <>
+                                        <Save className="mr-2" />
+                                        <p className="truncate">Guardar</p>
+                                    </>}
+                                    {loading && <>
+                                        <Loader className="mr-2" />
+                                        <p className="truncate">Guardando...</p>
+                                    </>}
+                                </button>
+                            } 
+                        />
+                    }
                 </div>
             </div>
             <ThreatmentPlanModal

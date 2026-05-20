@@ -39,6 +39,7 @@ export const useSessionPlanHook = () => {
     })
     const [items, setItems] = useState<TreatmentPlanItem[]>([]);
     const [step, setStep] = useState(1);
+    const [loading, setLoading] = useState(false)
 
     const addPlanId = (id: number) => {
         setPlansIds(prev => [...prev, id])
@@ -83,6 +84,7 @@ export const useSessionPlanHook = () => {
     }, [])
 
     const handleSave = async () => {
+        setLoading(true);
         const resultSession = await saveSession()
         if (resultSession.isSuccess) {
             updateSession("id", resultSession.value.id)
@@ -91,7 +93,11 @@ export const useSessionPlanHook = () => {
             const responseSessionPlan = await saveSessionPlan(session.id != 0 ? session.id : resultSession.value.id)
             if (responseSessionPlan.isSuccess) {
                 navigate(`/patients/${session.customerId}/treatment-history/${responseSessionPlan.value.id}`)
+            } else {
+                setLoading(false);
             }
+        } else {
+            setLoading(false);
         }
     }
 
@@ -161,6 +167,7 @@ export const useSessionPlanHook = () => {
         items,
         isOpenModal,
         step,
+        loading,
         updateSession,
         updateSessionPlan,
         setItems,

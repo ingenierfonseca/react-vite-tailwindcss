@@ -4,11 +4,13 @@ const classNameBnt = "flex min-w-0 p-3 cursor-pointer bg-primary rounded-md item
 interface AddButtonAppProps {
     label: string,
     onclick: () => void
+    disabled?: boolean
 }
-export default function AddButtonApp({ label, onclick }: AddButtonAppProps) {
+export default function AddButtonApp({ label, onclick, disabled }: AddButtonAppProps) {
     return (
         <button
             onClick={onclick}
+            disabled={disabled}
             className={classNameBnt}>
             <Plus className="mr-2" />
             <p className="truncate">{label}</p>
@@ -16,10 +18,11 @@ export default function AddButtonApp({ label, onclick }: AddButtonAppProps) {
     )
 }
 
-export function SaveButtonApp({ label, onclick }: AddButtonAppProps) {
+export function SaveButtonApp({ label, onclick, disabled }: AddButtonAppProps) {
     return (
         <button
             onClick={onclick}
+            disabled={disabled}
             className={classNameBnt}>
             <Save className="mr-2" />
             <p className="truncate">{label}</p>
@@ -27,10 +30,11 @@ export function SaveButtonApp({ label, onclick }: AddButtonAppProps) {
     )
 }
 
-export function NextButtonApp({ label, onclick }: AddButtonAppProps) {
+export function NextButtonApp({ label, onclick, disabled }: AddButtonAppProps) {
     return (
         <button
             onClick={onclick}
+            disabled={disabled}
             className={classNameBnt}>
             <p className="truncate">{label}</p>
             <ArrowRight className="mr-2" />
@@ -38,10 +42,11 @@ export function NextButtonApp({ label, onclick }: AddButtonAppProps) {
     )
 }
 
-export function BackButtonApp({ label, onclick }: AddButtonAppProps) {
+export function BackButtonApp({ label, onclick, disabled }: AddButtonAppProps) {
     return (
         <button
             onClick={onclick}
+            disabled={disabled}
             className={classNameBnt}>
                 <ArrowLeft className="mr-2" />
             <p className="truncate">{label}</p>
@@ -49,10 +54,11 @@ export function BackButtonApp({ label, onclick }: AddButtonAppProps) {
     )
 }
 
-export function FloatingAddButton({ label, onclick }: AddButtonAppProps) {
+export function FloatingAddButton({ label, onclick, disabled }: AddButtonAppProps) {
     return (
         <button
             onClick={onclick}
+            disabled={disabled}
             className="flex md:hidden fixed items-center justify-center bottom-5 left-1/2 -translate-x-1/2 
             z-0 w-[80%] py-3 rounded-2xl text-white font-semibold text-sm
             bg-linear-to-r from-pink-500 to-purple-600  shadow-md

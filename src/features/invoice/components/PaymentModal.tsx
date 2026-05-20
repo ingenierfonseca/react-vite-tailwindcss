@@ -55,6 +55,8 @@ export default function PaymentModal({ id, customer, isModalOpen, setIsModalOpen
 
     useEffect(() => {
         if (id == 0) return
+        
+        setDisabled(true)
 
         PaymentService.find(id).then(item => {
             setPayment(item)
