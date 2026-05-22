@@ -77,6 +77,7 @@ export default function PatientProfile({ customer, setIsOpen, setIsOpenTransitio
                         <p className="text-lg font-medium text-black dark:text-white">
                             {customer.firstName} {customer.lastName}
                         </p>
+                        <p className="dark:text-slate-400">Id: {customer.dni}</p>
                         <p className="dark:text-slate-400">Edad: {customer.age} {customer.age > 1 ? 'años' : 'año'}</p>
                         <p className="dark:text-slate-400">Tel: {formatPhoneNumber(customer.phone)}</p>
                         <p className="dark:text-slate-400">Email: {customer.email}</p>

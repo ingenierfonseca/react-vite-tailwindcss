@@ -164,7 +164,7 @@ export default function PatientCreate({ customerParam, setIsOpen, reload }: Pati
                         label="Paciente"
                         onClick={() => handleSave()}
                         loading={loading}
-                     />
+                    />
                 </div>
             </fieldset>
         </div>

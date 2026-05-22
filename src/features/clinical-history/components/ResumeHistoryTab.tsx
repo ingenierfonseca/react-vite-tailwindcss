@@ -8,6 +8,7 @@ import type { SessionPlan, SessionPlanItem } from "@/services/treatment-plan/tre
 import { useEffect, useState } from "react";
 import { formatNumber } from "@/utils/number.util";
 import { calculateMonthsBetweenDates } from "@/utils/date.util";
+import { SessionPlanService } from "@/services/session-plan/sessionPlan.service";
 
 const notes = [
     {
@@ -28,11 +29,14 @@ interface ResumeHistoryTabProps {
 
 export default function ResumeHistoryTab({ treatment }: ResumeHistoryTabProps) {
     const [progress, setProgress] = useState<ProgressInfo>({ percentage: 0, nextPlan: null, currentPlan: null, currentId: 0, estimatedMonths: 0, transcurredMonths: 0 })
+    const [totalPaid, setTotalPaid] = useState<number>(0);
     const loading = true
 
     useEffect(() => {
-            if (treatment) 
-                setProgress(getProgress(treatment!))
+        if (treatment) {
+            setProgress(getProgress(treatment!))
+            SessionPlanService.getPlanTotalPaid(treatment!.id!).then(data => setTotalPaid(data.value))
+        }
     }, [treatment])
 
     return (
@@ -153,7 +157,7 @@ export default function ResumeHistoryTab({ treatment }: ResumeHistoryTabProps) {
                     </CardContent>
                 </Card>
 
-                {/* Treatment plan */}
+                {/* Payment history */}
                 <Card>
                     <CardContent className="p-4 space-y-4">
                         <div className="flex items-center justify-between">
@@ -166,11 +170,11 @@ export default function ResumeHistoryTab({ treatment }: ResumeHistoryTabProps) {
                             </div>
                             <div className="flex justify-between">
                                 <p className="dark:text-slate-400">Pagado</p>
-                                <p className="text-green-500 dark:text-green-400 font-medium">$1,680.00</p>
+                                <p className="text-green-500 dark:text-green-400 font-medium">${formatNumber(totalPaid)}</p>
                             </div>
                             <div className="flex justify-between">
                                 <p className="font-medium dark:text-slate-200">Pendiente</p>
-                                <p className="text-red-500 dark:text-green-400 font-medium">$1,120.00</p>
+                                <p className="text-red-500 dark:text-green-400 font-medium">${formatNumber(treatment?.totalEstimatedPrice! - totalPaid)}</p>
                             </div>
                             <Progress defaultValue="bg-green-500" value={65} />
                         </div>

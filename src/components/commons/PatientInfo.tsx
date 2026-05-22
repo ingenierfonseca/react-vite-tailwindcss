@@ -14,16 +14,16 @@ export default function PatientInfo({customer}: PatientInfoProps) {
     return (
         <Card className="flex flex-col p-4 md:flex-row md:items-center md:justify-between gap-4">
             <div className="flex items-center gap-4">
-                <Avatar className="w-30 h-30">
+                <Avatar className="w-24 h-24 md:w-30 md:h-30 shrink-0">
                     <AvatarImage src={`${ASSETS_URLS.avatars}/${customer.avatar}`} />
                     <AvatarFallback>JP</AvatarFallback>
                 </Avatar>
-                <div className="flex flex-col gap-2">
-                    <div className="flex gap-3 items-center">
+                <div className="flex flex-col gap-2 min-w-0">
+                    <div className="flex flex-wrap gap-2 items-center">
                         <h1 className="text-xl md:text-2xl font-bold dark:text-slate-200">{customer.firstName} {customer.lastName}</h1>
                         <div className="bg-green-400/10 text-green-600 font-semibold rounded-2xl px-3">Activo</div>
                     </div>
-                    <div className="flex gap-3 items-center text-sm text-slate-800 dark:text-slate-400">
+                    <div className="flex flex-wrap gap-3 items-center text-sm text-slate-800 dark:text-slate-400">
                         <p>23 años</p>
                         <CircleDot />
                         <p>15/03/2001</p>
@@ -37,7 +37,7 @@ export default function PatientInfo({customer}: PatientInfoProps) {
             </div>
 
             <div className="flex flex-wrap gap-2">
-                <Button variant="outline">Enviar recordatorio</Button>
+                {/*<Button variant="outline">Enviar recordatorio</Button>*/}
                 <Button>Nueva cita</Button>
             </div>
         </Card>

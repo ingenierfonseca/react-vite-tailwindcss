@@ -3,9 +3,9 @@ import type { Result } from "@/models/result.type"
 import { ClinicalSessionService } from "@/services/clinical-session/clinicalSession.service"
 import type { ClinicalSession } from "@/services/clinical-session/clinicalSession.type"
 import { DoctorService } from "@/services/doctor/doctor.service"
+import type { PaymentTerm } from "@/services/paymentTerm/PaymentTerm.type"
 import { SessionPlanService } from "@/services/session-plan/sessionPlan.service"
 import type { RequestSessionPlanMaster, SessionPlan, TreatmentPlanItem } from "@/services/treatment-plan/treatmentPlan.type"
-import type { Currency } from "@/services/types/currency.type"
 import { mapToDropdown } from "@/utils/dropdow.util"
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router"
@@ -13,6 +13,12 @@ import { toast } from "react-toastify"
 
 export const useSessionPlanHook = () => {
     const navigate = useNavigate();
+    const [paymentTerm, setPaymentTerm] = useState<PaymentTerm>()
+    const [doctors, setDoctors] = useState<DropDownAppModel[]>()
+    const [isOpenModal, setIsOpenModal] = useState(false)
+    const [items, setItems] = useState<TreatmentPlanItem[]>([]);
+    const [step, setStep] = useState(1);
+    const [loading, setLoading] = useState(false)
     const [session, setSession] = useState<ClinicalSession>({
         id: 0,
         customerId: 0,
@@ -21,10 +27,6 @@ export const useSessionPlanHook = () => {
         reasonForVisit: "",
         clinicalNotes: "",
     })
-    const [plansIds, setPlansIds] = useState<number[]>([])
-    const [currency, setCurrency] = useState<Currency>()
-    const [doctors, setDoctors] = useState<DropDownAppModel[]>()
-    const [isOpenModal, setIsOpenModal] = useState(false)
     const [sessionPlan, setSessionPlan] = useState<SessionPlan>({
         id: 0,
         sessionId: 0,
@@ -37,12 +39,27 @@ export const useSessionPlanHook = () => {
         comments: "",
         items: []
     })
-    const [items, setItems] = useState<TreatmentPlanItem[]>([]);
-    const [step, setStep] = useState(1);
-    const [loading, setLoading] = useState(false)
+    const [request, setRequest] = useState<RequestSessionPlanMaster>({
+        sessionId: 0,
+        name: "",
+        status: "Pendiente",
+        currencyId: 2,
+        paymentTermId: 0,
+        isFinanced: false,
+        downPayment: 0,
+        comments: "",
+        plansIds: []
+    })
 
     const addPlanId = (id: number) => {
-        setPlansIds(prev => [...prev, id])
+        setRequest(prev => ({ ...prev, plansIds: [...prev.plansIds, id] }))
+    }
+
+    const updateRequestField = <K extends keyof RequestSessionPlanMaster>(
+        key: K,
+        value: RequestSessionPlanMaster[K]
+    ) => {
+        setRequest(prev => ({ ...prev, [key]: value }))
     }
 
     const updateSession = <K extends keyof ClinicalSession>(
@@ -59,6 +76,15 @@ export const useSessionPlanHook = () => {
         key: K,
         value: SessionPlan[K]
     ) => {
+        if (key === "currencyId")
+            setRequest(prev => ({ ...prev, currencyId: value as number }))
+        if (key === "name")
+            setRequest(prev => ({ ...prev, name: value as string }))
+        if (key === "comments")
+            setRequest(prev => ({ ...prev, comments: value as string }))
+        if (key === "status")
+            setRequest(prev => ({ ...prev, status: value as string }))
+
         setSessionPlan(prev => ({
             ...prev,
             [key]: value,
@@ -132,20 +158,13 @@ export const useSessionPlanHook = () => {
             errorMessage: ""
         };
         try {
-            let requesSessionPlan: RequestSessionPlanMaster = {
-                sessionId: sessionId,
-                name: sessionPlan.name,
-                status: sessionPlan.status,
-                currencyId: currency?.id!,
-                plansIds: plansIds,
-                comments: sessionPlan.comments
-            };
+            request.sessionId = sessionId;
 
             if (sessionPlan?.id) {
-                await SessionPlanService.put(sessionPlan.id, requesSessionPlan);
+                await SessionPlanService.put(sessionPlan.id, request);
                 toast.success("Plan de tratamiento actualizado correctamente");
             } else {
-                result = await SessionPlanService.post(requesSessionPlan);
+                result = await SessionPlanService.post(request);
                 toast.success("Plan de tratamiento creado correctamente");
             }
             result.isSuccess = true;
@@ -166,16 +185,19 @@ export const useSessionPlanHook = () => {
         sessionPlan,
         items,
         isOpenModal,
+        paymentTerm,
+        request,
         step,
         loading,
         updateSession,
         updateSessionPlan,
+        updateRequestField,
         setItems,
         setIsOpenModal,
         setStep,
         setSessionPlan,
         addPlanId,
         handleSave,
-        setCurrency
+        setPaymentTerm
     }
 }

@@ -1,33 +1,50 @@
+import NumberInputApp from "@/components/commons/NumberInputApp";
 import { PaginatedAutocomplete } from "@/components/pagination-data/PaginatedAutocomplete";
 import AddTreatmentPlan from "@/features/invoice/components/AddTreatmentPlan";
 import { CurrencyService } from "@/services/currency/currency.service";
-import type { SessionPlan, TreatmentPlanItem } from "@/services/treatment-plan/treatmentPlan.type";
-import type { Currency } from "@/services/types/currency.type";
+import { PaymentTermService } from "@/services/paymentTerm/paymentTerm.service";
+import type { PaymentTerm } from "@/services/paymentTerm/PaymentTerm.type";
+import type { RequestSessionPlanMaster, SessionPlan, TreatmentPlanItem } from "@/services/treatment-plan/treatmentPlan.type";
 import { formatNumber } from "@/utils/number.util";
-import { TextField } from "@mui/material";
+import { Checkbox, FormControlLabel, TextField } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
 
 interface EditTreatmentPlanProps {
     sessionPlan: SessionPlan,
-    items: TreatmentPlanItem[]
+    items: TreatmentPlanItem[],
+    request: RequestSessionPlanMaster,
     setIsOpenModal: (value: boolean) => void
-    setCurrency: (currency: Currency) => void
+    setPaymentTerm: (paymentTerm: PaymentTerm) => void
     updateSessionPlan: <K extends keyof SessionPlan>(
         key: K,
         value: SessionPlan[K]
     ) => void;
+    updateRequestField: <K extends keyof RequestSessionPlanMaster>(
+        key: K,
+        value: RequestSessionPlanMaster[K]
+    ) => void;
 }
-export default function EditTreatmentPlan({ sessionPlan, items, setIsOpenModal, updateSessionPlan, setCurrency }: EditTreatmentPlanProps) {
+export default function EditTreatmentPlan({ 
+    sessionPlan, 
+    items, 
+    request, 
+    setIsOpenModal,
+    updateSessionPlan,
+    updateRequestField, 
+    setPaymentTerm 
+}: EditTreatmentPlanProps) {
     const maxLength = 300;
     return (
-        <div className="p-4 flex flex-col">
-            <p className="text-2xl font-medium dark:text-slate-200 mt-3">Plan de tratamiento propuesto</p>
-            <p className="text-slate-600 dark:text-slate-400 mb-3">Selecciona el tipo de tratamiento y configura los detalles</p>
-            <p className="text-lg mb-3 dark:text-slate-200">{sessionPlan?.name}</p>
-            <div className="flex gap-3">
+        <div className="p-4 flex flex-col space-y-6">
+            <div>
+                <p className="text-2xl font-medium dark:text-slate-200 mt-3">Plan de tratamiento propuesto</p>
+                <p className="text-slate-600 dark:text-slate-400 mb-3">Selecciona el tipo de tratamiento y configura los detalles</p>
+                <p className="text-lg mb-3 dark:text-slate-200 wrap-break-word">{sessionPlan?.name}</p>
+            </div>
+            <div className="grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-4">
                 <DatePicker
-                    className="flex-1"
+                    className="min-w-0"
                     label="Fecha de inicio"
                     value={sessionPlan?.startDate ? dayjs(sessionPlan.startDate) : null}
                     onChange={(val) => updateSessionPlan("startDate", val ? val.toISOString() : "")}
@@ -40,14 +57,12 @@ export default function EditTreatmentPlan({ sessionPlan, items, setIsOpenModal, 
                     onChange={(val) => updateSessionPlan("endDate", val ? val.toISOString() : "")}
                     disabled={true}
                 />
-            </div>
-            <div className="flex gap-3 mt-3">
+
                 <PaginatedAutocomplete
                     label="Moneda"
                     value={sessionPlan?.currencyId}
                     onChange={(item) => {
-                        setCurrency(item!)
-                        //updateField("currencyId", value)
+                        console.log(item)
                     }}
                     fetchData={CurrencyService.get}
                     getValue={(item) => item.id}
@@ -65,6 +80,37 @@ export default function EditTreatmentPlan({ sessionPlan, items, setIsOpenModal, 
                     }}
                     disabled={true}
                 />
+
+                <PaginatedAutocomplete
+                    label="Terminos de Pago"
+                    value={request.paymentTermId}
+                    onChange={(value, item) => {
+                        updateRequestField("paymentTermId", value)
+                        setPaymentTerm(item!)
+                    }}
+                    fetchData={PaymentTermService.get}
+                    getValue={(item) => item.id}
+                    getLabel={(item) => item.name.trim()}
+                />
+
+                <FormControlLabel
+                    label="Requiere pago inicial"
+                    className="dark:text-slate-400"
+                    control={
+                        <Checkbox className="dark:text-primary-dark!"
+                            checked={request.isFinanced}
+                            onChange={(e) => updateRequestField("isFinanced", e.target.checked)}
+                        />
+                    }
+                />
+                {request.isFinanced && (
+                    <NumberInputApp
+                        title="Monto del pago inicial"
+                        value={request.downPayment}
+                        onChange={(value) => updateRequestField("downPayment", value)}
+                        shrink={true}
+                    />
+                )}
             </div>
             <div className="mt-3">
                 {items.map((item) => (

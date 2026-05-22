@@ -25,5 +25,9 @@ export const SessionPlanService =  {
     getTreatmentHistory: async (customerId: number): Promise<SessionPlan[]> => {
         const { data } = await api.get(`${method}treatment-history/${customerId}`);
         return data;
+    },
+    getPlanTotalPaid: async (sessionPlanId: number): Promise<Result<number>> => {
+        const { data } = await api.get(`${method}${sessionPlanId}/payments/total-paid`);
+        return data;
     }
 }

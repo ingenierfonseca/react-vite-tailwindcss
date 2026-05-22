@@ -1,4 +1,4 @@
-import { BackButtonApp, NextButtonApp } from "@/components/commons/AddButtonApp";
+import { BackButtonApp, NextButtonApp, SaveButtonApp } from "@/components/commons/AddButtonApp";
 
 import PageRightComponent from "@/components/commons/PageRightComponent";
 import PatientInfo from "@/components/commons/PatientInfo";
@@ -15,7 +15,6 @@ import { toast } from "react-toastify";
 import { useSessionPlanHook } from "../hooks/sessionPlan.hook";
 import { useEffect } from "react";
 import { ConfirmDialog } from "@/components/alert-modal/ConfirmDialog";
-import { Loader, Save } from "lucide-react";
 
 interface ClinicalAssessmentProps {
     customer: Customer;
@@ -30,15 +29,18 @@ export default function ClinicalAssessment({ customer, setIsOpen }: ClinicalAsse
         isOpenModal,
         step,
         loading,
+        paymentTerm,
+        request,
         updateSession,
         updateSessionPlan,
+        updateRequestField,
         setItems,
         setIsOpenModal,
         setStep,
         setSessionPlan,
         handleSave,
         addPlanId,
-        setCurrency
+        setPaymentTerm
     } = useSessionPlanHook()
 
     useEffect(() => {
@@ -49,18 +51,20 @@ export default function ClinicalAssessment({ customer, setIsOpen }: ClinicalAsse
         <PageRightComponent
             title={"Nuevo Diagnostico"}
             onClick={() => setIsOpen(false)}>
-            <div className="flex flex-col gap-4 mt-3">
+
+            <div className="flex flex-col gap-4 mt-3 max-w-full min-w-0 w-full">
                 <PatientInfo customer={customer} />
 
-                <div className="relative w-full overflow-hidden">
+                <div className="flex flex-col gap-4 mt-3 w-full max-w-[calc(100vw-2rem)] md:max-w-full min-w-0 overflow-hidden">
                     <div
-                        className="flex transition-transform duration-500 ease-in-out"
+                        className="flex w-full transition-transform duration-500 ease-in-out"
                         style={{ transform: `translateX(-${(step - 1) * 100}%)` }}
                     >
                         {/* Card 1 */}
-                        <Card className="w-full shrink-0 p-4">
+                        <div className="w-full min-w-full shrink-0 basis-full p-1">
+                        <Card className="w-full p-4">
                             <p className="text-2xl dark:text-slate-200">Información del diagnóstico</p>
-                            <div className="flex gap-3">
+                            <div className="flex flex-col md:flex-row gap-3">
                                 <DatePicker
                                     className="flex-1"
                                     label="Fecha del diagnóstico"
@@ -75,36 +79,49 @@ export default function ClinicalAssessment({ customer, setIsOpen }: ClinicalAsse
                                 />}
                             </div>
                         </Card>
+                        </div>
 
                         {/* Card 2 */}
-                        <Card className="w-full shrink-0">
+                        <div className="w-full min-w-full shrink-0 basis-full p-1">
+                        <Card className="w-full">
                             <EditTreatmentPlan
                                 sessionPlan={sessionPlan!}
                                 items={items}
+                                request={request}
                                 setIsOpenModal={setIsOpenModal}
                                 updateSessionPlan={updateSessionPlan}
-                                setCurrency={setCurrency}
+                                updateRequestField={updateRequestField}
+                                setPaymentTerm={setPaymentTerm}
                             />
                         </Card>
+                        </div>
 
                         {/* Card 3 */}
-                        <Card className="w-full shrink-0">
-                            <ResumeTreatmentPlan sessionPlan={sessionPlan!} items={items} />
+                        <Card className="w-full shrink-0 basis-full">
+                            <ResumeTreatmentPlan sessionPlan={sessionPlan!} items={items} request={request} paymentTerm={paymentTerm!} />
                         </Card>
                     </div>
                 </div>
                 <div className="flex gap-3 ml-auto">
-                    {step > 1 && step < 4 && <BackButtonApp label="Volver" onclick={() => setStep(step - 1)} />}
+                    {step > 1 && step < 4 && <BackButtonApp label="Volver" onclick={() => setStep(step - 1)} disabled={loading} loading={loading} />}
                     {step != 3 && <NextButtonApp
                         label={"Continuar"}
+                        disabled={loading}
                         onclick={() => {
-                            if (step === 2 && items.length === 0) {
-                                toast.error("Tiene que agregar un plan de tratamiento para continuar")
-                                return
+                            if (step === 2) {
+                                if (items.length === 0) {
+                                    toast.error("Tiene que agregar un plan de tratamiento para continuar")
+                                    return
+                                }
+                                if (request.paymentTermId === 0) {
+                                    toast.error("Tiene que seleccionar un termino de pago para continuar")
+                                    return
+                                }
+                                if (request.isFinanced && request.downPayment <= 0) {
+                                    toast.error("Tiene que ingresar un monto para el pago inicial")
+                                    return
+                                }
                             }
-                            if (step === 3) {
-                                handleSave()
-                            } else
                             setStep(step + 1)
                         }}
                     />}
@@ -114,18 +131,10 @@ export default function ClinicalAssessment({ customer, setIsOpen }: ClinicalAsse
                             title="Registrar plan"
                             description="¿Está seguro de que desea registrar este plan de tratamiento?"
                             trigger={ 
-                                <button
-                                disabled={loading}
-                                className="flex min-w-0 p-3 cursor-pointer bg-primary rounded-md items-center text-white text-sm font-semibold shadow-md hover:scale-[1.02] active:scale-[0.98] transition">
-                                    {!loading && <>
-                                        <Save className="mr-2" />
-                                        <p className="truncate">Guardar</p>
-                                    </>}
-                                    {loading && <>
-                                        <Loader className="mr-2" />
-                                        <p className="truncate">Guardando...</p>
-                                    </>}
-                                </button>
+                                <SaveButtonApp
+                                    label="Plan"
+                                    disabled={loading}
+                                    loading={loading} />
                             } 
                         />
                     }
@@ -146,7 +155,6 @@ export default function ClinicalAssessment({ customer, setIsOpen }: ClinicalAsse
                             currencyId: plan.currencyId,
                             currency: plan.currency
                         }));
-                        setCurrency(plan.currency)
                     }
                     setItems(prev => [
                         ...prev,

@@ -51,6 +51,9 @@ export interface RequestSessionPlanMaster {
     name: string
     status: string
     currencyId: number
+    paymentTermId: number
+    isFinanced: boolean
+    downPayment: number
     comments: string
     plansIds: number[]
 }

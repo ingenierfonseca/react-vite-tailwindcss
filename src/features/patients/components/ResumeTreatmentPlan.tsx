@@ -1,4 +1,5 @@
-import type { SessionPlan, TreatmentPlanItem } from "@/services/treatment-plan/treatmentPlan.type";
+import type { PaymentTerm } from "@/services/paymentTerm/PaymentTerm.type";
+import type { RequestSessionPlanMaster, SessionPlan, TreatmentPlanItem } from "@/services/treatment-plan/treatmentPlan.type";
 import { formatNumber } from "@/utils/number.util";
 import { TextField } from "@mui/material";
 import dayjs from "dayjs";
@@ -7,8 +8,10 @@ import { Check } from "lucide-react";
 interface ResumeTreatmentPlanProps {
     sessionPlan: SessionPlan
     items: TreatmentPlanItem[]
+    request: RequestSessionPlanMaster
+    paymentTerm?: PaymentTerm
 }
-export default function ResumeTreatmentPlan({ sessionPlan, items }: ResumeTreatmentPlanProps) {
+export default function ResumeTreatmentPlan({ sessionPlan, items, request, paymentTerm }: ResumeTreatmentPlanProps) {
     const durationInMonths =
         sessionPlan.startDate && sessionPlan.endDate
             ? Math.round(dayjs(sessionPlan.endDate).diff(dayjs(sessionPlan.startDate), "month", true))
@@ -18,23 +21,37 @@ export default function ResumeTreatmentPlan({ sessionPlan, items }: ResumeTreatm
         <div className="p-4 flex flex-col">
             <p className="text-2xl font-medium dark:text-slate-200">Resumen del plan</p>
 
-            <div className="flex mt-3">
+            <div className="flex mt-3 gap-4">
                 <p className="flex-1 font-medium text-lg dark:text-slate-200">Tipo de tratamiento</p>
                 <p className="flex-2 text-lg dark:text-slate-400">{sessionPlan?.name}</p>
             </div>
-            <div className="flex">
+            <div className="flex gap-4">
                 <p className="flex-1 font-medium text-lg dark:text-slate-200">Duración estimada</p>
                 <p className="flex-2 text-lg dark:text-slate-400">{durationInMonths} {durationInMonths > 1 ? "meses" : "mes"}</p>
             </div>
-            <div className="flex">
+            <div className="flex gap-4">
                 <p className="flex-1 font-medium text-lg dark:text-slate-200">Precio estimado</p>
                 <p className="flex-2 text-lg dark:text-slate-400">${formatNumber(sessionPlan?.totalEstimatedPrice)}</p>
             </div>
-            <div className="flex">
+            <div className="flex gap-4">
                 <p className="flex-1 font-medium text-lg dark:text-slate-200">Moneda</p>
                 <p className="flex-2 text-lg dark:text-slate-400">{sessionPlan?.currency?.name}</p>
             </div>
-            <div className="flex">
+            <div className="flex gap-4">
+                <p className="flex-1 font-medium text-lg dark:text-slate-200">Requiere pago inicial</p>
+                <p className="flex-2 text-lg dark:text-slate-400">{request.requireDownPayment ? "Sí" : "No"}</p>
+            </div>
+            {request.requireDownPayment && (
+                <div className="flex gap-4">
+                    <p className="flex-1 font-medium text-lg dark:text-slate-200">Monto del pago inicial</p>
+                    <p className="flex-2 text-lg dark:text-slate-400">{sessionPlan?.currency?.symbol}{formatNumber(request.downPaymentAmount)}</p>
+                </div>
+            )}
+            <div className="flex gap-4">
+                <p className="flex-1 font-medium text-lg dark:text-slate-200">Termino de pago</p>
+                <p className="flex-2 text-lg dark:text-slate-400">{paymentTerm?.name}</p>
+            </div>
+            <div className="flex gap-4">
                 <p className="flex-1 font-medium text-lg dark:text-slate-200">Tratamientos</p>
                 <div className="flex-2 flex flex-col">
                     {items.map((item) => (
