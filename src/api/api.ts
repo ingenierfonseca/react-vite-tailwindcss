@@ -7,6 +7,7 @@ const api = axios.create({
   timeout: 20000,
   headers: {
     "Content-Type": "application/json",
+    "ngrok-skip-browser-warning": "true"
   },
 });
 
@@ -26,7 +27,7 @@ api.interceptors.response.use(
   (error) => {
     console.error("API Error:", error.response?.data || error.message);
 
-    if (error.response?.status === 401) {
+    if (error.response?.status === 401 && localStorage.getItem("token")) {
       localStorage.removeItem("token");
     }
 

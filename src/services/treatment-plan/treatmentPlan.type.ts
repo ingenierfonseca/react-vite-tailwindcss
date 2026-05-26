@@ -26,7 +26,6 @@ export interface TreatmentPlanItem {
 export interface SessionPlan {
     id: number
     sessionId: number
-    //title: string
     name: string
     status: string
     startDate: string

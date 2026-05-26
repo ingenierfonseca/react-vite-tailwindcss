@@ -1,20 +1,26 @@
-import type { PaymentTerm } from "@/services/paymentTerm/PaymentTerm.type";
-import type { RequestSessionPlanMaster, SessionPlan, TreatmentPlanItem } from "@/services/treatment-plan/treatmentPlan.type";
+import type { SessionPlanFormValues } from "@/features/session-plan/schemas/session-plan.schema";
 import { formatNumber } from "@/utils/number.util";
 import { TextField } from "@mui/material";
 import dayjs from "dayjs";
 import { Check } from "lucide-react";
+import { useFormContext } from "react-hook-form";
 
 interface ResumeTreatmentPlanProps {
-    sessionPlan: SessionPlan
-    items: TreatmentPlanItem[]
-    request: RequestSessionPlanMaster
-    paymentTerm?: PaymentTerm
 }
-export default function ResumeTreatmentPlan({ sessionPlan, items, request, paymentTerm }: ResumeTreatmentPlanProps) {
+export default function ResumeTreatmentPlan({ }: ResumeTreatmentPlanProps) {
+    const {
+            watch
+        } = useFormContext<SessionPlanFormValues>();
+    
+    const plan = watch("plan");
+    const items = watch("items");
+    const financing = watch("financing");
+    const currency = watch("currency");
+    const paymentTerm = watch("paymentTerm");
+
     const durationInMonths =
-        sessionPlan.startDate && sessionPlan.endDate
-            ? Math.round(dayjs(sessionPlan.endDate).diff(dayjs(sessionPlan.startDate), "month", true))
+        plan.startDate && plan.endDate
+            ? Math.round(dayjs(plan.endDate).diff(dayjs(plan.startDate), "month", true))
             : 0;
     
     return (
@@ -23,7 +29,7 @@ export default function ResumeTreatmentPlan({ sessionPlan, items, request, payme
 
             <div className="flex mt-3 gap-4">
                 <p className="flex-1 font-medium text-lg dark:text-slate-200">Tipo de tratamiento</p>
-                <p className="flex-2 text-lg dark:text-slate-400">{sessionPlan?.name}</p>
+                <p className="flex-2 text-lg dark:text-slate-400">{plan.name}</p>
             </div>
             <div className="flex gap-4">
                 <p className="flex-1 font-medium text-lg dark:text-slate-200">Duración estimada</p>
@@ -31,20 +37,20 @@ export default function ResumeTreatmentPlan({ sessionPlan, items, request, payme
             </div>
             <div className="flex gap-4">
                 <p className="flex-1 font-medium text-lg dark:text-slate-200">Precio estimado</p>
-                <p className="flex-2 text-lg dark:text-slate-400">${formatNumber(sessionPlan?.totalEstimatedPrice)}</p>
+                <p className="flex-2 text-lg dark:text-slate-400">${formatNumber(plan.totalEstimatedPrice)}</p>
             </div>
             <div className="flex gap-4">
                 <p className="flex-1 font-medium text-lg dark:text-slate-200">Moneda</p>
-                <p className="flex-2 text-lg dark:text-slate-400">{sessionPlan?.currency?.name}</p>
+                <p className="flex-2 text-lg dark:text-slate-400">{currency?.name}</p>
             </div>
             <div className="flex gap-4">
                 <p className="flex-1 font-medium text-lg dark:text-slate-200">Requiere pago inicial</p>
-                <p className="flex-2 text-lg dark:text-slate-400">{request.requireDownPayment ? "Sí" : "No"}</p>
+                <p className="flex-2 text-lg dark:text-slate-400">{financing?.isFinanced ? "Sí" : "No"}</p>
             </div>
-            {request.requireDownPayment && (
+            {financing?.isFinanced && (
                 <div className="flex gap-4">
                     <p className="flex-1 font-medium text-lg dark:text-slate-200">Monto del pago inicial</p>
-                    <p className="flex-2 text-lg dark:text-slate-400">{sessionPlan?.currency?.symbol}{formatNumber(request.downPaymentAmount)}</p>
+                    <p className="flex-2 text-lg dark:text-slate-400">{currency?.symbol}{formatNumber(financing?.downPayment)}</p>
                 </div>
             )}
             <div className="flex gap-4">
@@ -73,7 +79,7 @@ export default function ResumeTreatmentPlan({ sessionPlan, items, request, payme
                     label="Notas del plan"
                     multiline
                     rows={4}
-                    value={sessionPlan.comments}
+                    value={plan.comments}
                     disabled={true}
                 />
             </div>

@@ -8,39 +8,32 @@ import { formatNumber } from "@/utils/number.util";
 
 
 interface ThreatmentPlanModalProps {
-    isModalOpen: boolean,
-    setIsModalOpen: (value: boolean) => void,
+    modal: {
+        isOpen: boolean;
+        open: () => void;
+        close: () => void;
+    };
     onClick: (plan: TreatmentPlan, items: TreatmentPlanItem[]) => void,
 }
 
 export default function ThreatmentPlanModal({
-    isModalOpen, setIsModalOpen, onClick
+    modal, onClick
 }: ThreatmentPlanModalProps) {
     const [search, setSearch] = useState('')
     const [treatmentPlan, setTreatmentPlan] = useState<TreatmentPlan>()
     const [selectedItems, setSelectedItems] = useState<TreatmentPlanItem[]>([]);
 
-    /*const handleCheck = (item: TreatmentPlanItem) => (
-        event: React.ChangeEvent<HTMLInputElement>
-    ) => {
-        if (event.target.checked) {
-            setSelectedItems(prev => [...prev, item]);
-        } else {
-            setSelectedItems(prev => prev.filter(i => i.id !== item.id));
-        }
-    };*/
-
     return (
-        <Modal isOpen={isModalOpen}
+        <Modal isOpen={modal.isOpen}
             onClose={() => {
                 setSearch("")
-                setIsModalOpen(false)
+                modal.close()
             }}
             title="Seleccione plan de tratamiento"
             textBtnConfirm="Agregar"
             clickBtnConfirm={() => {
                 onClick(treatmentPlan!, selectedItems)
-                setIsModalOpen(false)
+                modal.close()
                 setSearch("")
                 setTreatmentPlan(undefined)
             }}>
@@ -71,7 +64,6 @@ export default function ThreatmentPlanModal({
                                             <Checkbox className="dark:text-primary-dark!"
                                                 defaultValue={item.id}
                                                 checked={selectedItems.some(i => i.id === item.id)}
-                                                //onChange={handleCheck(item)}
                                             />
                                         }
                                     />
