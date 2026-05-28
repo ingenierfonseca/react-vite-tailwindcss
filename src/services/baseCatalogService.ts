@@ -32,10 +32,5 @@ export function createCatalogService<T>(endpoint: string) {
             const { data } = await api.put(`${endpoint}${id}`, payload);
             return data;
         },
-
-        /*delete: async (id: number) => {
-            const { data } = await api.delete(`${endpoint}${id}`);
-            return data;
-        }*/
     };
 }

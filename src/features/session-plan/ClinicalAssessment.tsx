@@ -4,6 +4,8 @@ import ThreatmentPlanModal from "@/features/invoice/components/TreatmentPlanModa
 import type { Customer } from "@/services/customer/customer.type";
 import FooterActions from "./components/footer/FooterActions";
 import DiagnosisStep from "./components/steps/DiagnosisStep";
+import OdontogramStep from "./components/steps/OdontogramStep";
+import DiseasesStep from "./components/steps/DiseasesStep";
 import TreatmentPlanStep from "./components/steps/TreatmentPlanStep";
 import ResumeStep from "./components/steps/ResumeStep";
 import { useSessionPlanForm } from "./hooks/useSessionPlanForm";
@@ -39,18 +41,24 @@ export default function ClinicalAssessment({ customer, setIsOpen }: ClinicalAsse
                         className="flex w-full transition-transform duration-500 ease-in-out"
                         style={{ transform: `translateX(-${(step - 1) * 100}%)` }}
                     >
-                        {/* Card 1 */}
+                        {/* Step 1 */}
                         <DiagnosisStep doctors={doctors!} />
 
-                        {/* Card 2 */}
+                        {/* Step 2 */}
+                        <OdontogramStep />
+
+                        {/* Step 3 */}
+                        <DiseasesStep />
+
+                        {/* Step 4 */}
                         <TreatmentPlanStep
                             modal={form.modal}
                         />
 
-                        {/* Card 3 */}
+                        {/* Step 5 */}
                         <TreatmentPaymentPlanStep />
 
-                        {/* Card 4 */}
+                        {/* Step 6 */}
                         <ResumeStep />
                     </div>
                 </div>

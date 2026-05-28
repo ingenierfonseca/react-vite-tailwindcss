@@ -4,11 +4,13 @@ import Odontogram from "../features/odontogram/Odontogram";
 import DashboardPage from "../pages/DashboardPage";
 import PatientListPage from "../features/patients/page/PatientListPage";
 import SettingsPage from "../features/settings/SettingsPage";
-//import TreatmentListPage from "../features/administration/treatments/TreatmentListPage";
 import AppointmentTypeListPage from "../features/administration/apointment-type/AppointmentTypeListPage";
 import PatientBulkUploadPage from "../features/upload-data/patient/PatientBulkUploadPage";
 import CustomerClinicalHistoryDashboard from "@/features/clinical-history/CustomerClinicalHistoryPage";
 import TreatmentListPage from "@/features/administration/treatments/TreatmentListPage";
+import DoctorListPage from "@/features/administration/doctors/DoctorListPage";
+import TreatmentPlanListPage from "@/features/administration/treatment-plans/TreatmentPlanListPage";
+import CurrencyListPage from "@/features/administration/currencies/CurrencyListPage";
 
 export const routesConfig = [
   {
@@ -39,7 +41,17 @@ export const routesConfig = [
   {
     path: "/doctors",
     title: "Doctores",
-    element: <div>Doctors</div>
+    element: <DoctorListPage />
+  },
+  {
+    path: "/treatment-plans",
+    title: "Planes de Tratamiento",
+    element: <TreatmentPlanListPage />
+  },
+  {
+    path: "/currencies",
+    title: "Monedas",
+    element: <CurrencyListPage />
   },
   {
     path: "/settings",

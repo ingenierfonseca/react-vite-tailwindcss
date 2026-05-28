@@ -6,6 +6,8 @@ import { FormControl, FormControlLabel, FormLabel, Radio, RadioGroup, TextField 
 import { DatePicker } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
 import { ImageIcon } from "lucide-react";
+import { Controller, useFormContext } from "react-hook-form";
+import type { SessionPlanFormValues } from "../../schemas/session-plan.schema";
 
 interface file {
     id: number
@@ -26,61 +28,73 @@ interface DiagnosisStepProps {
 
 export default function DiagnosisStep({ doctors }: DiagnosisStepProps) {
     const maxLength = 300;
+    const { control, watch, setValue } = useFormContext<SessionPlanFormValues>();
+    const session = watch("session");
 
     return (
         <div className="w-full min-w-full shrink-0 basis-full p-1">
             <Card className="w-full p-4">
-                <p className="text-2xl dark:text-slate-200">Información del diagnóstico</p>
-                <div className="flex flex-col md:flex-row gap-3">
+                <p className="text-2xl dark:text-slate-200 mb-4">Información del diagnóstico</p>
+
+                <div className="flex flex-col md:flex-row gap-3 mb-4">
                     <DatePicker
                         className="flex-1"
                         label="Fecha del diagnóstico"
-                        value={dayjs(Date())}
+                        value={dayjs(session.date)}
+                        onChange={(val) => setValue("session.date", val ? val.format("YYYY-MM-DD") : dayjs().format("YYYY-MM-DD"), { shouldDirty: true })}
                     />
-                    {doctors && <DropDownApp title="Doctor(a)"
-                        data={doctors} value={1}
-                        onChange={(value) => {
-                            console.log(value)
-                        }}
-                    />}
+                    {doctors && (
+                        <Controller
+                            control={control}
+                            name="session.doctorId"
+                            render={({ field }) => (
+                                <DropDownApp title="Doctor(a)"
+                                    data={doctors}
+                                    value={field.value}
+                                    onChange={(val) => field.onChange(val)}
+                                />
+                            )}
+                        />
+                    )}
                 </div>
-                <TextField
-                    id="outlined-multiline-flexible"
-                    label="Motivo de consulta"
-                    multiline
-                    rows={4}
-                    //value={plan.comments ?? ""}
-                    onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
-                        if (e.target.value.length <= maxLength) {
-                            //setValue("plan", { ...plan, comments: e.target.value })
-                        }
-                    }}
-                    //helperText={`${plan.comments.length}/${maxLength}`}
-                    slotProps={{
-                        input: {
-                            inputProps: {
-                                maxLength: maxLength,
-                            },
-                        },
-                    }}
+
+                <Controller
+                    control={control}
+                    name="session.reasonForVisit"
+                    render={({ field }) => (
+                        <TextField
+                            {...field}
+                            label="Motivo de consulta"
+                            multiline
+                            rows={4}
+                            className="mb-4"
+                            slotProps={{
+                                input: {
+                                    inputProps: { maxLength },
+                                },
+                            }}
+                        />
+                    )}
                 />
 
-                <FormControl>
+                <FormControl className="mb-4">
                     <FormLabel id={`type-diagnostics-label`}>
                         <p className="font-bold">Tipo de diagnostico</p>
                     </FormLabel>
                     <RadioGroup
                         aria-labelledby={`type-diagnostics-label`}
-                        defaultValue="female"
+                        defaultValue="Inicial"
                         name="radio-buttons-group"
+                        onChange={(e) => setValue("session.clinicalNotes", e.target.value, { shouldDirty: true })}
                     >
-                        <FormControlLabel value="female" control={<Radio />} label="Inicial" />
-                        <FormControlLabel value="male" control={<Radio />} label="Reevaluacion" />
-                        <FormControlLabel value="other" control={<Radio />} label="Postratamiento / Retencion" />
+                        <FormControlLabel value="Inicial" control={<Radio />} label="Inicial" />
+                        <FormControlLabel value="Reevaluacion" control={<Radio />} label="Reevaluacion" />
+                        <FormControlLabel value="Postratamiento / Retencion" control={<Radio />} label="Postratamiento / Retencion" />
                     </RadioGroup>
                 </FormControl>
+
                 <SelectFile onFileSelect={() => { }} />
-                <p className="text-lg font-semibold">Imganes o archivos</p>
+                <p className="text-lg font-semibold mt-4">Imganes o archivos</p>
                 <div
                     className="hidden
                         rounded-2xl
@@ -112,16 +126,7 @@ export default function DiagnosisStep({ doctors }: DiagnosisStepProps) {
                             {files.slice(0, 4).map((file) => (
                                 <div
                                     key={file.id}
-                                    className="
-                        relative
-                        h-28
-                        w-56
-                        shrink-0
-                        overflow-hidden
-                        rounded-xl
-                        border
-                        border-slate-200
-                    "
+                                    className="relative h-28 w-56 shrink-0 overflow-hidden rounded-xl border border-slate-200"
                                 >
                                     <img
                                         src={file.preview}
@@ -132,20 +137,7 @@ export default function DiagnosisStep({ doctors }: DiagnosisStepProps) {
                             ))}
 
                             {files.length > 4 && (
-                                <div
-                                    className="
-                        flex
-                        h-28
-                        w-28
-                        shrink-0
-                        flex-col
-                        items-center
-                        justify-center
-                        rounded-xl
-                        bg-slate-100
-                        text-slate-600
-                    "
-                                >
+                                <div className="flex h-28 w-28 shrink-0 flex-col items-center justify-center rounded-xl bg-slate-100 text-slate-600">
                                     <span className="text-2xl font-bold">
                                         +{files.length - 4}
                                     </span>

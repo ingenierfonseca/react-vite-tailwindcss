@@ -2,7 +2,7 @@ import { useState } from "react";
 import { get, type UseFormReturn } from "react-hook-form";
 import { toast } from "react-toastify";
 import type { SessionPlanFormValues } from "../schemas/session-plan.schema";
-import { STEPS } from "../utils/sessionPlanHelpers";
+import { STEPS, TOTAL_STEPS } from "../utils/sessionPlanHelpers";
 
 export const useSessionPlanStepper = (
     form: UseFormReturn<SessionPlanFormValues>
@@ -15,7 +15,7 @@ export const useSessionPlanStepper = (
 
         if (!valid) return;
 
-        setStep(prev => Math.min(prev + 1, 4));
+        setStep(prev => Math.min(prev + 1, TOTAL_STEPS));
     };
 
     const back = () => {

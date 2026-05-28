@@ -2,6 +2,8 @@ import type { SessionPlan, TreatmentPlan, TreatmentPlanItem } from "@/services/t
 import type { SessionPlanFormValues } from "../schemas/session-plan.schema";
 import dayjs from "dayjs";
 
+export const TOTAL_STEPS = 6;
+
 export const buildUpdatedPlan = (
     plan: SessionPlanFormValues["plan"],
     items: SessionPlanFormValues["items"],
@@ -65,12 +67,14 @@ export const STEPS = {
             "session.doctorId"
         ]
     },
-    2: {
+    2: { fields: [] },
+    3: { fields: [] },
+    4: {
         fields: [
             "items"
         ]
     },
-    3: {
+    5: {
         fields: [
             "financing.paymentTermId",
             "financing.downPayment"

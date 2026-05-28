@@ -1,5 +1,6 @@
 import ConfirmDialog from "@/components/alert-modal/ConfirmDialog";
 import { BackButtonApp, NextButtonApp, SaveButtonApp } from "@/components/commons/AddButtonApp";
+import { TOTAL_STEPS } from "../../utils/sessionPlanHelpers";
 
 interface FooterActionsProps {
     step: number;
@@ -12,13 +13,13 @@ interface FooterActionsProps {
 export default function FooterActions({ step, loading, onBack, onNext, onSubmit }: FooterActionsProps) {
     return (
         <div className="flex gap-3 ml-auto">
-            {step > 1 && step < 4 && <BackButtonApp label="Volver" onclick={onBack} disabled={loading} loading={loading} />}
-            {step != 4 && <NextButtonApp
+            {step > 1 && step < TOTAL_STEPS && <BackButtonApp label="Volver" onclick={onBack} disabled={loading} loading={loading} />}
+            {step !== TOTAL_STEPS && <NextButtonApp
                 label={"Continuar"}
                 disabled={loading}
                 onclick={onNext}
             />}
-            {step === 4 &&
+            {step === TOTAL_STEPS &&
                 <ConfirmDialog
                     onConfirm={loading ? () => { } : onSubmit}
                     title="Registrar plan"

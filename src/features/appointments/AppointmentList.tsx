@@ -1,155 +1,145 @@
-import { EllipsisVertical } from "lucide-react"
-import { useAppointments } from "./appointment.hooks"
-import AddButtonApp from "../../components/commons/AddButtonApp"
-
-const headers = [
-    '#',
-    'patient name',
-    'doctor',
-    'department',
-    'date',
-    'time',
-    'status',
-    'action'
-]
-
-/*const data =
-    {
-        currentPage: 1,
-        totalItems: 3,
-        totalPages: 1,
-        data: [
-            {
-                id: 1,
-                patientName: "John Doe",
-                doctor: "Dr. Smith",
-                department: "Cardiology",
-                date: "2024-07-01",
-                time: "10:00 AM",
-                status: "Completed"
-            },
-            {
-                id: 2,
-                patientName: "Jane Doe",
-                doctor: "Dr. Johnson",
-                department: "Neurology",
-                date: "2024-07-02",
-                time: "11:00 AM",
-                status: "Pending"
-            },
-            {
-                id: 3,
-                patientName: "Bob Smith",
-                doctor: "Dr. Williams",
-                department: "Orthopedics",
-                date: "2024-07-03",
-                time: "02:00 PM",
-                status: "Cancelled"
-            }
-        ]
-    }*/
-
+import { useState, useMemo, useCallback } from "react"
+import {
+    Calendar,
+    CalendarCheck,
+    CalendarX,
+    Clock,
+    ChevronLeft,
+    ChevronRight,
+    Plus,
+} from "lucide-react"
+import { useAppointmentStats, useAppointmentSchedule } from "./appointment.hooks"
+import type { Appointment } from "../../services/appointment/appointment.types"
+import StatCard from "./components/StatCard"
+import ScheduleGrid from "./components/ScheduleGrid"
+import MonthView from "./components/MonthView"
+import AddAppointmentModal from "./components/AddAppointmentModal"
+import { getDateRange, formatCursorLabel, type ViewMode } from "./components/appointment.utils"
 
 export default function AppointmentList() {
-    const { data, currentPage } = useAppointments()
-    const buttonPage = 'px-3 py-1 rounded-md bg-blue-300 text-black text-sm'
-    const dropDownStyle = 'ml-1 mt-2 p-1 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs text-black font-bold'
-    const isMobile = window.innerWidth <= 768
-    console.log("isMobile", isMobile)
-    return (
-        <div className="w-full p-8 bg-white rounded-2xl">
-            <div className="flex pb-5">
-                <div>
-                    <p className="font-bold">Lista de Agendamentos</p>
-                    <p className="text-xs">Puedes buscar todas tus citas aquí.</p>
-                </div>
-                <div className="ml-auto">
-                    <AddButtonApp  label="Agregar Nueva Cita" onclick={()=>console.log('open button')} />
-                </div>
-            </div>
-            <div className="ml-auto flex gap-4 mb-4">
-                    <input type="text" placeholder="Search..." className="flex-1 mt-2 p-1 border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"/>
-                    <div>
-                        <span className="text-sm text-black mr-2">Doctor</span>
-                        <select className={`${dropDownStyle}`}>
-                            <option value="">All</option>
-                            <option value="Dr. Smith">Dr. Smith</option>
-                        </select>
-                    </div>
-                    <div>
-                        <span className="text-sm text-black mr-2">Status</span>
-                        <select className={`${dropDownStyle}`}>
-                            <option value="">All</option>
-                            <option value="Completed">Completed</option>
-                            <option value="Pending">Pending</option>
-                            <option value="Cancelled">Cancelled</option>
-                        </select>
-                    </div>
-                    <div>
-                        <select className={`${dropDownStyle}`}>
-                            <option value="">Hoy</option>
-                            <option value="today">Semana</option>
-                            <option value="today">Mes</option>
-                            <option value="today">Todos</option>
-                        </select>
-                    </div>
-                </div>
+    const [view, setView] = useState<ViewMode>("day")
+    const [cursor, setCursor] = useState(new Date())
+    const [modalOpen, setModalOpen] = useState(false)
 
-            <div className="flex flex-col">
-                <div className="flex">
-                    {headers.map((header) => {
-                        return <span key={header} className={`${header[0] === "#" && isMobile ? 'hidden' : 'flex-1'} text-xs text-slate-500 uppercase font-medium`}>{header}</span>
-                    })}
+    const dateRange = useMemo(() => getDateRange(view, cursor), [view, cursor])
+
+    const filters = useMemo(() => ({
+        startDate: dateRange.start.toISOString().split("T")[0],
+        endDate: dateRange.end.toISOString().split("T")[0],
+    }), [dateRange])
+
+    const { stats, loading: statsLoading } = useAppointmentStats(filters)
+    const { appointments, loading: scheduleLoading, refetch } = useAppointmentSchedule(filters)
+
+    const navigate = useCallback((dir: -1 | 1) => {
+        const d = new Date(cursor)
+        if (view === "day") d.setDate(d.getDate() + dir)
+        else if (view === "week") d.setDate(d.getDate() + 7 * dir)
+        else d.setMonth(d.getMonth() + dir)
+        setCursor(d)
+    }, [cursor, view])
+
+    const scheduleGrid = useMemo(() => {
+        if (view === "month") return null
+
+        const days: Date[] = []
+        if (view === "day") {
+            days.push(new Date(dateRange.start))
+        } else {
+            const d = new Date(dateRange.start)
+            while (d <= dateRange.end) {
+                days.push(new Date(d))
+                d.setDate(d.getDate() + 1)
+            }
+        }
+        return { days }
+    }, [view, dateRange])
+
+    const appointmentsBySlot = useMemo(() => {
+        const map = new Map<string, Appointment[]>()
+        for (const appt of appointments) {
+            const key = `${appt.date}_${appt.startTime}`
+            if (!map.has(key)) map.set(key, [])
+            map.get(key)!.push(appt)
+        }
+        return map
+    }, [appointments])
+
+    return (
+        <div className="space-y-6">
+            <div className="flex items-center justify-between">
+                <div>
+                    <h1 className="text-2xl font-bold text-slate-800 dark:text-white">Agenda de Citas</h1>
+                    <p className="text-sm text-slate-500 dark:text-slate-400">Gestiona las citas de tus pacientes</p>
                 </div>
-                {data && data.data.map((item) => {
-                    return (
-                        <div key={item.id} className="flex items-center w-full py-2">
-                            <span className={`${isMobile ? 'hidden' : ''} text-sm`}>{item.id}</span>
-                            <span className="flex-1 text-sm">{item.patientFullName}</span>
-                            <span className="flex-1 text-sm">{item.doctor}</span>
-                            <span className="flex-1 text-sm">{item.department}</span>
-                            <span className="flex-1 text-sm">{item.dateTime}</span>
-                            <span className="flex-1 text-sm">{item.dateTime}</span>
-                            <span className={`flex-1`}>
-                                <div className={`pl-2 pr-2 pb-0.5 w-22 text-center text-sm rounded-2xl ${getBgColorStatus(item.status)}`}>{item.status}</div>
-                            </span>
-                            <div className="flex flex-1">
-                                <button className="pl-4 pr-4 rounded-sm bg-blue-200 border-2 border-blue-600 text-sm">Ver</button>
-                                <EllipsisVertical />
-                            </div>
-                        </div>
-                    )
-                })}
-                <div className="flex pt-3">
-                    <p className="text-xs">Showing 1 to {data && data.totalPages} of {data && data.totalItems} entries</p>
-                    <div className="ml-auto flex gap-1">
-                        {data && data.currentPage !== 1 && (
-                            <button className={`${buttonPage}`} disabled>Previous</button>
-                        )}
-                        {data && data.totalPages > 1 && Array.from({ length: data.totalPages }).map((_, index) => (
-                            <button key={index} className={`${buttonPage}`}>
-                                {index + 1}
+                <button
+                    onClick={() => setModalOpen(true)}
+                    className="flex items-center gap-2 px-4 py-2.5 bg-primary text-white text-sm font-semibold rounded-xl shadow-lg hover:opacity-90 transition active:scale-95"
+                >
+                    <Plus size={18} />
+                    Nueva Cita
+                </button>
+            </div>
+
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                <StatCard icon={<Calendar size={20} />} label="Total de Citas" value={stats?.total ?? 0} color="text-blue-600 bg-blue-50 dark:bg-blue-900/20" />
+                <StatCard icon={<CalendarCheck size={20} />} label="Confirmadas" value={stats?.confirmed ?? 0} color="text-green-600 bg-green-50 dark:bg-green-900/20" />
+                <StatCard icon={<Clock size={20} />} label="Pendientes" value={stats?.pending ?? 0} color="text-amber-600 bg-amber-50 dark:bg-amber-900/20" />
+                <StatCard icon={<CalendarX size={20} />} label="Canceladas" value={stats?.cancelled ?? 0} color="text-red-600 bg-red-50 dark:bg-red-900/20" />
+            </div>
+
+            <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700">
+                <div className="flex flex-wrap items-center gap-3 p-4 border-b border-slate-200 dark:border-slate-700">
+                    <div className="flex bg-slate-100 dark:bg-slate-700 rounded-lg p-0.5">
+                        {(["day", "week", "month"] as ViewMode[]).map((m) => (
+                            <button
+                                key={m}
+                                onClick={() => setView(m)}
+                                className={`px-4 py-2 text-xs font-semibold rounded-xl transition ${
+                                    view === m
+                                        ? "bg-primary text-white dark:bg-slate-600 shadow-sm"
+                                        : "text-slate-800 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200"
+                                }`}
+                            >
+                                {m === "day" ? "Día" : m === "week" ? "Semana" : "Mes"}
                             </button>
                         ))}
-                        {data && currentPage < data.totalPages && (
-                            <button className={`${buttonPage}`} disabled>Next</button>
-                        )}
                     </div>
+
+                    <div className="flex items-center gap-2 ml-auto">
+                        <button onClick={() => navigate(-1)} className="p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-500 dark:text-slate-400 transition">
+                            <ChevronLeft size={18} />
+                        </button>
+                        <span className="text-sm font-semibold text-slate-700 dark:text-slate-200 min-w-45 text-center">
+                            {formatCursorLabel(view, cursor)}
+                        </span>
+                        <button onClick={() => navigate(1)} className="p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-500 dark:text-slate-400 transition">
+                            <ChevronRight size={18} />
+                        </button>
+                    </div>
+
+                    <button
+                        onClick={() => setCursor(new Date())}
+                        className="px-3 py-1.5 text-xs font-semibold text-primary bg-primary/10 hover:bg-primary/20 rounded-lg transition"
+                    >
+                        Hoy
+                    </button>
+                </div>
+
+                <div className="overflow-x-auto">
+                    {view === "month" ? (
+                        <MonthView cursor={cursor} appointments={appointments} onDateClick={(d) => { setCursor(d); setView("day") }} />
+                    ) : (
+                        <ScheduleGrid days={scheduleGrid!.days} appointmentsBySlot={appointmentsBySlot} loading={scheduleLoading} />
+                    )}
                 </div>
             </div>
+
+            <AddAppointmentModal
+                isOpen={modalOpen}
+                onClose={() => setModalOpen(false)}
+                onSuccess={() => { setModalOpen(false); refetch() }}
+            />
         </div>
     )
-}
-
-function getBgColorStatus(status: string) {
-    switch (status) {
-        case "Completed":
-            return "bg-green-200 border-green-600 text-green-800"
-        case "Pending":
-            return "bg-yellow-200 border-yellow-600 text-yellow-800"
-        case "Cancelled":
-            return "bg-red-200 border-red-600 text-red-800"
-        default:
-            return "bg-gray-200 border-gray-600 text-gray-800"
-    }
 }

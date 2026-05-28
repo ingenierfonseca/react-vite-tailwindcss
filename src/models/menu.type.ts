@@ -67,7 +67,10 @@ export function getMenuData() {
             icon: Settings,
             label: "Administración",
             submenu: [
+                { id: "doctors", label: "Doctores", path: "doctors" },
                 { id: "treatments", label: "Tratamientos", path: "treatments" },
+                { id: "treatment-plans", label: "Planes de Tratamiento", path: "treatment-plans" },
+                { id: "currencies", label: "Monedas", path: "currencies" },
                 { id: "appointmentType", label: "Tipos de cita", path: "appointment-types" }
             ]
         },
