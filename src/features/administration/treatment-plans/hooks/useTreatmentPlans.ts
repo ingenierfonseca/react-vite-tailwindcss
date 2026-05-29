@@ -9,7 +9,7 @@ export const useTreatmentPlans = () => {
 
     const resetItem = () => {
         setItem({
-            id: 0, title: "", description: "", categoryId: 0,
+            id: 0, title: "", description: "", categoryId: 1,
             currencyId: 1, complexity: "Media",
             estimatedDurationMonths: 1, basePrice: 0,
             version: 1, isActive: true,

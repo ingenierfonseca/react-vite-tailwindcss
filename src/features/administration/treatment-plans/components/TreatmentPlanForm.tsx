@@ -8,6 +8,9 @@ import type { TreatmentPlan } from "../../../../services/treatment-plan/treatmen
 import { useTreatmentPlan } from "../hooks/useTreatmentPlan";
 import { ArrowUp, ArrowDown, Trash2, Plus } from "lucide-react";
 import { TextField } from "@mui/material";
+import { PaginatedAutocomplete } from "@/components/pagination-data/PaginatedAutocomplete";
+import { CurrencyService } from "@/services/currency/currency.service";
+import { TreatmentCategoryService } from "@/services/treatmentCategory.service";
 
 interface TreatmentPlanFormProps {
     itemParam?: TreatmentPlan;
@@ -19,11 +22,6 @@ const complexities: { id: number; value: string }[] = [
     { id: 1, value: "Baja" },
     { id: 2, value: "Media" },
     { id: 3, value: "Alta" },
-];
-
-const moneys: { id: number; value: string }[] = [
-    { id: 1, value: "NIO - Córdoba" },
-    { id: 2, value: "USD - Dólar" },
 ];
 
 export default function TreatmentPlanForm({ itemParam, setIsOpen, reload }: TreatmentPlanFormProps) {
@@ -45,7 +43,6 @@ export default function TreatmentPlanForm({ itemParam, setIsOpen, reload }: Trea
         setNewItemName("");
     };
 
-    const currencyValue = moneys.find(m => m.id === item.currencyId)?.id ?? 1;
     const complexityValue = complexities.find(c => c.value === item.complexity)?.id ?? 2;
 
     return (
@@ -59,8 +56,10 @@ export default function TreatmentPlanForm({ itemParam, setIsOpen, reload }: Trea
                         maxLength={100} onChange={(value) => setItem({ ...item, title: value })} />
                     <TextFieldApp className="flex-5" label="Descripción" value={item.description}
                         maxLength={200} onChange={(value) => setItem({ ...item, description: value })} />
-
+                    
                     <div className="flex gap-4">
+                        <NumberInputApp className="flex-1" title="Versión" value={item.version}
+                            shrink={true} min={1} onChange={(value) => setItem({ ...item, version: value })} />
                         <DropDownApp title="Complejidad"
                             data={complexities as any}
                             value={complexityValue}
@@ -68,10 +67,25 @@ export default function TreatmentPlanForm({ itemParam, setIsOpen, reload }: Trea
                                 const c = complexities.find(c => c.id === parseInt(val));
                                 setItem({ ...item, complexity: c?.value ?? "Media" });
                             }} />
-                        <DropDownApp title="Moneda"
-                            data={moneys as any}
-                            value={currencyValue}
-                            onChange={(val) => setItem({ ...item, currencyId: parseInt(val) })} />
+                    </div>
+
+                    <div className="flex gap-4">
+                        <PaginatedAutocomplete
+                            label="Categoria"
+                            value={item.categoryId}
+                            onChange={(val) => setItem({ ...item, categoryId: parseInt(val) })}
+                            fetchData={TreatmentCategoryService.get}
+                            getValue={(item) => item.id}
+                            getLabel={(item) => `${item.name.trim()}`}
+                        />
+                        <PaginatedAutocomplete
+                            label="Moneda"
+                            value={item.currencyId}
+                            onChange={(val) => setItem({ ...item, currencyId: parseInt(val) })}
+                            fetchData={CurrencyService.get}
+                            getValue={(item) => item.id}
+                            getLabel={(item) => `${item.symbol}-${item.name.trim()}`}
+                        />
                     </div>
 
                     <div className="flex gap-4">

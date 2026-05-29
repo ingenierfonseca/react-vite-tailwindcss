@@ -12,8 +12,7 @@ export const useAppointmentTypes = () => {
             id: 0,
             name: '',
             description: '',
-            time: '00:30:00',
-            timeMinutes: 30
+            durationMinutes: 30
         })
     }
 

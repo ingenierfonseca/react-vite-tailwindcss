@@ -11,6 +11,8 @@ import TreatmentListPage from "@/features/administration/treatments/TreatmentLis
 import DoctorListPage from "@/features/administration/doctors/DoctorListPage";
 import TreatmentPlanListPage from "@/features/administration/treatment-plans/TreatmentPlanListPage";
 import CurrencyListPage from "@/features/administration/currencies/CurrencyListPage";
+import TreatmentCategoryListPage from "@/features/administration/treatment-category/TreatmentCategoryListPage";
+import ExchangeRateListPage from "@/features/administration/exchange-rate/ExchangeRateListPage";
 
 export const routesConfig = [
   {
@@ -67,6 +69,16 @@ export const routesConfig = [
     path: "/appointment-types",
     title: "Tipo de Citas",
     element: <AppointmentTypeListPage />
+  },
+  {
+    path: "/treatment-categories",
+    title: "Categorías de Tratamiento",
+    element: <TreatmentCategoryListPage />
+  },
+  {
+    path: "/exchange-rates",
+    title: "Tipos de Cambio",
+    element: <ExchangeRateListPage />
   },
   {
     path: "/imports/patients",

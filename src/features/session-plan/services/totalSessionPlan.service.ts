@@ -42,6 +42,6 @@ const buildRequest = (
         isFinanced: values.financing.isFinanced,
         downPayment: values.financing.downPayment,
         comments: values.plan.comments,
-        plansIds: values.items.map((x: any) => x.id),
+        plansIds: values.plansIds,
     };
 };

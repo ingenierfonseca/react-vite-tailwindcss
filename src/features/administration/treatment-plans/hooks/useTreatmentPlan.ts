@@ -5,7 +5,7 @@ import { TreatmentPlanService } from "../../../../services/treatment-plan/treatm
 
 export const useTreatmentPlan = () => {
     const [item, setItem] = useState<TreatmentPlan>({
-        id: 0, title: "", description: "", categoryId: 0,
+        id: 0, title: "", description: "", categoryId: 1,
         currencyId: 1, complexity: "Media",
         estimatedDurationMonths: 1, basePrice: 0,
         version: 1, isActive: true,

@@ -56,7 +56,7 @@ export default function AppointmentTypeListPage() {
                         <div key={item.id} className={`flex px-4 py-3 gap-2 items-center ${index % 2 !== 0 ? 'bg-slate-200 dark:bg-slate-800' : ''} hover:bg-slate-300 dark:hover:bg-slate-800/50 transition-colors`}>
                             <span className="flex-3 dark:text-slate-200">{item.name}</span>
                             <span className="hidden sm:block flex-3 dark:text-slate-200">{item.description}</span>
-                            <span className="flex-1 dark:text-slate-200">{item.time}</span>
+                            <span className="flex-1 dark:text-slate-200">{item.durationMinutes}</span>
                             {/* Menú de Acciones */}
                             <div className="flex-1 flex justify-end relative">
                                 <button

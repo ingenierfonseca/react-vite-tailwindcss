@@ -102,6 +102,7 @@ export default function TreatmentForm({ treatmentParam, setIsOpen, reload }: Tre
                     <FormControlLabel
                         control={
                             <Checkbox
+                                className="dark:text-primary-dark!"
                                 checked={treatment?.isActive ?? false}
                                 onChange={(e) => setTreatment({...treatment!, isActive: e.target.checked})}
                             />

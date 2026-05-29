@@ -10,8 +10,9 @@ interface NumberInputAppProps {
     step?: number
     disabled?: boolean
     shrink?: boolean
+    permitDecimal?: boolean
 }
-export default function NumberInputApp({ title, value, className, max, onChange, disabled = false, shrink = false }: NumberInputAppProps) {
+export default function NumberInputApp({ title, value, className, max, onChange, disabled = false, shrink = false, permitDecimal = false }: NumberInputAppProps) {
     return (
         <TextField
             className={className}
@@ -27,11 +28,13 @@ export default function NumberInputApp({ title, value, className, max, onChange,
                 htmlInput: {
                     min: 0,
                     max: max,
-                    step: 1,
+                    step: permitDecimal ? "any" : 1,
                 },
             }}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                const val = parseInt(e.target.value, 10);
+                const val = permitDecimal 
+                    ? parseFloat(e.target.value) 
+                    : parseInt(e.target.value, 10);
                 onChange(isNaN(val) ? 0 : val);
             }}
         />

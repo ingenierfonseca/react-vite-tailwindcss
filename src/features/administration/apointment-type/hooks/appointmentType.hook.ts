@@ -8,8 +8,7 @@ export const useAppointmentType = () => {
         id: 0,
         name: '',
         description: '',
-        time: '00:00:00',
-        timeMinutes: 0
+        durationMinutes: 30
     })
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<any>(null);
@@ -19,7 +18,7 @@ export const useAppointmentType = () => {
         setLoading(true);
         setError(null);
 
-        if (validateTreatment() === false) {
+        if (validateAppointmentType() === false) {
             setLoading(false);
             return success;
         }
@@ -27,10 +26,10 @@ export const useAppointmentType = () => {
         try {
             if (item?.id) {
                 await AppointmentTypeService.put(item.id, item);
-                toast.success("Tratamiento actualizado correctamente");
+                toast.success("Tipo de cita actualizado correctamente");
             } else {
                 await AppointmentTypeService.post(item);
-                toast.success("Tratamiento creado correctamente");
+                toast.success("Tipo de cita creado correctamente");
             }
             success = true;
         } catch (err: any) {
@@ -45,7 +44,7 @@ export const useAppointmentType = () => {
         }
     };
 
-    function validateTreatment() {
+    function validateAppointmentType() {
         if (item.name.length === 0) {
             toast.error("El Nombre es requerido");
             return false;
@@ -54,7 +53,7 @@ export const useAppointmentType = () => {
             toast.error("La Descripcion es requerida");
             return false;
         }
-        if (item.timeMinutes <= 0) {
+        if (item.durationMinutes <= 0) {
             toast.error("La duración debe ser mayor a 0");
             return false;
         }

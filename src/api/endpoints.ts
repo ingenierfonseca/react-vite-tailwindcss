@@ -12,5 +12,6 @@ export const ENDPOINTS = {
     PAYMENTTERM: "/paymentterm/",
     SESSIONPLAN: "/session-plan-treatment/",
     TREATMENT: "/treatment/",
+    TREATMENTCATEGORY: "/treatment-category/",
     TREATMENTPLAN: "/treatment-plan-template/"
 } as const;

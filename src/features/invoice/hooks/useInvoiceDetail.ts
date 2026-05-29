@@ -7,7 +7,7 @@ import { toast } from "react-toastify";
 import { formatNumber } from "../../../utils/number.util";
 import type { Currency } from "../../../services/types/currency.type";
 import { CurrencyService } from "../../../services/currency/currency.service";
-import { ExchangeRateService, type ExchangeRate } from "../../../services/exchange-rate/exchangeRate.service";
+import { ExchangeRateService } from "../../../services/exchange-rate/exchangeRate.service";
 
 const successMsg = "SUCCESS"
 export const useInvoiceDetail = () => {
@@ -102,21 +102,23 @@ export const useInvoiceDetail = () => {
         const lastItem = state.invoice.items.findLast(x => x.originalCurrencyId!)
         
         if (lastItem) {
-            let exchangeRate: ExchangeRate
-            if (newCurrencyId !== lastItem.originalCurrencyId!)
-                exchangeRate = await ExchangeRateService.getLatest(lastItem.originalCurrencyId!, newCurrencyId);
+            let rateValue = 1
+            if (newCurrencyId !== lastItem.originalCurrencyId!) {
+                const response = await ExchangeRateService.getLatest(lastItem.originalCurrencyId!, newCurrencyId);
+                rateValue = response.rate;
+            }
 
             const updatedItems = state.invoice.items.map(item => {
                 if (item.originalCurrencyId === newCurrencyId) {
                     return { ...item, unitPrice: item.originalPrice };
                 }
 
-                const newUnitPrice = item.originalPrice! * exchangeRate.rate;
+                const newUnitPrice = item.originalPrice! * rateValue;
 
                 return {
                     ...item,
                     unitPrice: Number(newUnitPrice.toFixed(2)),
-                    discount: item.discount * exchangeRate.rate
+                    discount: item.discount * rateValue
                 };
             });
 

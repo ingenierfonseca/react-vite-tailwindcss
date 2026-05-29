@@ -16,7 +16,7 @@ export default function AppointmentTypeForm({ itemParam, setIsOpen, reload }: Ap
     const { item, setItem, loading, saveTreatment } = useAppointmentType()
     useEffect(() => {
         if (itemParam) {
-            itemParam.timeMinutes = timeToMinutes(itemParam.time)
+            //itemParam.durationMinutes = timeToMinutes(itemParam.time)
             setItem(itemParam)
         }
     }, [itemParam])
@@ -53,11 +53,10 @@ export default function AppointmentTypeForm({ itemParam, setIsOpen, reload }: Ap
                     <NumberInputApp
                         className="flex-1"
                         title="Duración Minutos"
-                        value={item.timeMinutes}
+                        value={item.durationMinutes}
                         shrink={true}
                         onChange={(value) => {
-                            console.log(value)
-                            setItem({ ...item, timeMinutes: value, time: minutesToTime(value) });
+                            setItem({ ...item, durationMinutes: value });
                         }}
                     />
                 </div>

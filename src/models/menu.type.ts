@@ -71,6 +71,8 @@ export function getMenuData() {
                 { id: "treatments", label: "Tratamientos", path: "treatments" },
                 { id: "treatment-plans", label: "Planes de Tratamiento", path: "treatment-plans" },
                 { id: "currencies", label: "Monedas", path: "currencies" },
+                { id: "treatmentCategories", label: "Categorías de Tratamiento", path: "treatment-categories" },
+                { id: "exchangeRates", label: "Tipos de Cambio", path: "exchange-rates" },
                 { id: "appointmentType", label: "Tipos de cita", path: "appointment-types" }
             ]
         },
