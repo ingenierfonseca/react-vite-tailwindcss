@@ -1,8 +1,11 @@
 import { useEffect, useState } from "react";
+import { LogOut } from "lucide-react";
 import SideBarItem from "./SideBarItem";
 import { getMenuData } from "../../models/menu.type";
 import { BriefcaseMedical } from "lucide-react";
 import { useLocation, useNavigate } from "react-router";
+import { useAuth } from "../../provider/AuthProvider";
+import { Avatar, AvatarFallback, AvatarImage } from "../../components/ui/avatar";
 
 interface SidebarProps {
   collapsed: boolean;
@@ -15,6 +18,7 @@ function Sidebar({collapsed, isMobileMenuOpen}: SidebarProps) {
     const menuItems = getMenuData();
     const navigate = useNavigate();
     const location = useLocation();
+    const { user, logout } = useAuth();
 
     useEffect(() => {
         const newExpanded = new Set()
@@ -27,6 +31,15 @@ function Sidebar({collapsed, isMobileMenuOpen}: SidebarProps) {
 
         setExpandedItems(newExpanded)
     }, [location.pathname])
+
+    const handleLogout = async () => {
+      await logout();
+      navigate("/login", { replace: true });
+    };
+
+    const userInitials = user?.name
+      ? user.name.split(" ").map((n) => n[0]).join("").toUpperCase().slice(0, 2)
+      : "AD";
 
     return (
         <div className={`
@@ -87,24 +100,35 @@ function Sidebar({collapsed, isMobileMenuOpen}: SidebarProps) {
                 })}
             </nav>
 
-            <div className={`${collapsed ? "p-3 " : "p-4 "}}border-t border-slate-200/50 dark:border-slate-700/50`}>
-                <div className={`${collapsed ? "p-2 " : "p-3 "}} flex items-center space-x-3 rounded-xl bg-slate-50
-                        dark:bg-slate-800/50`}>
-                    <img src="https://avatars.githubusercontent.com/u/16735800?v=4"
-                        alt="user" className="w-10 h-10 rounded-full border-2 border-primary"
-                    />
+            <div className={`${collapsed ? "p-3 " : "p-4 "} border-t border-slate-200/50 dark:border-slate-700/50`}>
+                <div className={`${collapsed ? "p-2 flex-col items-center gap-2 " : "p-3 "} flex rounded-xl bg-slate-50 dark:bg-slate-800/50`}>
+                  <div className="flex items-center space-x-3 flex-1 min-w-0">
+                    <Avatar size="sm">
+                      <AvatarImage src="" alt={user?.name || "Usuario"} />
+                      <AvatarFallback className="text-xs bg-primary/10 text-primary">
+                        {userInitials}
+                      </AvatarFallback>
+                    </Avatar>
                     {(!collapsed || !isDesktop) && (
-                        <div className="flex-1 min-w-0">
-                            <div className="flex-1 min-w-0">
-                                <p className="text-sm font-medium text-shadow-amber-800 dark:text-white truncate">
-                                    Marlon Fonseca
-                                </p>
-                                <p className="text-xs text-shadow-amber-500 dark:text-shadow-amber-400 truncate">
-                                    Administrador
-                                </p>
-                            </div>
-                        </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium text-slate-800 dark:text-white truncate">
+                          {user?.name || "Usuario"}
+                        </p>
+                        <p className="text-xs text-slate-500 dark:text-slate-400 truncate">
+                          {user?.role || "Sin rol"}
+                        </p>
+                      </div>
                     )}
+                  </div>
+                  {(!collapsed || !isDesktop) && (
+                    <button
+                      onClick={handleLogout}
+                      className="p-2 rounded-lg text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors"
+                      title="Cerrar sesión"
+                    >
+                      <LogOut className="size-4" />
+                    </button>
+                  )}
                 </div>
             </div>
         </div>

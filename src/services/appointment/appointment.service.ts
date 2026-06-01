@@ -13,7 +13,7 @@ export const AppointmentService = {
         if (filters?.status) params.append('status', filters.status);
         const queryString = params.toString();
         const { data } = await api.get(`${method}${queryString ? `?${queryString}` : ''}`);
-        return data as Appointment[];
+        return data.data as Appointment[];
     },
 
     getStats: async (filters?: AppointmentFilters) => {
