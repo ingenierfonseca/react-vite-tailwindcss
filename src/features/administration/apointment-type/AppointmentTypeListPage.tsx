@@ -1,8 +1,10 @@
 import { EllipsisVertical } from "lucide-react";
+import { Navigate } from "react-router";
 import PageComponent from "../../../components/commons/PageComponent";
 import PaginatedDataTable from "../../../components/pagination-data/PaginatedDataTable";
 import { useAppointmentTypes } from "./hooks/appointmentTypes.hook";
 import AppointmentTypeForm from "./components/AppointmentTypeForm";
+import { usePermissions } from "../../../hooks/usePermissions";
 import type { Header } from "../../invoice/components/InvoiceDetail";
 
 const headers: Header[] = [
@@ -19,7 +21,11 @@ const headers: Header[] = [
         className: 'flex-1'
     }
 ]
+
+const RESOURCE = "appointmenttypes";
+
 export default function AppointmentTypeListPage() {
+    const { can } = usePermissions();
     const {
         isOpenCreateOrEdit,
         isOpenTransitionRight,
@@ -35,11 +41,16 @@ export default function AppointmentTypeListPage() {
         resetItem
     } = useAppointmentTypes()
 
+    if (!can("view", RESOURCE)) {
+        return <Navigate to="/not-found" replace />;
+    }
+
     return (
         <PageComponent
             title="Tipos de Citas"
             description="Administra los tipos de cita en esta clínica"
             textButton="Agregar Tipo de Cita"
+            showButton={can("create", RESOURCE)}
             onclick={() => {
                 resetItem()
                 openCreate(true)
@@ -71,15 +82,17 @@ export default function AppointmentTypeListPage() {
                                         className="absolute right-0 top-8 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-600 rounded-md shadow-xl z-50 min-w-30"
                                         onMouseLeave={() => setOpenPopUp(0)}
                                     >
-                                        <button
-                                            className="w-full text-left px-4 py-2 hover:bg-slate-100 dark:hover:bg-slate-700 text-sm dark:text-slate-200"
-                                            onClick={() => {
-                                                setItem(item)
-                                                openCreate(true)
-                                            }}
-                                        >
-                                            Editar
-                                        </button>
+                                        {can("update", RESOURCE) && (
+                                            <button
+                                                className="w-full text-left px-4 py-2 hover:bg-slate-100 dark:hover:bg-slate-700 text-sm dark:text-slate-200"
+                                                onClick={() => {
+                                                    setItem(item)
+                                                    openCreate(true)
+                                                }}
+                                            >
+                                                Editar
+                                            </button>
+                                        )}
                                     </div>
                                 )}
                             </div>

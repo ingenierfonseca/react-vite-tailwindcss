@@ -5,6 +5,7 @@ import { getMenuData } from "../../models/menu.type";
 import { BriefcaseMedical } from "lucide-react";
 import { useLocation, useNavigate } from "react-router";
 import { useAuth } from "../../provider/AuthProvider";
+import { usePermissions } from "../../hooks/usePermissions";
 import { Avatar, AvatarFallback, AvatarImage } from "../../components/ui/avatar";
 
 interface SidebarProps {
@@ -23,9 +24,9 @@ function Sidebar({collapsed, isMobileMenuOpen}: SidebarProps) {
     useEffect(() => {
         const newExpanded = new Set()
 
-        menuItems.forEach(item => {
-            if (item.submenu?.some(sub => location.pathname.includes(sub.path))) {
-            newExpanded.add(item.id)
+        filteredMenuItems.forEach(item => {
+            if (item!.submenu?.some(sub => location.pathname.includes(sub.path))) {
+                newExpanded.add(item!.id)
             }
         })
 
@@ -40,6 +41,17 @@ function Sidebar({collapsed, isMobileMenuOpen}: SidebarProps) {
     const userInitials = user?.name
       ? user.name.split(" ").map((n) => n[0]).join("").toUpperCase().slice(0, 2)
       : "AD";
+
+    const { can, isAdmin } = usePermissions();
+
+    const filteredMenuItems = menuItems.map((item) => {
+      if (item.id !== "superAdmin" || isAdmin) return item;
+      const filteredSubmenu = item.submenu?.filter(
+        (sub) => sub.resource && can("view", sub.resource)
+      );
+      if (!filteredSubmenu || filteredSubmenu.length === 0) return null;
+      return { ...item, submenu: filteredSubmenu };
+    }).filter(Boolean);
 
     return (
         <div className={`
@@ -78,17 +90,17 @@ function Sidebar({collapsed, isMobileMenuOpen}: SidebarProps) {
             </div>
             {/**Navigation*/}
             <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
-                {menuItems.map((item) => {
+                {filteredMenuItems.map((item) => {
                     return (
-                        <div key={item.id}>
-                            <SideBarItem item={item} 
+                        <div key={item!.id}>
+                            <SideBarItem item={item!} 
                                 collapsed={collapsed}
                                 isDesktop={isDesktop} 
                                 expandedItems={expandedItems} 
                                 setExpandedItems={setExpandedItems} />
-                            {item.submenu && expandedItems.has(item.id) && (
+                            {item!.submenu && expandedItems.has(item!.id) && (
                                 <div className="flex flex-col mt-2 ml-8">
-                                    {item.submenu.map((submenuItem) => {
+                                    {item!.submenu.map((submenuItem) => {
                                         return <button key={submenuItem.id} className={`text-left p-3 cursor-pointer hover:bg-sidebar-item/20 dark:hover:bg-slate-800/50
                                             ${location.pathname.includes(submenuItem.path!) ? "text-sidebar-item font-bold border-l" : "text-slate-400 border-l border-slate-200"}`}
                                             onClick={() => navigate(submenuItem.path || "/")}>{submenuItem.label}</button>
@@ -115,7 +127,7 @@ function Sidebar({collapsed, isMobileMenuOpen}: SidebarProps) {
                           {user?.name || "Usuario"}
                         </p>
                         <p className="text-xs text-slate-500 dark:text-slate-400 truncate">
-                          {user?.role || "Sin rol"}
+                          {user?.roles?.[0] || "Sin rol"}
                         </p>
                       </div>
                     )}

@@ -2,25 +2,25 @@ import { EllipsisVertical } from "lucide-react";
 import { Navigate } from "react-router";
 import PageComponent from "../../../components/commons/PageComponent";
 import PaginatedDataTable from "../../../components/pagination-data/PaginatedDataTable";
-import { useTreatmentCategories } from "./hooks/useTreatmentCategories";
-import TreatmentCategoryForm from "./components/TreatmentCategoryForm";
+import { usePermissionList } from "./hooks/usePermissionList";
+import PermissionForm from "./components/PermissionForm";
 import { usePermissions } from "../../../hooks/usePermissions";
 import type { Header } from "../../invoice/components/InvoiceDetail";
 
 const headers: Header[] = [
-    { header: "Nombre", className: "flex-3" },
-    { header: "Descripción", className: "flex-3" },
+    { header: "Permiso", className: "flex-3" },
+    { header: "Descripción", className: "flex-5" },
 ];
 
-const RESOURCE = "treatmentcategories";
+const RESOURCE = "permissions";
 
-export default function TreatmentCategoryListPage() {
+export default function PermissionListPage() {
     const { can } = usePermissions();
     const {
         isOpenCreateOrEdit, isOpenTransitionRight, openCreate,
         load, data, item, openPopUp, setItem, setOpenPopUp,
         setCurrentPage, pages, resetItem
-    } = useTreatmentCategories();
+    } = usePermissionList();
 
     if (!can("view", RESOURCE)) {
         return <Navigate to="/not-found" replace />;
@@ -28,9 +28,9 @@ export default function TreatmentCategoryListPage() {
 
     return (
         <PageComponent
-            title="Categorías de Tratamiento"
-            description="Administra las categorías de tratamientos"
-            textButton="Agregar Categoría"
+            title="Permisos"
+            description="Administra los permisos disponibles en el sistema"
+            textButton="Agregar Permiso"
             showButton={can("create", RESOURCE)}
             onclick={() => { resetItem(); openCreate(true); }}
         >
@@ -44,8 +44,8 @@ export default function TreatmentCategoryListPage() {
                     {data?.data?.map((item, index) => (
                         <div key={item.id}
                             className={`flex px-4 py-3 gap-2 items-center ${index % 2 !== 0 ? "bg-slate-200 dark:bg-slate-800" : ""} hover:bg-slate-300 dark:hover:bg-slate-800/50 transition-colors`}>
-                            <span className="flex-3 dark:text-slate-200">{item.name}</span>
-                            <span className="flex-3 dark:text-slate-200">{item.description}</span>
+                            <span className="flex-3 dark:text-slate-200 font-mono text-sm">{item.name}</span>
+                            <span className="flex-5 dark:text-slate-400 text-sm">{item.description}</span>
                             <div className="flex-1 flex justify-end relative">
                                 <button onClick={() => setOpenPopUp(item.id)}
                                     className="p-1 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-full transition-colors">
@@ -71,7 +71,7 @@ export default function TreatmentCategoryListPage() {
             <div className={`fixed top-0 right-0 h-full w-full md:w-7/12 bg-white dark:bg-slate-800 shadow-2xl z-50 
                             transform transition-transform duration-500 ease-in-out 
                             ${isOpenTransitionRight ? "translate-x-0" : "translate-x-full"}`}>
-                {isOpenCreateOrEdit && <TreatmentCategoryForm setIsOpen={openCreate} itemParam={item} reload={load} />}
+                {isOpenCreateOrEdit && <PermissionForm setIsOpen={openCreate} itemParam={item} reload={load} />}
             </div>
         </PageComponent>
     );

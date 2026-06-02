@@ -1,6 +1,5 @@
 import { createContext, useContext, useState, useEffect, useCallback, type ReactNode } from "react";
 import type { User, LoginCredentials, UserProfileResponse } from "../models/auth.type";
-import { Role } from "../models/auth.type";
 import { AuthService } from "../services/auth/auth.service";
 
 interface AuthContextType {
@@ -41,10 +40,9 @@ function mapProfileToUser(profile: UserProfileResponse): User {
     id: profile.id,
     name: profile.username,
     email: profile.email,
-    role: (profile.roles[0] as Role) || Role.Admin,
+    roles: profile.roles,
     permissions: profile.permissions,
-    doctorId: profile.doctorId,
-    customerId: profile.customerId,
+    staffId: profile.staffId,
   };
 }
 
@@ -70,10 +68,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser({
       id: response.userId,
       name: response.username,
-      role: (response.roles[0] as Role) || Role.Admin,
+      roles: response.roles,
       permissions: response.permissions,
-      doctorId: response.doctorId,
-      customerId: response.customerId,
+      staffId: response.staffId,
     });
   }, []);
 

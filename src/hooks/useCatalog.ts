@@ -2,10 +2,11 @@ import { useEffect, useState } from "react";
 import type { PaginatedResponse } from "../models/paginatedResponse";
 
 interface UseCatalogProps<T> {
-    fetchFn: (params: { page: number; search: string }) => Promise<PaginatedResponse<T>>;
+    size?: number;
+    fetchFn: (params: { page: number; search: string; size?: number }) => Promise<PaginatedResponse<T>>;
 }
 
-export function useCatalog<T>({ fetchFn }: UseCatalogProps<T>) {
+export function useCatalog<T>({ fetchFn, size }: UseCatalogProps<T>) {
     const [data, setData] = useState<PaginatedResponse<T>>();
     const [item, setItem] = useState<T>();
 
@@ -22,7 +23,7 @@ export function useCatalog<T>({ fetchFn }: UseCatalogProps<T>) {
 
     const load = async () => {
         setLoading(true);
-        fetchFn({ page: currentPage, search })
+        fetchFn({ page: currentPage, search, size })
             .then((data) => {
                 setData(data);
                 setPages(

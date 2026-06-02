@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router";
 import MainLayout from "../layouts/MainLayout";
 import LoginPage from "../features/auth/LoginPage";
+import NotFoundPage from "../features/not-found/NotFoundPage";
 import { ProtectedRoute } from "../components/commons/ProtectedRoute";
 import { routesConfig } from "./routesConfig";
 
@@ -20,10 +21,11 @@ export default function AppRouter() {
                 element={route.element}
               />
             ))}
+            <Route path="/not-found" element={<NotFoundPage />} />
           </Route>
         </Route>
 
-        <Route path="*" element={<Navigate to="/dashboard" replace />} />
+        <Route path="*" element={<Navigate to="/not-found" replace />} />
       </Routes>
     </BrowserRouter>
   );

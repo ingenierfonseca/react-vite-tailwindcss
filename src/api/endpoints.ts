@@ -13,5 +13,9 @@ export const ENDPOINTS = {
     SESSIONPLAN: "/session-plan-treatment/",
     TREATMENT: "/treatment/",
     TREATMENTCATEGORY: "/treatment-category/",
-    TREATMENTPLAN: "/treatment-plan-template/"
+    TREATMENTPLAN: "/treatment-plan-template/",
+    USER: "/user/",
+    ROLEPERMISSION: "/role-permission/",
+    ROLE: "/role/",
+    PERMISSION: "/permission/"
 } as const;

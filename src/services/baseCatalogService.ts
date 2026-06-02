@@ -2,15 +2,16 @@ import api from "../api/api";
 import type { PaginatedResponse, Result } from "../models/paginatedResponse";
 
 interface GetParams {
+    size?: number;
     page: number;
     search: string;
 }
 
 export function createCatalogService<T>(endpoint: string) {
     return {
-        get: async ({ page, search }: GetParams): Promise<PaginatedResponse<T>> => {
+        get: async ({ page, search, size }: GetParams): Promise<PaginatedResponse<T>> => {
             const { data } = await api.get(
-                `${endpoint}?pageNumber=${page}${search ? `&search=${search}` : ''}`
+                `${endpoint}?pageNumber=${page}&pageSize=${size || 15}${search ? `&search=${search}` : ''}`
             );
             return data;
         },

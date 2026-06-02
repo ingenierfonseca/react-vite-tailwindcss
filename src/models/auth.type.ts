@@ -1,5 +1,5 @@
 export const Role = {
-  Admin: "Admin",
+  Admin: "SuperAdmin",
   Doctor: "Doctor",
   Recepcionista: "Recepcionista",
 } as const;
@@ -10,10 +10,9 @@ export interface User {
   id: number;
   name: string;
   email?: string;
-  role: Role;
+  roles: string[];
   permissions?: string[];
-  doctorId?: number | null;
-  customerId?: number | null;
+  staffId?: number | null;
 }
 
 export interface LoginCredentials {
@@ -28,8 +27,7 @@ export interface LoginApiResponse {
   roles: string[];
   permissions: string[];
   userId: number;
-  doctorId: number | null;
-  customerId: number | null;
+  staffId: number | null;
 }
 
 export interface UserProfileResponse {
@@ -39,6 +37,5 @@ export interface UserProfileResponse {
   roles: string[];
   permissions: string[];
   isActive: boolean;
-  doctorId: number | null;
-  customerId: number | null;
+  staffId: number | null;
 }

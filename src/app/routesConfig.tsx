@@ -13,6 +13,10 @@ import TreatmentPlanListPage from "@/features/administration/treatment-plans/Tre
 import CurrencyListPage from "@/features/administration/currencies/CurrencyListPage";
 import TreatmentCategoryListPage from "@/features/administration/treatment-category/TreatmentCategoryListPage";
 import ExchangeRateListPage from "@/features/administration/exchange-rate/ExchangeRateListPage";
+import UsersListPage from "@/features/administration/users/UsersListPage";
+import RolePermissionListPage from "@/features/administration/role-permissions/RolePermissionListPage";
+import RolesListPage from "@/features/administration/roles/RolesListPage";
+import PermissionListPage from "@/features/administration/permissions/PermissionListPage";
 
 export const routesConfig = [
   {
@@ -79,6 +83,26 @@ export const routesConfig = [
     path: "/exchange-rates",
     title: "Tipos de Cambio",
     element: <ExchangeRateListPage />
+  },
+  {
+    path: "/users",
+    title: "Usuarios",
+    element: <UsersListPage />
+  },
+  {
+    path: "/role-permissions",
+    title: "Roles y Permisos",
+    element: <RolePermissionListPage />
+  },
+  {
+    path: "/roles",
+    title: "Roles",
+    element: <RolesListPage />
+  },
+  {
+    path: "/permissions",
+    title: "Permisos",
+    element: <PermissionListPage />
   },
   {
     path: "/imports/patients",

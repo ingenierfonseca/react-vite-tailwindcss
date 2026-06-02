@@ -3,7 +3,8 @@ import { BarChart3, Calendar, LayoutDashboard, Receipt, Settings, Upload, Users,
 export interface SubMenuAppModel {
     id: string,
     label: string,
-    path: string
+    path: string,
+    resource?: string
 }
 
 export interface MenuAppModel {
@@ -63,17 +64,21 @@ export function getMenuData() {
             path: "/odontogram",
         },
         {
-            id: "admin",
+            id: "superAdmin",
             icon: Settings,
             label: "Administración",
             submenu: [
-                { id: "doctors", label: "Doctores", path: "doctors" },
-                { id: "treatments", label: "Tratamientos", path: "treatments" },
-                { id: "treatment-plans", label: "Planes de Tratamiento", path: "treatment-plans" },
-                { id: "currencies", label: "Monedas", path: "currencies" },
-                { id: "treatmentCategories", label: "Categorías de Tratamiento", path: "treatment-categories" },
-                { id: "exchangeRates", label: "Tipos de Cambio", path: "exchange-rates" },
-                { id: "appointmentType", label: "Tipos de cita", path: "appointment-types" }
+                { id: "doctors", label: "Doctores", path: "doctors", resource: "doctors" },
+                { id: "treatments", label: "Tratamientos", path: "treatments", resource: "treatments" },
+                { id: "treatment-plans", label: "Planes de Tratamiento", path: "treatment-plans", resource: "treatmentplans" },
+                { id: "currencies", label: "Monedas", path: "currencies", resource: "currencies" },
+                { id: "treatmentCategories", label: "Categorías de Tratamiento", path: "treatment-categories", resource: "treatmentcategories" },
+                { id: "exchangeRates", label: "Tipos de Cambio", path: "exchange-rates", resource: "exchangerates" },
+                { id: "appointmentType", label: "Tipos de cita", path: "appointment-types", resource: "appointmenttypes" },
+                { id: "users", label: "Usuarios", path: "users", resource: "users" },
+                { id: "rolePermissions", label: "Roles y Permisos", path: "role-permissions", resource: "rolepermissions" },
+                { id: "roles", label: "Roles", path: "roles", resource: "roles" },
+                { id: "permissions", label: "Permisos", path: "permissions", resource: "permissions" }
             ]
         },
         {

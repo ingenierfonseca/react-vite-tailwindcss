@@ -1,8 +1,10 @@
 import { EllipsisVertical } from "lucide-react";
+import { Navigate } from "react-router";
 import PageComponent from "../../../components/commons/PageComponent";
 import PaginatedDataTable from "../../../components/pagination-data/PaginatedDataTable";
 import { useCurrencies } from "./hooks/useCurrencies";
 import CurrencyForm from "./components/CurrencyForm";
+import { usePermissions } from "../../../hooks/usePermissions";
 import type { Header } from "../../invoice/components/InvoiceDetail";
 
 const headers: Header[] = [
@@ -11,18 +13,26 @@ const headers: Header[] = [
     { header: "Símbolo", className: "flex-1" },
 ];
 
+const RESOURCE = "currencies";
+
 export default function CurrencyListPage() {
+    const { can } = usePermissions();
     const {
         isOpenCreateOrEdit, isOpenTransitionRight, openCreate,
         load, data, item, openPopUp, setItem, setOpenPopUp,
         setCurrentPage, pages, resetItem
     } = useCurrencies();
 
+    if (!can("view", RESOURCE)) {
+        return <Navigate to="/not-found" replace />;
+    }
+
     return (
         <PageComponent
             title="Monedas"
             description="Administra las monedas utilizadas en la clínica"
             textButton="Agregar Moneda"
+            showButton={can("create", RESOURCE)}
             onclick={() => { resetItem(); openCreate(true); }}
         >
             <PaginatedDataTable
@@ -46,10 +56,12 @@ export default function CurrencyListPage() {
                                 {openPopUp === item.id && (
                                     <div className="absolute right-0 top-8 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-600 rounded-md shadow-xl z-50 min-w-30"
                                         onMouseLeave={() => setOpenPopUp(0)}>
-                                        <button className="w-full text-left px-4 py-2 hover:bg-slate-100 dark:hover:bg-slate-700 text-sm dark:text-slate-200"
-                                            onClick={() => { setItem(item); openCreate(true); }}>
-                                            Editar
-                                        </button>
+                                        {can("update", RESOURCE) && (
+                                            <button className="w-full text-left px-4 py-2 hover:bg-slate-100 dark:hover:bg-slate-700 text-sm dark:text-slate-200"
+                                                onClick={() => { setItem(item); openCreate(true); }}>
+                                                Editar
+                                            </button>
+                                        )}
                                     </div>
                                 )}
                             </div>

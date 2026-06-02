@@ -24,7 +24,7 @@ export default function PageComponent({ title, description, textButton, onclick,
                 </div>
             </div>
             {children}
-            <FloatingAddButton onclick={onclick} label={textButton} />
+            {showButton && <FloatingAddButton onclick={onclick} label={textButton} />}
             <ToastContainer
                 position="bottom-right"
                 autoClose={5000}

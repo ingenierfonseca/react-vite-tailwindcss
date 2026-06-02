@@ -1,13 +1,19 @@
 import { ChevronLeft, ChevronRight, EllipsisVertical } from "lucide-react";
+import { Navigate } from "react-router";
 import PageComponent from "../../../components/commons/PageComponent";
 import TreatmentForm from "./components/TreatmentForm";
 import { useTreatments } from "./hooks/useTreatmetns";
 import PaginationButton from "../../../components/pagination-data/PaginationButton";
+import { usePermissions } from "../../../hooks/usePermissions";
 
 const headers = [
     'Tratamiento', 'Descripcion', 'Precio', 'Estado', ''
 ]
+
+const RESOURCE = "treatments";
+
 export default function TreatmentListPage() {
+    const { can } = usePermissions();
     const {
         isOpenCreateOrEdit,
         isOpenTransitionRight,
@@ -22,11 +28,16 @@ export default function TreatmentListPage() {
         pages
     } = useTreatments()
 
+    if (!can("view", RESOURCE)) {
+        return <Navigate to="/not-found" replace />;
+    }
+
     return (
         <PageComponent
             title="Tratamientos"
             description="Administra los tratamientos que se realizan en esta clinica"
             textButton="Agregar Tratamiento"
+            showButton={can("create", RESOURCE)}
             onclick={() => openCreate(true)}>
 
             <div className="flex mt-4 px-4 py-2 gap-2 bg-slate-100 border border-slate-200 dark:bg-slate-700/20 dark:border-slate-600">
@@ -41,7 +52,7 @@ export default function TreatmentListPage() {
                 ))}
             </div>
             {data && data.data.map((item) => (
-                <div key={item?.name} className="flex px-4 py-2 gap-2 border border-slate-200 dark:border-slate-600">
+                <div key={item?.name} className="flex px-4 py-2 gap-2 border border-slate-200 dark:border-slate-600 relative">
                     <span className="flex-3 dark:text-slate-200">{item?.name}</span>
                     <span className="flex-3 hidden md:block dark:text-slate-400">{item?.description}</span>
                     <span className="flex-1 font-bold dark:text-slate-200">{item?.currency?.symbol}{item?.price}</span>
@@ -49,15 +60,17 @@ export default function TreatmentListPage() {
                     <div className="flex-1 flex justify-end items-center dark:text-slate-200 dark:hover:text-slate-400 cursor-pointer" onClick={() => setOpenPopUp(item?.id ?? 0)}><EllipsisVertical /></div>
                     {openPopUp === item?.id &&(
                         <div className="absolute right-0 mt-2 bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-lg shadow-lg z-50" onMouseLeave={() => setOpenPopUp(0)}>
-                            <button
-                                className="w-full text-left px-2 py-0 hover:bg-slate-100 dark:hover:bg-slate-700 dark:text-slate-200"
-                                onClick={() => {
-                                    setTreatment(item)
-                                    openCreate(true)
-                                }}
-                            >
-                                Editar
-                            </button>
+                            {can("update", RESOURCE) && (
+                                <button
+                                    className="w-full text-left px-2 py-0 hover:bg-slate-100 dark:hover:bg-slate-700 dark:text-slate-200"
+                                    onClick={() => {
+                                        setTreatment(item)
+                                        openCreate(true)
+                                    }}
+                                >
+                                    Editar
+                                </button>
+                            )}
                         </div>
                     )}
                 </div>
