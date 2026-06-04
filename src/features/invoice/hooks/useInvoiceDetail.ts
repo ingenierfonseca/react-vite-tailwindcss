@@ -5,7 +5,7 @@ import { InvoiceService } from "../../../services/invoice/invoice.service";
 import { invoiceReducer } from "../state/invoice.reducer";
 import { toast } from "react-toastify";
 import { formatNumber } from "../../../utils/number.util";
-import type { Currency } from "../../../services/types/currency.type";
+import type { Currency } from "../../../models/currency.type";
 import { CurrencyService } from "../../../services/currency/currency.service";
 import { ExchangeRateService } from "../../../services/exchange-rate/exchangeRate.service";
 

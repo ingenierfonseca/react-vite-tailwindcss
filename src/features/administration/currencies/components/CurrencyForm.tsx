@@ -2,7 +2,7 @@ import TextFieldApp from "../../../../components/commons/TextFieldApp";
 import { useEffect } from "react";
 import ButtonSaveApp from "../../../../components/commons/ButtonSaveApp";
 import PageRightComponent from "../../../../components/commons/PageRightComponent";
-import type { Currency } from "../../../../services/types/currency.type";
+import type { Currency } from "../../../../models/currency.type";
 import { useCurrency } from "../hooks/useCurrency";
 
 interface CurrencyFormProps {

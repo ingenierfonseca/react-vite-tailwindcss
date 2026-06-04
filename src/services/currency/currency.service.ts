@@ -1,7 +1,7 @@
 import api from "../../api/api";
 import { ENDPOINTS } from "../../api/endpoints";
 import { createCatalogService } from "../baseCatalogService";
-import type { Currency } from "../types/currency.type";
+import type { Currency } from "../../models/currency.type";
 
 const method = ENDPOINTS.CURRENCY
 const baseService = createCatalogService<Currency>(method);

@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { AppointmentService } from "../../services/appointment/appointment.service"
-import type { Appointment, AppointmentFilters, AppointmentStats, CreateAppointmentPayload } from "../../services/appointment/appointment.types";
+import type { Appointment, AppointmentFilters, AppointmentInfoDto, AppointmentStats, CreateAppointmentPayload } from "../../models/appointment.types";
+import { toast } from "react-toastify";
 
 export function useAppointmentStats(filters?: AppointmentFilters) {
     const [stats, setStats] = useState<AppointmentStats | null>(null);
@@ -27,7 +28,8 @@ export function useAppointmentStats(filters?: AppointmentFilters) {
 }
 
 export function useAppointmentSchedule(filters?: AppointmentFilters) {
-    const [appointments, setAppointments] = useState<Appointment[]>([]);
+    const [openTransition, setOpenTransition] = useState(false)
+    const [appointments, setAppointments] = useState<AppointmentInfoDto[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<any>(null);
 
@@ -41,32 +43,67 @@ export function useAppointmentSchedule(filters?: AppointmentFilters) {
         } finally {
             setLoading(false);
         }
-    }, [filters?.startDate, filters?.endDate, filters?.doctorId, filters?.status]);
+    }, [filters?.startDate, filters?.endDate, filters?.doctorId, filters?.statusId]);
 
     useEffect(() => {
         fetch();
     }, [fetch]);
 
-    return { appointments, loading, error, refetch: fetch };
+    return { appointments, loading, error, refetch: fetch, openTransition, setOpenTransition };
 }
 
 export function useCreateAppointment() {
+    const [appointment, setAppointment] = useState<Partial<Appointment>>({})
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<any>(null);
 
-    const create = async (payload: CreateAppointmentPayload) => {
+    const updateAppointment = (field: keyof Appointment, value: any) => {
+        setAppointment(prev => ({ ...prev, [field]: value }));
+    }
+
+    const create = async () => {
+        const validation = validate();
+        if (!validation.valid) {
+            setError(new Error(validation.message));
+            toast.error(validation.message);
+            return validation.valid;
+        }
+
+        const payload: CreateAppointmentPayload = {
+            customerId: appointment.customerId!,
+            doctorId: appointment.doctorId!,
+            resourceId: appointment.resourceId!,
+            date: appointment.date!,
+            startTime: appointment.startTime!,
+            appointmentTypeId: appointment.appointmentTypeId!,
+        };
+
+        let result = true;
         try {
             setLoading(true);
             setError(null);
-            const result = await AppointmentService.create(payload);
-            return { success: true, data: result };
-        } catch (err) {
-            setError(err);
-            return { success: false, error: err };
+            await AppointmentService.create(payload);
+            toast.success("Cita creada correctamente");
+        } catch (err: any) {console.log(err);
+            const errorMessage = err.response?.data?.message || "Error al guardar la cita";
+            setError(errorMessage);
+            toast.error(errorMessage);
+            result = false;
         } finally {
             setLoading(false);
+            return result;
         }
     };
 
-    return { create, loading, error };
+    const validate = (): { valid: boolean; message?: string } => {
+        if (!appointment.customerId) return { valid: false, message: "Paciente es requerido" };
+        if (!appointment.doctorId) return { valid: false, message: "Doctor es requerido" };
+        if (!appointment.appointmentTypeId) return { valid: false, message: "Tipo de cita es requerido" };
+        if (!appointment.resourceId) return { valid: false, message: "Recurso es requerido" };
+        if (!appointment.date) return { valid: false, message: "Fecha es requerida" };
+        if (!appointment.startTime) return { valid: false, message: "Hora de inicio es requerida" };
+        return { valid: true };
+    }
+
+    return { create, loading, error, appointment, updateAppointment, setAppointment };
 }

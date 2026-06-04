@@ -2,7 +2,7 @@ import TextFieldApp from "../../../../components/commons/TextFieldApp";
 import { useEffect } from "react";
 import ButtonSaveApp from "../../../../components/commons/ButtonSaveApp";
 import PageRightComponent from "../../../../components/commons/PageRightComponent";
-import type { TreatmentCategory } from "../../../../services/types/treatmentCategory.type";
+import type { TreatmentCategory } from "../../../../models/treatmentCategory.type";
 import { useTreatmentCategory } from "../hooks/useTreatmentCategory";
 
 interface TreatmentCategoryFormProps {

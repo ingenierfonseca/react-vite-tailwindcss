@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { toast } from "react-toastify";
-import type { ExchangeRate } from "../../../../services/types/exchangeRate.type";
+import type { ExchangeRate } from "../../../../models/exchangeRate.type";
 import { ExchangeRateService } from "../../../../services/exchange-rate/exchangeRate.service";
 
 export const useExchangeRate = () => {

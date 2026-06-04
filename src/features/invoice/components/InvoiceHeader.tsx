@@ -12,7 +12,7 @@ import { useState } from "react";
 import type { PaymentTerm } from "../../../services/paymentTerm/PaymentTerm.type";
 import { addDays } from "../../../utils/date.util";
 import { CurrencyService } from "../../../services/currency/currency.service";
-import type { Currency } from "../../../services/types/currency.type";
+import type { Currency } from "../../../models/currency.type";
 
 interface InvoiceHeaderProps {
     invoice: Invoice | null,

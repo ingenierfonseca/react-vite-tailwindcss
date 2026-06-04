@@ -1,13 +1,14 @@
-import type { Appointment } from "../../../services/appointment/appointment.types"
+import type { Appointment } from "../../../models/appointment.types"
 import { getStatusColor, getStatusBadgeColor } from "./appointment.utils"
 
 interface MonthViewProps {
     cursor: Date
     appointments: Appointment[]
     onDateClick: (d: Date) => void
+    onAppointmentClick?: (appointment: Appointment) => void
 }
 
-export default function MonthView({ cursor, appointments, onDateClick }: MonthViewProps) {
+export default function MonthView({ cursor, appointments, onDateClick, onAppointmentClick }: MonthViewProps) {
     const year = cursor.getFullYear()
     const month = cursor.getMonth()
     const firstDay = new Date(year, month, 1).getDay()
@@ -32,7 +33,7 @@ export default function MonthView({ cursor, appointments, onDateClick }: MonthVi
             </div>
             <div className="grid grid-cols-7 gap-px bg-slate-200 dark:bg-slate-700 rounded-lg overflow-hidden">
                 {cells.map((day, i) => {
-                    if (day === null) return <div key={`e-${i}`} className="bg-slate-50 dark:bg-slate-800/50 min-h-[80px]" />
+                    if (day === null) return <div key={`e-${i}`} className="bg-slate-50 dark:bg-slate-800/50 min-h-20" />
                     const dateStr = `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`
                     const dayAppts = appointmentsByDate.get(dateStr) ?? []
                     return (
@@ -44,7 +45,11 @@ export default function MonthView({ cursor, appointments, onDateClick }: MonthVi
                             <span className="font-semibold text-slate-600 dark:text-slate-300">{day}</span>
                             <div className="mt-1 space-y-0.5">
                                 {dayAppts.slice(0, 3).map((a) => (
-                                    <div key={a.id} className={`flex items-center gap-1 rounded px-1 py-0.5 ${getStatusColor(a.status)}`}>
+                                    <div
+                                        key={a.id}
+                                        className={`flex items-center gap-1 rounded px-1 py-0.5 cursor-pointer hover:opacity-80 transition ${getStatusColor(a.status)}`}
+                                        onClick={(e) => { e.stopPropagation(); onAppointmentClick?.(a); }}
+                                    >
                                         <span className={`w-1.5 h-1.5 rounded-full ${getStatusBadgeColor(a.status)}`} />
                                         <span className="truncate">{a.patientFullName}</span>
                                     </div>

@@ -6,20 +6,22 @@ import {
     Clock,
     ChevronLeft,
     ChevronRight,
-    Plus,
 } from "lucide-react"
+import PageComponent from "../../components/commons/PageComponent"
 import { useAppointmentStats, useAppointmentSchedule } from "./appointment.hooks"
-import type { Appointment } from "../../services/appointment/appointment.types"
+import type { Appointment } from "../../models/appointment.types"
 import StatCard from "./components/StatCard"
 import ScheduleGrid from "./components/ScheduleGrid"
 import MonthView from "./components/MonthView"
 import AddAppointmentModal from "./components/AddAppointmentModal"
 import { getDateRange, formatCursorLabel, type ViewMode } from "./components/appointment.utils"
+import AppointmentCreate from "./components/AppoinmentCreateEdit"
 
 export default function AppointmentList() {
     const [view, setView] = useState<ViewMode>("day")
     const [cursor, setCursor] = useState(new Date())
     const [modalOpen, setModalOpen] = useState(false)
+    const [selectedAppointment, setSelectedAppointment] = useState<Partial<Appointment> | null>(null)
 
     const dateRange = useMemo(() => getDateRange(view, cursor), [view, cursor])
 
@@ -29,7 +31,7 @@ export default function AppointmentList() {
     }), [dateRange])
 
     const { stats, loading: statsLoading } = useAppointmentStats(filters)
-    const { appointments, loading: scheduleLoading, refetch } = useAppointmentSchedule(filters)
+    const { appointments, loading: scheduleLoading, refetch, openTransition, setOpenTransition } = useAppointmentSchedule(filters)
 
     const navigate = useCallback((dir: -1 | 1) => {
         const d = new Date(cursor)
@@ -55,6 +57,26 @@ export default function AppointmentList() {
         return { days }
     }, [view, dateRange])
 
+    const handleAppointmentClick = useCallback((appt: any) => {
+        setSelectedAppointment({
+            id: appt.id,
+            customerId: appt.customerId,
+            patientFullName: appt.patientName ?? appt.patientFullName ?? '',
+            doctorId: appt.doctorId,
+            doctorName: appt.doctorName ?? '',
+            resourceId: appt.resourceId,
+            resourceName: appt.resourceName ?? '',
+            date: appt.date,
+            startTime: appt.startTime,
+            endTime: appt.endTime,
+            statusId: appt.statusId,
+            notes: appt.notes,
+            appointmentTypeId: appt.appointmentTypeId,
+            isConfirmed: appt.isConfirmed ?? false,
+        })
+        setOpenTransition(true)
+    }, [])
+
     const appointmentsBySlot = useMemo(() => {
         const map = new Map<string, Appointment[]>()
         for (const appt of appointments) {
@@ -66,20 +88,12 @@ export default function AppointmentList() {
     }, [appointments])
 
     return (
-        <div className="space-y-6">
-            <div className="flex items-center justify-between">
-                <div>
-                    <h1 className="text-2xl font-bold text-slate-800 dark:text-white">Agenda de Citas</h1>
-                    <p className="text-sm text-slate-500 dark:text-slate-400">Gestiona las citas de tus pacientes</p>
-                </div>
-                <button
-                    onClick={() => setModalOpen(true)}
-                    className="flex items-center gap-2 px-4 py-2.5 bg-primary text-white text-sm font-semibold rounded-xl shadow-lg hover:opacity-90 transition active:scale-95"
-                >
-                    <Plus size={18} />
-                    Nueva Cita
-                </button>
-            </div>
+        <PageComponent
+            title="Agenda de Citas"
+            description="Gestiona las citas de tus pacientes"
+            textButton="Nueva Cita"
+            onclick={() => { setSelectedAppointment(null); setOpenTransition(true) }}
+        >
 
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                 <StatCard icon={<Calendar size={20} />} label="Total de Citas" value={stats?.total ?? 0} color="text-blue-600 bg-blue-50 dark:bg-blue-900/20" />
@@ -95,11 +109,10 @@ export default function AppointmentList() {
                             <button
                                 key={m}
                                 onClick={() => setView(m)}
-                                className={`px-4 py-2 text-xs font-semibold rounded-xl transition ${
-                                    view === m
+                                className={`px-4 py-2 text-xs font-semibold rounded-xl transition ${view === m
                                         ? "bg-primary text-white dark:bg-slate-600 shadow-sm"
                                         : "text-slate-800 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200"
-                                }`}
+                                    }`}
                             >
                                 {m === "day" ? "Día" : m === "week" ? "Semana" : "Mes"}
                             </button>
@@ -128,9 +141,9 @@ export default function AppointmentList() {
 
                 <div className="overflow-x-auto">
                     {view === "month" ? (
-                        <MonthView cursor={cursor} appointments={appointments} onDateClick={(d) => { setCursor(d); setView("day") }} />
+                        <MonthView cursor={cursor} appointments={appointments} onDateClick={(d) => { setCursor(d); setView("day") }} onAppointmentClick={handleAppointmentClick} />
                     ) : (
-                        <ScheduleGrid days={scheduleGrid!.days} appointmentsBySlot={appointmentsBySlot} loading={scheduleLoading} />
+                        <ScheduleGrid days={scheduleGrid!.days} appointmentsBySlot={appointmentsBySlot} loading={scheduleLoading} onAppointmentClick={handleAppointmentClick} />
                     )}
                 </div>
             </div>
@@ -140,6 +153,15 @@ export default function AppointmentList() {
                 onClose={() => setModalOpen(false)}
                 onSuccess={() => { setModalOpen(false); refetch() }}
             />
-        </div>
+
+            <div
+                className={`fixed top-0 right-0 h-full md:w-7/12 bg-white dark:bg-slate-800 shadow-2xl z-50 
+                                transform transition-transform duration-500 ease-in-out 
+                                ${openTransition ? 'translate-x-0' : 'translate-x-full'
+                    }`}
+            >
+                <AppointmentCreate setIsOpen={(v) => { setOpenTransition(v); if (!v) setSelectedAppointment(null) }} itemParam={selectedAppointment ?? undefined} refetch={refetch} />
+            </div>
+        </PageComponent>
     )
 }

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { toast } from "react-toastify";
-import type { AppointmentType } from "../../../../services/types/appointmentType.type";
+import type { AppointmentType } from "../../../../models/appointmentType.type";
 import { AppointmentTypeService } from "../../../../services/appointment-type/appointmentType.service";
 
 export const useAppointmentType = () => {

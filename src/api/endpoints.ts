@@ -1,5 +1,6 @@
 export const ENDPOINTS = {
     APPOINTMENT: "/appointment/",
+    APPOINTMENTSTATUS: "/appointment-status/",
     APPOINTMENTTYPE: "/appointmenttype/",
     CLINICALSESSION: "/clinical-session/",
     CUSTOMERS: "/customers/",
@@ -10,6 +11,8 @@ export const ENDPOINTS = {
     PATIENT: "/patient/",
     PAYMENT: "/payment/",
     PAYMENTTERM: "/paymentterm/",
+    RESOURCE: "/resource/",
+    RESOURCETYPE: "/resource-type/",
     SESSIONPLAN: "/session-plan-treatment/",
     TREATMENT: "/treatment/",
     TREATMENTCATEGORY: "/treatment-category/",

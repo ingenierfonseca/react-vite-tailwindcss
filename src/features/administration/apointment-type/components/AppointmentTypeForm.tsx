@@ -2,7 +2,7 @@ import TextFieldApp from "../../../../components/commons/TextFieldApp"
 import { useEffect } from "react";
 import ButtonSaveApp from "../../../../components/commons/ButtonSaveApp";
 import PageRightComponent from "../../../../components/commons/PageRightComponent";
-import type { AppointmentType } from "../../../../services/types/appointmentType.type";
+import type { AppointmentType } from "../../../../models/appointmentType.type";
 import { useAppointmentType } from "../hooks/appointmentType.hook";
 import { minutesToTime, timeToMinutes } from "../../../../utils/date.util";
 import NumberInputApp from "@/components/commons/NumberInputApp";

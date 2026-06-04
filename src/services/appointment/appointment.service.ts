@@ -1,6 +1,6 @@
 import api from "../../api/api";
 import { ENDPOINTS } from "../../api/endpoints";
-import type { Appointment, AppointmentFilters, AppointmentStats, CreateAppointmentPayload } from "./appointment.types";
+import type { AppointmentFilters, AppointmentInfoDto, AppointmentStats, CreateAppointmentPayload } from "../../models/appointment.types";
 
 const method = ENDPOINTS.APPOINTMENT
 
@@ -10,10 +10,10 @@ export const AppointmentService = {
         if (filters?.startDate) params.append('startDate', filters.startDate);
         if (filters?.endDate) params.append('endDate', filters.endDate);
         if (filters?.doctorId) params.append('doctorId', String(filters.doctorId));
-        if (filters?.status) params.append('status', filters.status);
+        if (filters?.statusId) params.append('statusId', String(filters.statusId));
         const queryString = params.toString();
         const { data } = await api.get(`${method}${queryString ? `?${queryString}` : ''}`);
-        return data.data as Appointment[];
+        return data.data as AppointmentInfoDto[];
     },
 
     getStats: async (filters?: AppointmentFilters) => {
@@ -32,11 +32,6 @@ export const AppointmentService = {
 
     update: async (id: number, payload: Partial<CreateAppointmentPayload>) => {
         const { data } = await api.put(`${method}${id}`, payload);
-        return data;
-    },
-
-    delete: async (id: number) => {
-        const { data } = await api.delete(`${method}${id}`);
         return data;
     },
 

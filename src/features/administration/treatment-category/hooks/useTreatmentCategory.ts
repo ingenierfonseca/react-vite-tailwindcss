@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { toast } from "react-toastify";
-import type { TreatmentCategory } from "../../../../services/types/treatmentCategory.type";
+import type { TreatmentCategory } from "../../../../models/treatmentCategory.type";
 import { TreatmentCategoryService } from "../../../../services/treatmentCategory.service";
 
 export const useTreatmentCategory = () => {

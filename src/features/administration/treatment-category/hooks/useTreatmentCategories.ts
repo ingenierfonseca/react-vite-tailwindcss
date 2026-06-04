@@ -1,6 +1,6 @@
 import { useCatalog } from "../../../../hooks/useCatalog";
 import { TreatmentCategoryService } from "../../../../services/treatmentCategory.service";
-import type { TreatmentCategory } from "../../../../services/types/treatmentCategory.type";
+import type { TreatmentCategory } from "../../../../models/treatmentCategory.type";
 
 export const useTreatmentCategories = () => {
     const { setItem, ...rest } = useCatalog<TreatmentCategory>({

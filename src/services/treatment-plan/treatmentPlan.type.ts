@@ -1,4 +1,4 @@
-import type { Currency } from "../types/currency.type"
+import type { Currency } from "../../models/currency.type"
 
 export interface TreatmentPlan {
     id: number

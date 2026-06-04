@@ -1,6 +1,6 @@
 import { useCatalog } from "../../../../hooks/useCatalog";
 import { ExchangeRateService } from "../../../../services/exchange-rate/exchangeRate.service";
-import type { ExchangeRate } from "../../../../services/types/exchangeRate.type";
+import type { ExchangeRate } from "../../../../models/exchangeRate.type";
 
 export const useExchangeRates = () => {
     const { setItem, ...rest } = useCatalog<ExchangeRate>({

@@ -2,7 +2,10 @@ import { useCallback, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { RolePermissionService } from "../../../../services/role-permission/rolePermission.service";
 import { PermissionService } from "../../../../services/permission/permission.service";
+import { RoleService } from "../../../../services/role/role.service";
 import type { RolePermission } from "../../../../models/rolePermission.type";
+import type { Permission } from "../../../../models/permission.type";
+import type { AppRole } from "../../../../models/appRole.type";
 import type { PaginatedResponse } from "../../../../models/paginatedResponse";
 
 export interface RoleGroup {
@@ -26,20 +29,30 @@ async function fetchAll<T>(
 }
 
 export const useRolePermissions = () => {
-  const [records, setRecords] = useState<RolePermission[]>([]);
   const [permissionMap, setPermissionMap] = useState<Record<string, number>>({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<any>(null);
   const [savingRoleId, setSavingRoleId] = useState<number | null>(null);
 
+  const [selectedRolePermissions, setSelectedRolePermissions] = useState<RolePermission[]>([]);
+  const [rolePermissionsLoading, setRolePermissionsLoading] = useState(false);
+
+  const [roleData, setRoleData] = useState<PaginatedResponse<AppRole>>();
+  const [roleCurrentPage, setRoleCurrentPage] = useState(1);
+
+  const [permData, setPermData] = useState<PaginatedResponse<Permission>>();
+  const [permCurrentPage, setPermCurrentPage] = useState(1);
+
   const refresh = useCallback(async () => {
     setLoading(true);
     try {
-      const [allRecords, allPermissions] = await Promise.all([
-        fetchAll(RolePermissionService.get),
+      const [allPermissions, roleResult, permResult] = await Promise.all([
         fetchAll(PermissionService.get),
+        RoleService.get({ page: roleCurrentPage, search: "", size: 15 }),
+        PermissionService.get({ page: permCurrentPage, search: "", size: 15 }),
       ]);
-      setRecords(allRecords);
+      setRoleData(roleResult);
+      setPermData(permResult);
       const map: Record<string, number> = {};
       allPermissions.forEach((p) => { map[p.name] = p.id; });
       setPermissionMap(map);
@@ -47,6 +60,19 @@ export const useRolePermissions = () => {
       setError(err);
     } finally {
       setLoading(false);
+    }
+  }, [roleCurrentPage, permCurrentPage]);
+
+  const loadRolePermissions = useCallback(async (roleId: number) => {
+    setRolePermissionsLoading(true);
+    try {
+      const result = await RolePermissionService.getByRoleId(roleId);
+      setSelectedRolePermissions(result);
+    } catch (err: any) {
+      toast.error(err.response?.data?.message || "Error al cargar permisos del rol");
+      setSelectedRolePermissions([]);
+    } finally {
+      setRolePermissionsLoading(false);
     }
   }, []);
 
@@ -56,12 +82,12 @@ export const useRolePermissions = () => {
 
   const roleGroups: RoleGroup[] = (() => {
     const grouped: Record<number, RoleGroup> = {};
-    records.forEach((r) => {
+    selectedRolePermissions.forEach((r) => {
       if (!grouped[r.roleId]) {
-        grouped[r.roleId] = { roleId: r.roleId, roleName: r.roleName, permissions: [], recordMap: {} };
+        grouped[r.roleId] = { roleId: r.roleId, roleName: r.roleName!, permissions: [], recordMap: {} };
       }
-      grouped[r.roleId].permissions.push(r.permissionName);
-      grouped[r.roleId].recordMap[r.permissionName] = r.id;
+      grouped[r.roleId].permissions.push(r.permissionName!);
+      grouped[r.roleId].recordMap[r.permissionName!] = r.roleId;
     });
     return Object.values(grouped);
   })();
@@ -75,54 +101,33 @@ export const useRolePermissions = () => {
 
       setSavingRoleId(group.roleId);
 
-      setRecords((prev) => {
-        let updated = [...prev];
-        for (const permName of removed) {
-          const recordId = group.recordMap[permName];
-          updated = updated.filter((r) => r.id !== recordId);
-        }
-        for (const permName of added) {
-          const [module] = permName.split(".");
-          const permissionId = permissionMap[permName] ?? 0;
-          updated.push({
-            id: -Date.now() - Math.random(),
-            roleId: group.roleId,
-            roleName: group.roleName,
-            permissionId,
-            permissionName: permName,
-            permissionModule: module,
-          });
-        }
-        return updated;
-      });
-
       try {
         for (const permName of removed) {
           const recordId = group.recordMap[permName];
           await RolePermissionService.delete(recordId);
         }
         for (const permName of added) {
-          const [module] = permName.split(".");
           const permissionId = permissionMap[permName] ?? 0;
           await RolePermissionService.post({
-            id: 0,
             roleId: group.roleId,
-            roleName: group.roleName,
             permissionId,
-            permissionName: permName,
-            permissionModule: module,
           });
         }
-        await refresh();
+        await loadRolePermissions(group.roleId);
       } catch (err: any) {
-        await refresh();
+        await loadRolePermissions(group.roleId);
         toast.error(err.response?.data?.message || "Error al actualizar permisos");
       } finally {
         setSavingRoleId(null);
       }
     },
-    [permissionMap, refresh]
+    [permissionMap, loadRolePermissions]
   );
 
-  return { loading, error, roleGroups, savingRoleId, handlePermissionsChange, refresh };
+  return {
+    loading, error, roleGroups, savingRoleId, handlePermissionsChange, refresh,
+    selectedRolePermissions, rolePermissionsLoading, loadRolePermissions,
+    roleData, roleCurrentPage, setRoleCurrentPage,
+    permData, permCurrentPage, setPermCurrentPage,
+  };
 };

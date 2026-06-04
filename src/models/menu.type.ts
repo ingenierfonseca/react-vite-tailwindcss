@@ -78,7 +78,10 @@ export function getMenuData() {
                 { id: "users", label: "Usuarios", path: "users", resource: "users" },
                 { id: "rolePermissions", label: "Roles y Permisos", path: "role-permissions", resource: "rolepermissions" },
                 { id: "roles", label: "Roles", path: "roles", resource: "roles" },
-                { id: "permissions", label: "Permisos", path: "permissions", resource: "permissions" }
+                { id: "permissions", label: "Permisos", path: "permissions", resource: "permissions" },
+                { id: "resourceTypes", label: "Tipos de Recurso", path: "resource-types", resource: "resourcetypes" },
+                { id: "resources", label: "Recursos", path: "resources", resource: "resources" },
+                { id: "appointmentStatuses", label: "Estados de Cita", path: "appointment-statuses", resource: "appointmentstatuses" }
             ]
         },
         {

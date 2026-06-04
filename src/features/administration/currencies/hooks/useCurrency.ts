@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { toast } from "react-toastify";
-import type { Currency } from "../../../../services/types/currency.type";
+import type { Currency } from "../../../../models/currency.type";
 import { CurrencyService } from "../../../../services/currency/currency.service";
 
 export const useCurrency = () => {

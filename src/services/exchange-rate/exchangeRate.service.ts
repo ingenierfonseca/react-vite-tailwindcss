@@ -1,7 +1,7 @@
 import api from "../../api/api";
 import { ENDPOINTS } from "../../api/endpoints";
 import { createCatalogService } from "../baseCatalogService";
-import type { ExchangeRate } from "../types/exchangeRate.type";
+import type { ExchangeRate } from "../../models/exchangeRate.type";
 
 const method = ENDPOINTS.EXCHANGERATE
 const baseService = createCatalogService<ExchangeRate>(method);

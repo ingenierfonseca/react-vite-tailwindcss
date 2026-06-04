@@ -1,11 +1,12 @@
 import { Loader2 } from "lucide-react"
-import type { Appointment } from "../../../services/appointment/appointment.types"
+import type { AppointmentInfoDto } from "../../../models/appointment.types"
 import { TIME_SLOTS, getStatusColor } from "./appointment.utils"
 
 interface ScheduleGridProps {
     days: Date[]
-    appointmentsBySlot: Map<string, Appointment[]>
+    appointmentsBySlot: Map<string, AppointmentInfoDto[]>
     loading: boolean
+    onAppointmentClick?: (appointment: AppointmentInfoDto) => void
 }
 
 function timeToMinutes(time: string): number {
@@ -37,7 +38,7 @@ function calcRowSpan(startTime: string, endTime: string, slot: string): number {
     return Math.max(1, count)
 }
 
-export default function ScheduleGrid({ days, appointmentsBySlot, loading }: ScheduleGridProps) {
+export default function ScheduleGrid({ days, appointmentsBySlot, loading, onAppointmentClick }: ScheduleGridProps) {
     if (loading) {
         return (
             <div className="flex items-center justify-center p-12">
@@ -50,17 +51,17 @@ export default function ScheduleGrid({ days, appointmentsBySlot, loading }: Sche
     const chairNames = new Map<number, string>()
     for (const appts of appointmentsBySlot.values()) {
         for (const a of appts) {
-            chairIds.add(a.chairId)
-            chairNames.set(a.chairId, a.chairName)
+            chairIds.add(a.resourceId)
+            chairNames.set(a.resourceId, a.resourceName)
         }
     }
     const chairs = chairIds.size > 0
         ? Array.from(chairIds).map(id => ({ id, name: chairNames.get(id) ?? `Silla ${id}` }))
         : [{ id: 1, name: "Silla 1" }, { id: 2, name: "Silla 2" }]
 
-    type CellAction = { skip: boolean; appointment?: Appointment; rowSpan?: number }
+    type CellAction = { skip: boolean; appointment?: AppointmentInfoDto; rowSpan?: number }
 
-    const slotMappedAppts = new Map<string, Appointment[]>()
+    const slotMappedAppts = new Map<string, AppointmentInfoDto[]>()
     for (const appts of appointmentsBySlot.values()) {
         for (const a of appts) {
             const slot = findSlot(a.startTime)
@@ -90,7 +91,7 @@ export default function ScheduleGrid({ days, appointmentsBySlot, loading }: Sche
 
                 const lookupKey = `${dateStr}_${time}`
                 const cellAppts = (slotMappedAppts.get(lookupKey) ?? [])
-                    .filter(a => a.chairId === chair.id)
+                    .filter(a => a.resourceId === chair.id)
 
                 if (cellAppts.length === 0) {
                     cellMap.set(key, { skip: false })
@@ -168,11 +169,12 @@ export default function ScheduleGrid({ days, appointmentsBySlot, loading }: Sche
                                         className="border-b border-r border-slate-100 dark:border-slate-700/50 p-1 align-top"
                                     >
                                         <div
-                                            className={`p-3 rounded-lg border text-sm leading-tight cursor-pointer hover:shadow-md transition ${getStatusColor(appt.status)}`}
-                                            title={`${appt.patientFullName} - ${appt.doctorName}`}
+                                            className={`p-3 rounded-lg border text-sm leading-tight cursor-pointer hover:shadow-md transition ${getStatusColor(appt.statusId)}`}
+                                            title={`${appt.patientName} - ${appt.doctorName}`}
+                                            onClick={() => onAppointmentClick?.(appt)}
                                         >
-                                            <p className="font-semibold truncate">{appt.patientFullName}</p>
-                                            <p className="truncate">{appt.appointmentType.name}</p>
+                                            <p className="font-semibold truncate">{appt.patientName}</p>
+                                            <p className="truncate">{appt.typeName}</p>
                                             <p className="truncate opacity-75">{appt.doctorName}</p>
                                         </div>
                                     </td>

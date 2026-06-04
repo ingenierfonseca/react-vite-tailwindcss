@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from "react"
+import { useState, useCallback, useEffect, useMemo } from "react"
 import { Search } from "lucide-react"
 import { toast } from "react-toastify"
 import Modal from "../../../components/commons/Modal"
@@ -8,16 +8,22 @@ import CalendarApp from "../../../components/commons/CalendarApp"
 import { CustomerService } from "../../../services/customer/customer.service"
 import { DoctorService } from "../../../services/doctor/doctor.service"
 import { AppointmentService } from "../../../services/appointment/appointment.service"
+import { AppointmentTypeService } from "../../../services/appointment-type/appointmentType.service"
 import { useCreateAppointment } from "../appointment.hooks"
 import type { DropDownAppModel } from "../../../models/dropdownapp.type"
-import type { AppointmentStatus } from "../../../services/appointment/appointment.types"
+import type { AppointmentType } from "../../../models/appointmentType.type"
 
-const STATUS_OPTIONS: DropDownAppModel[] = [
-    { id: "Confirmed", value: "Confirmada" },
-    { id: "Pending", value: "Pendiente" },
-    { id: "Cancelled", value: "Cancelada" },
-    { id: "Completed", value: "Completada" },
-]
+function addMinutes(time: string, mins: number): string {
+    const [h, m] = time.split(":").map(Number)
+    const total = h * 60 + m + mins
+    return `${String(Math.floor(total / 60) % 24).padStart(2, "0")}:${String(total % 60).padStart(2, "0")}`
+}
+
+function isWithinWorkingHours(time: string): boolean {
+    const [h, m] = time.split(":").map(Number)
+    const total = h * 60 + m
+    return total >= 8 * 60 && total <= 17 * 60
+}
 
 interface AddAppointmentModalProps {
     isOpen: boolean
@@ -34,19 +40,33 @@ export default function AddAppointmentModal({ isOpen, onClose, onSuccess }: AddA
     const [selectedDoctor, setSelectedDoctor] = useState("")
     const [chairs, setChairs] = useState<DropDownAppModel[]>([])
     const [selectedChair, setSelectedChair] = useState("")
+    const [appointmentTypesRaw, setAppointmentTypesRaw] = useState<AppointmentType[]>([])
+    const [selectedAppointmentType, setSelectedAppointmentType] = useState("")
     const [date, setDate] = useState(new Date().toISOString().split("T")[0])
     const [startTime, setStartTime] = useState("09:00")
-    const [status, setStatus] = useState("Pending")
     const [notes, setNotes] = useState("")
+
+    const appointmentTypeOptions = useMemo<DropDownAppModel[]>(() => {
+        return appointmentTypesRaw.map((t) => ({ id: t.id, value: `${t.name} (${t.durationMinutes} min)` }))
+    }, [appointmentTypesRaw])
+
+    const selectedTypeData = useMemo(() => {
+        return appointmentTypesRaw.find((t) => t.id === Number(selectedAppointmentType))
+    }, [selectedAppointmentType, appointmentTypesRaw])
+
+    const computedEndTime = useMemo(() => {
+        if (!selectedAppointmentType || !selectedTypeData) return ""
+        return addMinutes(startTime, selectedTypeData.durationMinutes)
+    }, [startTime, selectedAppointmentType, selectedTypeData])
 
     const reset = useCallback(() => {
         setPatientQuery("")
         setSelectedPatient("")
         setSelectedDoctor("")
         setSelectedChair("")
+        setSelectedAppointmentType("")
         setDate(new Date().toISOString().split("T")[0])
         setStartTime("09:00")
-        setStatus("Pending")
         setNotes("")
     }, [])
 
@@ -76,24 +96,45 @@ export default function AddAppointmentModal({ isOpen, onClose, onSuccess }: AddA
         }
     }, [])
 
+    const loadAppointmentTypes = useCallback(async () => {
+        try {
+            const res = await AppointmentTypeService.get({ page: 1, search: "", size: 100 })
+            setAppointmentTypesRaw(res.data)
+        } catch {
+            setAppointmentTypesRaw([])
+        }
+    }, [])
+
     useEffect(() => {
         if (isOpen) {
             loadPatients("")
             loadDoctors()
             loadChairs()
+            loadAppointmentTypes()
         }
-    }, [isOpen, loadPatients, loadDoctors, loadChairs])
+    }, [isOpen, loadPatients, loadDoctors, loadChairs, loadAppointmentTypes])
 
     const handleSubmit = async () => {
         if (!selectedPatient) { toast.error("Selecciona un paciente"); return }
         if (!selectedDoctor) { toast.error("Selecciona un doctor"); return }
-        if (!selectedChair) { toast.error("Selecciona una silla"); return }
+        if (!selectedAppointmentType) { toast.error("Selecciona un tipo de cita"); return }
         if (!date) { toast.error("Selecciona una fecha"); return }
         if (!startTime) { toast.error("Selecciona una hora"); return }
 
-        const endHour = parseInt(startTime.split(":")[0]) + 1
-        const endMin = startTime.split(":")[1]
-        const endTime = `${String(endHour).padStart(2, "0")}:${endMin}`
+        if (!isWithinWorkingHours(startTime)) {
+            toast.error("La hora de inicio debe estar entre 8:00 AM y 5:00 PM")
+            return
+        }
+
+        if (!computedEndTime) {
+            toast.error("No se pudo calcular la hora de fin. Selecciona un tipo de cita.")
+            return
+        }
+
+        if (!isWithinWorkingHours(computedEndTime)) {
+            toast.error("La hora de fin excede el horario laboral (5:00 PM)")
+            return
+        }
 
         const result = await create({
             patientId: Number(selectedPatient),
@@ -101,9 +142,10 @@ export default function AddAppointmentModal({ isOpen, onClose, onSuccess }: AddA
             chairId: Number(selectedChair),
             date,
             startTime,
-            endTime,
-            status: status as AppointmentStatus,
+            endTime: computedEndTime,
+            status: "Pending",
             notes: notes || undefined,
+            appointmentTypeId: Number(selectedAppointmentType),
         })
 
         if (result.success) {
@@ -153,8 +195,9 @@ export default function AddAppointmentModal({ isOpen, onClose, onSuccess }: AddA
                     </div>
 
                     <DropDownApp title="Doctor" data={doctors} value={selectedDoctor} onChange={setSelectedDoctor} />
-                    <DropDownApp title="Silla" data={chairs} value={selectedChair} onChange={setSelectedChair} />
+                    <DropDownApp title="Tipo de Cita" data={appointmentTypeOptions} value={selectedAppointmentType} onChange={setSelectedAppointmentType} />
 
+                    <DropDownApp title="Silla" data={chairs} value={selectedChair} onChange={setSelectedChair} />
                     <CalendarApp title="Fecha" value={date} onChange={setDate} />
 
                     <div className="flex flex-col flex-1">
@@ -167,7 +210,15 @@ export default function AddAppointmentModal({ isOpen, onClose, onSuccess }: AddA
                         />
                     </div>
 
-                    <DropDownApp title="Estado" data={STATUS_OPTIONS} value={status} onChange={setStatus} />
+                    <div className="flex flex-col flex-1">
+                        <p className="font-bold p-1 text-xs text-black">Hora de fin</p>
+                        <input
+                            type="time"
+                            value={computedEndTime}
+                            readOnly
+                            className="w-full px-3 py-2 border border-slate-300 bg-slate-100 dark:bg-slate-700 rounded-lg text-sm text-slate-500 dark:text-slate-400 cursor-not-allowed"
+                        />
+                    </div>
 
                     <div className="md:col-span-2">
                         <TextFieldApp

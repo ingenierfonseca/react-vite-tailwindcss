@@ -1,6 +1,6 @@
 import { useCatalog } from "../../../../hooks/useCatalog";
 import { CurrencyService } from "../../../../services/currency/currency.service";
-import type { Currency } from "../../../../services/types/currency.type";
+import type { Currency } from "../../../../models/currency.type";
 
 export const useCurrencies = () => {
     const { setItem, ...rest } = useCatalog<Currency>({

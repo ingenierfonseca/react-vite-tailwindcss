@@ -17,6 +17,9 @@ import UsersListPage from "@/features/administration/users/UsersListPage";
 import RolePermissionListPage from "@/features/administration/role-permissions/RolePermissionListPage";
 import RolesListPage from "@/features/administration/roles/RolesListPage";
 import PermissionListPage from "@/features/administration/permissions/PermissionListPage";
+import ResourceTypeListPage from "@/features/administration/resource-type/ResourceTypeListPage";
+import ResourceListPage from "@/features/administration/resource/ResourceListPage";
+import AppointmentStatusListPage from "@/features/administration/appointment-status/AppointmentStatusListPage";
 
 export const routesConfig = [
   {
@@ -103,6 +106,21 @@ export const routesConfig = [
     path: "/permissions",
     title: "Permisos",
     element: <PermissionListPage />
+  },
+  {
+    path: "/resource-types",
+    title: "Tipos de Recurso",
+    element: <ResourceTypeListPage />
+  },
+  {
+    path: "/resources",
+    title: "Recursos",
+    element: <ResourceListPage />
+  },
+  {
+    path: "/appointment-statuses",
+    title: "Estados de Cita",
+    element: <AppointmentStatusListPage />
   },
   {
     path: "/imports/patients",

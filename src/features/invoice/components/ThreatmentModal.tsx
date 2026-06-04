@@ -6,7 +6,7 @@ import { PaginatedAutocomplete } from "../../../components/pagination-data/Pagin
 import { useState } from "react";
 import { TreatmentService } from "../../../services/treatment/treatment.service";
 import { ExchangeRateService } from "../../../services/exchange-rate/exchangeRate.service";
-import type { Currency } from "../../../services/types/currency.type";
+import type { Currency } from "../../../models/currency.type";
 import { TextField } from "@mui/material";
 import { calculateLineTotal } from "../../../utils/invoice.util";
 

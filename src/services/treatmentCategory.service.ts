@@ -1,5 +1,5 @@
 import { createCatalogService } from "./baseCatalogService";
-import type { TreatmentCategory } from "./types/treatmentCategory.type";
+import type { TreatmentCategory } from "../models/treatmentCategory.type";
 import { ENDPOINTS } from "@/api/endpoints";
 
 const method = ENDPOINTS.TREATMENTCATEGORY

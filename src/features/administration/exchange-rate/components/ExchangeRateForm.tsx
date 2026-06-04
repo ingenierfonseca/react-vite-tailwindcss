@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import ButtonSaveApp from "../../../../components/commons/ButtonSaveApp";
 import PageRightComponent from "../../../../components/commons/PageRightComponent";
-import type { ExchangeRate } from "../../../../services/types/exchangeRate.type";
+import type { ExchangeRate } from "../../../../models/exchangeRate.type";
 import { useExchangeRate } from "../hooks/useExchangeRate";
 import { PaginatedAutocomplete } from "@/components/pagination-data/PaginatedAutocomplete";
 import { CurrencyService } from "@/services/currency/currency.service";

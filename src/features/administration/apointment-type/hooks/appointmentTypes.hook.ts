@@ -1,6 +1,6 @@
 import { useCatalog } from "../../../../hooks/useCatalog";
 import { AppointmentTypeService } from "../../../../services/appointment-type/appointmentType.service";
-import type { AppointmentType } from "../../../../services/types/appointmentType.type";
+import type { AppointmentType } from "../../../../models/appointmentType.type";
 
 export const useAppointmentTypes = () => {
     const { setItem, ...rest } =  useCatalog<AppointmentType>({
