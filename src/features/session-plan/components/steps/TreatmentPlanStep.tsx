@@ -1,5 +1,5 @@
 import { Card } from "@/components/ui/card";
-import EditTreatmentPlan from "../../../patients/components/EditTreatmentPlan";
+import EditTreatmentPlan from "./EditTreatmentPlan";
 
 interface TreatmentPlanStepProps {
     modal: {

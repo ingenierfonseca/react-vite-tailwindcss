@@ -5,4 +5,7 @@ export interface ClinicalSession {
     date: string
     reasonForVisit: string
     clinicalNotes: string
+    specialtyId: number;
+    consultationTypeId: number;
+    statusId: number;
 }

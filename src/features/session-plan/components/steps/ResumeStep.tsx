@@ -1,5 +1,5 @@
 import { Card } from "@/components/ui/card";
-import ResumeTreatmentPlan from "../../../patients/components/ResumeTreatmentPlan";
+import ResumeTreatmentPlan from "./ResumeTreatmentPlan";
 
 interface ResumeStepProps {
 }

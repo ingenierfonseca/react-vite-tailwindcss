@@ -9,18 +9,16 @@ import {
 } from "lucide-react"
 import PageComponent from "../../components/commons/PageComponent"
 import { useAppointmentStats, useAppointmentSchedule } from "./appointment.hooks"
-import type { Appointment } from "../../models/appointment.types"
+import type { Appointment, AppointmentInfoDto } from "../../models/appointment.types"
 import StatCard from "./components/StatCard"
 import ScheduleGrid from "./components/ScheduleGrid"
 import MonthView from "./components/MonthView"
-import AddAppointmentModal from "./components/AddAppointmentModal"
 import { getDateRange, formatCursorLabel, type ViewMode } from "./components/appointment.utils"
 import AppointmentCreate from "./components/AppoinmentCreateEdit"
 
 export default function AppointmentList() {
     const [view, setView] = useState<ViewMode>("day")
     const [cursor, setCursor] = useState(new Date())
-    const [modalOpen, setModalOpen] = useState(false)
     const [selectedAppointment, setSelectedAppointment] = useState<Partial<Appointment> | null>(null)
 
     const dateRange = useMemo(() => getDateRange(view, cursor), [view, cursor])
@@ -30,8 +28,8 @@ export default function AppointmentList() {
         endDate: dateRange.end.toISOString().split("T")[0],
     }), [dateRange])
 
-    const { stats, loading: statsLoading } = useAppointmentStats(filters)
-    const { appointments, loading: scheduleLoading, refetch, openTransition, setOpenTransition } = useAppointmentSchedule(filters)
+    const { stats, loading: statsLoading, refetch: refetchStats } = useAppointmentStats(filters)
+    const { appointments, loading: scheduleLoading, refetch: refetchSchedule, openTransition, setOpenTransition } = useAppointmentSchedule(filters)
 
     const navigate = useCallback((dir: -1 | 1) => {
         const d = new Date(cursor)
@@ -78,7 +76,7 @@ export default function AppointmentList() {
     }, [])
 
     const appointmentsBySlot = useMemo(() => {
-        const map = new Map<string, Appointment[]>()
+        const map = new Map<string, AppointmentInfoDto[]>()
         for (const appt of appointments) {
             const key = `${appt.date}_${appt.startTime}`
             if (!map.has(key)) map.set(key, [])
@@ -102,7 +100,7 @@ export default function AppointmentList() {
                 <StatCard icon={<CalendarX size={20} />} label="Canceladas" value={stats?.cancelled ?? 0} color="text-red-600 bg-red-50 dark:bg-red-900/20" />
             </div>
 
-            <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700">
+            <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 mt-6">
                 <div className="flex flex-wrap items-center gap-3 p-4 border-b border-slate-200 dark:border-slate-700">
                     <div className="flex bg-slate-100 dark:bg-slate-700 rounded-lg p-0.5">
                         {(["day", "week", "month"] as ViewMode[]).map((m) => (
@@ -148,19 +146,13 @@ export default function AppointmentList() {
                 </div>
             </div>
 
-            <AddAppointmentModal
-                isOpen={modalOpen}
-                onClose={() => setModalOpen(false)}
-                onSuccess={() => { setModalOpen(false); refetch() }}
-            />
-
             <div
                 className={`fixed top-0 right-0 h-full md:w-7/12 bg-white dark:bg-slate-800 shadow-2xl z-50 
                                 transform transition-transform duration-500 ease-in-out 
                                 ${openTransition ? 'translate-x-0' : 'translate-x-full'
                     }`}
             >
-                <AppointmentCreate setIsOpen={(v) => { setOpenTransition(v); if (!v) setSelectedAppointment(null) }} itemParam={selectedAppointment ?? undefined} refetch={refetch} />
+                <AppointmentCreate setIsOpen={(v) => { setOpenTransition(v); if (!v) setSelectedAppointment(null) }} itemParam={selectedAppointment ?? undefined} refetch={() => { refetchSchedule(); refetchStats() }} />
             </div>
         </PageComponent>
     )

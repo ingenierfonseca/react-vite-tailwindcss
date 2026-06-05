@@ -1,3 +1,5 @@
+import type { InvoiceItem } from "../invoice/invoice.types"
+
 export interface Payment {
     id: number
     currencyId: number
@@ -22,4 +24,22 @@ export interface RequestPayment {
     customerId: number
     paymentTypeId: number
     operationTypeId: number
+}
+
+export interface PaymentBaucherDto {
+    companyName: string;
+    companyNIT: string;
+    companyAddress: string;
+    companyPhone: string;
+    receiptNumber: string;
+    invoiceNumber: string;
+    paymentDate: string;
+    amountPaid: number;
+    paymentMethod: string;
+    currencySymbol: string;
+    isPartialPayment: boolean;
+    invoiceTotal: number;
+    previousBalance: number;
+    remainingBalance: number;
+    items: InvoiceItem[];
 }

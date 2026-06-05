@@ -1,11 +1,11 @@
-import type { Appointment } from "../../../models/appointment.types"
+import type { AppointmentInfoDto } from "../../../models/appointment.types"
 import { getStatusColor, getStatusBadgeColor } from "./appointment.utils"
 
 interface MonthViewProps {
     cursor: Date
-    appointments: Appointment[]
+    appointments: AppointmentInfoDto[]
     onDateClick: (d: Date) => void
-    onAppointmentClick?: (appointment: Appointment) => void
+    onAppointmentClick?: (appointment: AppointmentInfoDto) => void
 }
 
 export default function MonthView({ cursor, appointments, onDateClick, onAppointmentClick }: MonthViewProps) {
@@ -14,7 +14,7 @@ export default function MonthView({ cursor, appointments, onDateClick, onAppoint
     const firstDay = new Date(year, month, 1).getDay()
     const daysInMonth = new Date(year, month + 1, 0).getDate()
 
-    const appointmentsByDate = new Map<string, Appointment[]>()
+    const appointmentsByDate = new Map<string, AppointmentInfoDto[]>()
     for (const a of appointments) {
         if (!appointmentsByDate.has(a.date)) appointmentsByDate.set(a.date, [])
         appointmentsByDate.get(a.date)!.push(a)
@@ -47,11 +47,11 @@ export default function MonthView({ cursor, appointments, onDateClick, onAppoint
                                 {dayAppts.slice(0, 3).map((a) => (
                                     <div
                                         key={a.id}
-                                        className={`flex items-center gap-1 rounded px-1 py-0.5 cursor-pointer hover:opacity-80 transition ${getStatusColor(a.status)}`}
+                                        className={`flex items-center gap-1 rounded px-1 py-0.5 cursor-pointer hover:opacity-80 transition ${getStatusColor(a.statusId)}`}
                                         onClick={(e) => { e.stopPropagation(); onAppointmentClick?.(a); }}
                                     >
-                                        <span className={`w-1.5 h-1.5 rounded-full ${getStatusBadgeColor(a.status)}`} />
-                                        <span className="truncate">{a.patientFullName}</span>
+                                        <span className={`w-1.5 h-1.5 rounded-full ${getStatusBadgeColor(a.statusId)}`} />
+                                        <span className="truncate">{a.patientName}</span>
                                     </div>
                                 ))}
                                 {dayAppts.length > 3 && (

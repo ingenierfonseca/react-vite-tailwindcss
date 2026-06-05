@@ -9,6 +9,7 @@ import { SessionPlanService } from "@/services/session-plan/sessionPlan.service"
 import type { SessionPlan } from "@/services/treatment-plan/treatmentPlan.type";
 import { formatDateToMMDameDDYYYY } from "@/utils/date.util";
 import { useNavigate } from "react-router";
+import type { ClinicalSession } from "@/services/clinical-session/clinicalSession.type";
 
 const cardinfo = [
     {
@@ -42,6 +43,7 @@ interface PatientProfileProps {
 
 export default function PatientProfile({ customer, setIsOpen, setIsOpenTransition, openSessionTreatmentPlan }: PatientProfileProps) {
     const [treatmentHistory, setTreatmentHistory] = useState<SessionPlan[]>([])
+    const [consultationHistory, setConsultationHistory] = useState<ClinicalSession[]>([])
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -99,9 +101,9 @@ export default function PatientProfile({ customer, setIsOpen, setIsOpenTransitio
             </div>
 
             <div className="mt-4 rounded-md p-2 border dark:border-slate-300">
-                <p className="font-semibold text-black dark:text-white">Treatment history</p>
+                <p className="font-semibold text-black dark:text-white">Historial de tratamientos</p>
                 {treatmentHistory.length === 0 ? (
-                    <p className="text-sm text-gray-500 mt-2">No treatment history available.</p>
+                    <p className="text-sm text-gray-500 mt-2">No hay historial de tratamientos disponible.</p>
                 ) : (
                 treatmentHistory.map((treatment) => (
                     <div key={treatment.id}
@@ -123,10 +125,34 @@ export default function PatientProfile({ customer, setIsOpen, setIsOpenTransitio
             </div>
 
             <div className="mt-4 rounded-md p-2 border dark:border-slate-300">
+                <p className="font-semibold text-black dark:text-white">Historial de consultas</p>
+                {consultationHistory.length === 0 ? (
+                    <p className="text-sm text-gray-500 mt-2">No hay historial de consultas disponible.</p>
+                ) : (
+                consultationHistory.map((consultation) => (
+                    <div key={consultation.id}
+                        className="flex mt-4 p-2 rounded-md bg-slate-100 dark:bg-slate-900 cursor-pointer dark:hover:bg-slate-700 hover:bg-slate-200 transition-colors"
+                        onClick={() => navigate(`/patients/${customer.id}/consultation-history/${consultation.id}`)}>
+                        <div className="w-10 h-10 p-2 rounded-full dark:bg-slate-300 flex items-center justify-center">
+                            <p>MF</p>
+                        </div>
+                        <div className="mx-2">
+                            <p className="text-sm text-black dark:text-white">{consultation.reasonForVisit}</p>
+                            <p className="text-xs dark:text-slate-300">Dra. Melissa Fonseca</p>
+                            <p className="text-xs dark:text-slate-400">{consultation.clinicalNotes}</p>
+                        </div>
+                        <div className="ml-auto">
+                            <p className="text-xs text-gray-500 dark:text-slate-400">{formatDateToMMDameDDYYYY(consultation.date)}</p>
+                        </div>
+                    </div>
+                )))}
+            </div>
+
+            <div className="mt-4 rounded-md p-2 border dark:border-slate-300">
                 <p className="font-semibold text-black dark:text-white">Acciones Rapidas</p>
                 <div className="grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-4 mt-4">
                     <button className="flex-1 px-4 py-2 bg-primary text-white rounded-md hover:bg-primary/90">Agendar Cita</button>
-                    <button className="flex-1 px-4 py-2 border border-slate-300 text-black dark:text-white rounded-md hover:bg-slate-300 dark:hover:bg-slate-700" onClick={() => setIsOpenTransition(true)}>Iniciar Diagnóstico</button>
+                    <button className="flex-1 px-4 py-2 border border-slate-300 text-black dark:text-white rounded-md hover:bg-slate-300 dark:hover:bg-slate-700" onClick={() => setIsOpenTransition(true)}>Iniciar Consulta</button>
                     <button className="flex-1 px-4 py-2 border border-slate-300 text-black dark:text-white rounded-md hover:bg-slate-300 dark:hover:bg-slate-700" onClick={() => openSessionTreatmentPlan(true)}>Continuar Plan de Tratamiento</button>
                     <button className="flex-1 px-4 py-2 border border-slate-300 text-black dark:text-white rounded-md hover:bg-slate-300 dark:hover:bg-slate-700">Actualizar Información</button>
                     <button className="flex-1 px-4 py-2 border border-slate-300 text-black dark:text-white rounded-md hover:bg-slate-300 dark:hover:bg-slate-700">Ver Facturas</button>

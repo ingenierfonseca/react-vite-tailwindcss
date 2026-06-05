@@ -1,5 +1,5 @@
-import { useEffect } from "react"
-import { useCreateAppointment } from "../appointment.hooks"
+import { useEffect, useMemo } from "react"
+import { useAppointmentForm } from "../appointment.hooks"
 import { AppointmentStatus, type Appointment } from "@/models/appointment.types"
 import { PaginatedAutocomplete } from "@/components/pagination-data/PaginatedAutocomplete"
 import { CustomerService } from "@/services/customer/customer.service"
@@ -17,19 +17,33 @@ interface AppointmentCreateProps {
     setIsOpen: (value: boolean) => void
     refetch: () => void
 }
+const TERMINAL_STATUSES: number[] = [AppointmentStatus.COMPLETED, AppointmentStatus.CANCELLED, AppointmentStatus.NO_SHOW]
+
 export default function AppointmentCreate({ itemParam, setIsOpen, refetch }: AppointmentCreateProps) {
     const {
         appointment,
         updateAppointment,
         setAppointment,
-        create,
+        save,
         loading,
-    } = useCreateAppointment()
+        lastStatusId,
+        setLastStatusId,
+    } = useAppointmentForm()
+
+    const isReadOnly = useMemo(
+        () => !!(appointment.id && appointment.id > 0 && 
+            appointment.statusId && 
+            TERMINAL_STATUSES.includes(appointment.statusId) && 
+            appointment.statusId === lastStatusId),
+        [appointment.id, appointment.statusId, lastStatusId]
+    )
 
     useEffect(() => {
         if (itemParam) {
+            setLastStatusId(itemParam.statusId ?? null)
             setAppointment(itemParam)
         } else {
+            setLastStatusId(null)
             setAppointment({
                 id: 0,
                 customerId: 0,
@@ -43,7 +57,7 @@ export default function AppointmentCreate({ itemParam, setIsOpen, refetch }: App
     }, [itemParam])
 
     const handleSave = async () => {
-        const response = await create()
+        const response = await save()
         if (response) {
             refetch()
             setIsOpen(false)
@@ -68,6 +82,7 @@ export default function AppointmentCreate({ itemParam, setIsOpen, refetch }: App
                     onChange={(value) =>
                         updateAppointment("customerId", value)
                     }
+                    disabled={isReadOnly}
                     fetchData={CustomerService.get}
                     getValue={(item) => item.id}
                     getLabel={(item) => `${item.firstName.trim()} ${item.lastName.trim()}`}
@@ -76,6 +91,7 @@ export default function AppointmentCreate({ itemParam, setIsOpen, refetch }: App
                     label="Doctor"
                     value={appointment ? appointment.doctorId : undefined}
                     onChange={(value) => updateAppointment("doctorId", value)}
+                    disabled={isReadOnly}
                     fetchData={DoctorService.get}
                     getValue={(item) => item.id}
                     getLabel={(item) => `${item.firstName.trim()} ${item.lastName.trim()}`}
@@ -89,6 +105,7 @@ export default function AppointmentCreate({ itemParam, setIsOpen, refetch }: App
                     onChange={(value) =>
                         updateAppointment("appointmentTypeId", value)
                     }
+                    disabled={isReadOnly}
                     fetchData={AppointmentTypeService.get}
 
                     getValue={(item) => item.id}
@@ -100,6 +117,7 @@ export default function AppointmentCreate({ itemParam, setIsOpen, refetch }: App
                     onChange={(value) =>
                         updateAppointment("resourceId", value)
                     }
+                    disabled={isReadOnly}
                     fetchData={ResourceService.get}
                     getValue={(item) => item.id}
                     getLabel={(item) => `${item.name}`}
@@ -111,6 +129,7 @@ export default function AppointmentCreate({ itemParam, setIsOpen, refetch }: App
                     label="Fecha"
                     value={appointment?.date ? dayjs(appointment.date) : null}
                     onChange={(val) => updateAppointment("date", val ? val.format("YYYY-MM-DD") : null)}
+                    disabled={isReadOnly}
                 />
                 <TimePicker
                     className="flex-1"
@@ -121,6 +140,7 @@ export default function AppointmentCreate({ itemParam, setIsOpen, refetch }: App
                             : null
                     }
                     onChange={(val) => updateAppointment("startTime", val ? val.format("HH:mm:ss") : null)}
+                    disabled={isReadOnly}
                 />
             </div>
 
@@ -132,6 +152,7 @@ export default function AppointmentCreate({ itemParam, setIsOpen, refetch }: App
                         onChange={(value) =>
                             updateAppointment("statusId", value)
                         }
+                        disabled={isReadOnly}
                         fetchData={AppointmentStatusService.get}
                         getValue={(item) => item.id}
                         getLabel={(item) => `${item.name}`}
@@ -139,10 +160,12 @@ export default function AppointmentCreate({ itemParam, setIsOpen, refetch }: App
                     <FormControlLabel
                         label="Confirmar Cita"
                         className="flex-1 dark:text-slate-400"
+                        disabled={isReadOnly}
                         control={
                             <Checkbox className="dark:text-primary-dark!"
                                 checked={appointment.isConfirmed}
                                 onChange={(e) => updateAppointment("isConfirmed", e.target.checked)}
+                                disabled={isReadOnly}
                             />
                         }
                     />
@@ -160,6 +183,7 @@ export default function AppointmentCreate({ itemParam, setIsOpen, refetch }: App
                             updateAppointment("notes", e.target.value)
                         }
                     }}
+                    disabled={isReadOnly}
                     helperText={`${appointment.notes?.length || 0}/${300}`}
                     slotProps={{
                         input: {
@@ -176,13 +200,14 @@ export default function AppointmentCreate({ itemParam, setIsOpen, refetch }: App
                     label="Motivo cancelación"
                     multiline
                     rows={2}
-                    value={appointment.notes ?? ""}
+                    value={appointment.cancellationReason ?? ""}
                     onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
                         if (e.target.value.length <= 100) {
-                            updateAppointment("notes", e.target.value)
+                            updateAppointment("cancellationReason", e.target.value)
                         }
                     }}
-                    helperText={`${appointment.notes?.length || 0}/${100}`}
+                    disabled={isReadOnly}
+                    helperText={`${appointment.cancellationReason?.length || 0}/${100}`}
                     slotProps={{
                         input: {
                             inputProps: {
@@ -193,14 +218,16 @@ export default function AppointmentCreate({ itemParam, setIsOpen, refetch }: App
                 />
             }
 
-            <div className="flex justify-center">
-                <ButtonSaveApp
-                    className="flex-6"
-                    label="Cita"
-                    onClick={() => handleSave()}
-                    loading={loading}
-                />
-            </div>
+            {!isReadOnly &&
+                <div className="flex justify-center">
+                    <ButtonSaveApp
+                        className="flex-6"
+                        label="Cita"
+                        onClick={() => handleSave()}
+                        loading={loading}
+                    />
+                </div>
+            }
         </div>
     )
 }

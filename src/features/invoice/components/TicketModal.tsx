@@ -1,14 +1,36 @@
-import { X } from "lucide-react";
+import { PaymentService } from "@/services/payment/payment.service";
+import type { PaymentBaucherDto } from "@/services/payment/payment.type";
+import { Receipt, X } from "lucide-react";
+import { useEffect, useState } from "react";
 
 interface TicketModalProps {
   isOpen: boolean;
   onClose: () => void;
   title: string;
+  id: number;
   textBtnConfirm: string,
   clickBtnConfirm: () => void;
 }
 
-export default function TickectModal({ title, textBtnConfirm, isOpen, onClose, clickBtnConfirm }: TicketModalProps) {
+export default function TickectModal({ title, textBtnConfirm, isOpen, onClose, clickBtnConfirm, id }: TicketModalProps) {
+  const [baucher, setBaucher] = useState<PaymentBaucherDto>()
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    console.log("Valores actuales del Modal -> isOpen:", isOpen, " | id:", id);
+    if (id) {
+      setLoading(true);
+      PaymentService.getBaucher(id)
+        .then(setBaucher)
+        .catch((error) => {
+          console.error("Error fetching baucher:", error);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    }
+  }, [id]);
+
   if (!isOpen) return null;
 
   return (
@@ -35,7 +57,13 @@ export default function TickectModal({ title, textBtnConfirm, isOpen, onClose, c
           </button>
         </div>
 
-        <TicketFactura />
+        {loading ? (
+          <LoadingBaucher />
+        ) : baucher && (
+          <div className="animate-in fade-in duration-500">
+            <TicketBaucher baucher={baucher} />
+          </div>
+        )}
 
         {/* Pie del Modal (Opcional) */}
         <div className="flex justify-end gap-3 p-6 bg-slate-50 dark:bg-slate-800/50">
@@ -57,71 +85,120 @@ export default function TickectModal({ title, textBtnConfirm, isOpen, onClose, c
   );
 }
 
-const TicketFactura = () => {
+const LoadingBaucher = () => (
+  <div className="flex flex-col items-center justify-center py-20 gap-5 min-h-[300px]">
+    <div className="relative">
+      <div className="absolute inset-0 bg-primary/20 rounded-full blur-xl animate-pulse" />
+      <div className="relative p-3.5 rounded-2xl bg-primary/10">
+        <Receipt className="w-8 h-8 text-primary animate-spin" />
+      </div>
+    </div>
+    <div className="text-center space-y-2">
+      <p className="text-sm font-semibold text-slate-600 dark:text-slate-300">
+        Generando comprobante
+      </p>
+      <p className="text-xs text-slate-400 dark:text-slate-500">
+        Obteniendo datos de pago
+      </p>
+      <div className="flex justify-center gap-1.5 pt-1">
+        <span className="w-1.5 h-1.5 rounded-full bg-primary/60 animate-bounce"
+              style={{ animationDelay: '0ms' }} />
+        <span className="w-1.5 h-1.5 rounded-full bg-primary/60 animate-bounce"
+              style={{ animationDelay: '150ms' }} />
+        <span className="w-1.5 h-1.5 rounded-full bg-primary/60 animate-bounce"
+              style={{ animationDelay: '300ms' }} />
+      </div>
+    </div>
+  </div>
+)
+
+const TicketBaucher = ({ baucher }: { baucher: PaymentBaucherDto }) => {
   return (
     <div className="w-[80mm] p-4 bg-white text-black font-mono text-[12px] leading-tight">
       {/* Encabezado */}
       <div className="text-center mb-4">
-        <h1 className="text-[16px] font-bold uppercase">Nombre de la Empresa</h1>
-        <p>NIT: 123456789-0</p>
-        <p>Calle Falsa 123, Ciudad</p>
-        <p>Tel: (123) 456-7890</p>
+        <h1 className="text-[16px] font-bold uppercase">Clinica Dental Melissa</h1>
+        <p>NIT: {baucher.companyNIT}</p>
+        <p>{baucher.companyAddress}</p>
+        <p>Tel: {baucher.companyPhone}</p>
       </div>
 
       {/* Información de la Factura */}
       <div className="border-t border-dashed border-black pt-2 mb-2">
-        <p>Factura: #000125</p>
-        <p>Fecha: 22/04/2026 16:20</p>
+        <p>Factura: {baucher.invoiceNumber}</p>
+        <p>Fecha: {baucher.paymentDate}</p>
         <p>Cajero: Administrador</p>
       </div>
 
       {/* Tabla de Productos */}
-      <div className="border-t border-dashed border-black pt-2">
-        <div className="flex justify-between font-bold border-b border-dashed border-black mb-1">
-          <span className="w-1/2">Descripción</span>
-          <span className="w-1/6 text-center">Cant</span>
-          <span className="w-1/3 text-right">Total</span>
+      {baucher.items && baucher.items.length > 0 && 
+        <div className="border-t border-dashed border-black pt-2">
+          <div className="flex justify-between font-bold border-b border-dashed border-black mb-1">
+            <span className="w-1/2">Descripción</span>
+            <span className="w-1/6 text-center">Cant</span>
+            <span className="w-1/3 text-right">Total</span>
+          </div>
+          
+          {/* Ítems de ejemplo */}
+          {baucher.items.map((item, index) => (
+            <div key={index} className="flex justify-between my-1">
+              <span className="w-1/2">{item.description}</span>
+              <span className="w-1/6 text-center">{item.quantity}</span>
+              <span className="w-1/3 text-right">${item.lineTotal.toFixed(2)}</span>
+            </div>
+          ))}
         </div>
-        
-        {/* Ítems de ejemplo */}
-        <div className="flex justify-between my-1">
-          <span className="w-1/2">Paracetamol 500mg</span>
-          <span className="w-1/6 text-center">2</span>
-          <span className="w-1/3 text-right">$10.00</span>
+      }
+
+      {baucher && baucher.isPartialPayment && 
+      <div className="border-t border-dashed border-black mt-2 pt-2">
+        <div className="flex justify-between font-bold text-[14px]">
+          <span>Saldo inicial:</span>
+          <span>${baucher.invoiceTotal.toFixed(2)}</span>
         </div>
-        <div className="flex justify-between my-1">
-          <span className="w-1/2">Alcohol Etílico 1L</span>
-          <span className="w-1/6 text-center">1</span>
-          <span className="w-1/3 text-right">$5.50</span>
+        <div className="flex justify-between text-[11px] mt-1">
+          <span>Saldo anterior:</span>
+          <span>${baucher.previousBalance.toFixed(2)}</span>
+        </div>
+        <div className="flex justify-between text-[11px] mt-1">
+          <span>Abono:</span>
+          <span>${baucher.amountPaid.toFixed(2)}</span>
+        </div>
+        <div className="flex justify-between text-[11px]">
+          <span>Saldo actual:</span>
+          <span>${baucher.remainingBalance.toFixed(2)}</span>
         </div>
       </div>
+      }
 
       {/* Totales */}
+      {baucher && !baucher.isPartialPayment && 
       <div className="border-t border-dashed border-black mt-2 pt-2">
         <div className="flex justify-between font-bold text-[14px]">
           <span>TOTAL:</span>
-          <span>$15.50</span>
+          <span>${baucher.invoiceTotal.toFixed(2)}</span>
         </div>
         <div className="flex justify-between text-[11px] mt-1">
           <span>Efectivo:</span>
-          <span>$20.00</span>
+          <span>${baucher.amountPaid.toFixed(2)}</span>
         </div>
         <div className="flex justify-between text-[11px]">
           <span>Cambio:</span>
-          <span>$4.50</span>
+          <span>${baucher.remainingBalance.toFixed(2)}</span>
         </div>
       </div>
+      }
 
       {/* Pie de página (Legal) */}
       <div className="text-center mt-6">
         <p className="italic text-[10px]">¡Gracias por su compra!</p>
-        <p className="text-[9px] mt-2">
+        {/*<p className="text-[9px] mt-2">
           Resolución DIAN No. 123456 <br />
           Rango 0001 al 5000 - Vigencia 12 meses
         </p>
         <div className="mt-4 border-t border-dashed border-black pt-2">
           <p className="text-[10px]">Visítanos en: www.tuempresa.com</p>
-        </div>
+        </div>*/}
       </div>
     </div>
   );

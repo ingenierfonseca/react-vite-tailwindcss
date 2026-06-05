@@ -141,7 +141,10 @@ export default function PatientBillInfo({ customer, setIsOpen, reload, openInvoi
                                 <TooltipButton
                                     text="Imprimir Pago"
                                     icon={<Printer />}
-                                    onClick={() => setIsOpenTicket(true)}
+                                    onClick={() => {
+                                        setPaymentId(payment.id)
+                                        setIsOpenTicket(true)
+                                    }}
                                 />
                                 <TooltipButton
                                     text="Descargar Pago"
@@ -180,7 +183,7 @@ export default function PatientBillInfo({ customer, setIsOpen, reload, openInvoi
             </div>
 
             <PaymentModal id={paymentId} customer={customer!} isModalOpen={isOpenModal} setIsModalOpen={setIsOpenModal} onClick={() => { setReload((prev) => prev + 1); reload() }} />
-            <TickectModal isOpen={isOpenTicket} onClose={() => setIsOpenTicket(false)} title={"Baucher"} textBtnConfirm={"Imprimir"} clickBtnConfirm={() => { }} />
+            <TickectModal id={paymentId} isOpen={isOpenTicket} onClose={() => setIsOpenTicket(false)} title={"Baucher"} textBtnConfirm={"Imprimir"} clickBtnConfirm={() => { }} />
             <InvoicePrintModal isOpen={false} onClose={() => setIsOpenTicket(false)} title={"Baucher"} textBtnConfirm={"Imprimir"} clickBtnConfirm={() => { }} />
             <ModalInvoice isOpen={isOpenInvoicePDF} onClose={() => setIsOpenInvoicePDF(false)} title={"Factura"}>
                 <PDFViewer width="100%" height="98%">

@@ -56,6 +56,19 @@ export interface CreateAppointmentPayload {
     appointmentTypeId: number;
 }
 
+export interface UpdateAppointmentPayload {
+    customerId: number;
+    doctorId: number;
+    resourceId: number;
+    date: string;
+    startTime: string;
+    appointmentTypeId: number;
+    statusId: number;
+    notes?: string;
+    cancellationReason?: string;
+    isConfirmed?: boolean;
+}
+
 export interface Chair {
     id: number;
     name: string;

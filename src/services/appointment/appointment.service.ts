@@ -1,6 +1,6 @@
 import api from "../../api/api";
 import { ENDPOINTS } from "../../api/endpoints";
-import type { AppointmentFilters, AppointmentInfoDto, AppointmentStats, CreateAppointmentPayload } from "../../models/appointment.types";
+import type { AppointmentFilters, AppointmentInfoDto, AppointmentStats, CreateAppointmentPayload, UpdateAppointmentPayload } from "../../models/appointment.types";
 
 const method = ENDPOINTS.APPOINTMENT
 
@@ -30,7 +30,7 @@ export const AppointmentService = {
         return data;
     },
 
-    update: async (id: number, payload: Partial<CreateAppointmentPayload>) => {
+    update: async (id: number, payload: UpdateAppointmentPayload) => {
         const { data } = await api.put(`${method}${id}`, payload);
         return data;
     },
