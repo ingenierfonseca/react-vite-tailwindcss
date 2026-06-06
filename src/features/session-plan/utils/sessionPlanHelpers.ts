@@ -64,7 +64,10 @@ export const STEPS = {
         fields: [
             "session.reasonForVisit",
             "session.clinicalNotes",
-            "session.doctorId"
+            "session.doctorId",
+            "session.specialtyId",
+            "session.consultationTypeId",
+            "session.date",
         ]
     },
     2: { fields: [] },

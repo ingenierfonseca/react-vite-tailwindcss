@@ -7,12 +7,10 @@ import { useSessionPlan } from "./useSessionPlan";
 export const useSessionPlanForm = (customer: Customer) => {
     const form = useSessionPlan(customer);
     const stepper = useSessionPlanStepper(form!.form);
-    const doctorsQuery = useDoctors();
     const submit = useSessionPlanSubmit(form!.form);
 
     return {
         form,
-        doctors: doctorsQuery.data ?? [],
         loading: submit.loading,
         ...stepper,
         onSubmit: submit.onSubmit,

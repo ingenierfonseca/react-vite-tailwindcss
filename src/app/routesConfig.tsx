@@ -20,6 +20,8 @@ import PermissionListPage from "@/features/administration/permissions/Permission
 import ResourceTypeListPage from "@/features/administration/resource-type/ResourceTypeListPage";
 import ResourceListPage from "@/features/administration/resource/ResourceListPage";
 import AppointmentStatusListPage from "@/features/administration/appointment-status/AppointmentStatusListPage";
+import ConsultationTypeListPage from "@/features/administration/consultation-type/ConsultationTypeListPage";
+import SpecialtyListPage from "@/features/administration/specialty/SpecialtyListPage";
 
 export const routesConfig = [
   {
@@ -121,6 +123,16 @@ export const routesConfig = [
     path: "/appointment-statuses",
     title: "Estados de Cita",
     element: <AppointmentStatusListPage />
+  },
+  {
+    path: "/consultation-types",
+    title: "Tipos de Consulta",
+    element: <ConsultationTypeListPage />
+  },
+  {
+    path: "/specialties",
+    title: "Especialidades",
+    element: <SpecialtyListPage />
   },
   {
     path: "/imports/patients",

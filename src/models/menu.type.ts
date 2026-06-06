@@ -81,7 +81,9 @@ export function getMenuData() {
                 { id: "permissions", label: "Permisos", path: "permissions", resource: "permissions" },
                 { id: "resourceTypes", label: "Tipos de Recurso", path: "resource-types", resource: "resourcetypes" },
                 { id: "resources", label: "Recursos", path: "resources", resource: "resources" },
-                { id: "appointmentStatuses", label: "Estados de Cita", path: "appointment-statuses", resource: "appointmentstatuses" }
+                { id: "appointmentStatuses", label: "Estados de Cita", path: "appointment-statuses", resource: "appointmentstatuses" },
+                { id: "consultationTypes", label: "Tipos de Consulta", path: "consultation-types", resource: "consultationtypes" },
+                { id: "specialties", label: "Especialidades", path: "specialties", resource: "specialties" }
             ]
         },
         {

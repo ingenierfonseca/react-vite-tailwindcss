@@ -11,6 +11,7 @@ import ResumeStep from "./components/steps/ResumeStep";
 import { useSessionPlanForm } from "./hooks/useSessionPlanForm";
 import { FormProvider } from "react-hook-form";
 import TreatmentPaymentPlanStep from "./components/steps/TreatmentPaymentPlanStep";
+import ConsultationStep from "./components/steps/ConsultationStep";
 
 interface ClinicalAssessmentProps {
     customer: Customer;
@@ -42,7 +43,7 @@ export default function ClinicalAssessment({ customer, setIsOpen }: ClinicalAsse
                         style={{ transform: `translateX(-${(step - 1) * 100}%)` }}
                     >
                         {/* Step 1 */}
-                        <DiagnosisStep doctors={doctors!} />
+                        <ConsultationStep doctors={doctors!} />
 
                         {/* Step 2 */}
                         <OdontogramStep />

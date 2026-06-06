@@ -9,3 +9,8 @@ export interface Consultation {
     statusId: number;
     notes: string;
 }
+
+export interface ConsultationType {
+    id: number;
+    name: string;
+}
