@@ -2,25 +2,24 @@ import { EllipsisVertical } from "lucide-react";
 import { Navigate } from "react-router";
 import PageComponent from "../../../components/commons/PageComponent";
 import PaginatedDataTable from "../../../components/pagination-data/PaginatedDataTable";
-import { useConsultationTypes } from "./hooks/useConsultationTypes";
-import ConsultationTypeForm from "./components/ConsultationTypeForm";
+import { useServices } from "./hooks/useServices";
+import ServiceForm from "./components/ServiceTypeForm";
 import { usePermissions } from "../../../hooks/usePermissions";
 import type { Header } from "../../invoice/components/InvoiceDetail";
 
 const headers: Header[] = [
     { header: "Nombre", className: "flex-3" },
-    { header: "Estado", className: "flex-1" },
 ];
 
-const RESOURCE = "consultationtypes";
+const RESOURCE = "services";
 
-export default function ConsultationTypeListPage() {
+export default function ServiceListPage() {
     const { can } = usePermissions();
     const {
         isOpenCreateOrEdit, isOpenTransitionRight, openCreate,
         load, data, item, openPopUp, setItem, setOpenPopUp,
         setCurrentPage, pages, resetItem
-    } = useConsultationTypes();
+    } = useServices();
 
     if (!can("view", RESOURCE)) {
         return <Navigate to="/not-found" replace />;
@@ -29,7 +28,7 @@ export default function ConsultationTypeListPage() {
     return (
         <PageComponent
             title="Tipos de Consulta"
-            description="Administra los tipos de consulta disponibles en la clínica"
+            description="Administra los tipos de consulta"
             textButton="Agregar Tipo de Consulta"
             showButton={can("create", RESOURCE)}
             onclick={() => { resetItem(); openCreate(true); }}
@@ -45,9 +44,6 @@ export default function ConsultationTypeListPage() {
                         <div key={item.id}
                             className={`flex px-4 py-3 gap-2 items-center ${index % 2 !== 0 ? "bg-slate-200 dark:bg-slate-800" : ""} hover:bg-slate-300 dark:hover:bg-slate-800/50 transition-colors`}>
                             <span className="flex-3 dark:text-slate-200">{item.name}</span>
-                            <span className={`flex-1 text-sm font-semibold ${item.isActive ? "text-emerald-500" : "text-amber-500"}`}>
-                                {item.isActive ? "Activo" : "Inactivo"}
-                            </span>
                             <div className="flex-1 flex justify-end relative">
                                 <button onClick={() => setOpenPopUp(item.id)}
                                     className="p-1 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-full transition-colors">
@@ -73,7 +69,7 @@ export default function ConsultationTypeListPage() {
             <div className={`fixed top-0 right-0 h-full w-full md:w-7/12 bg-white dark:bg-slate-800 shadow-2xl z-50 
                             transform transition-transform duration-500 ease-in-out 
                             ${isOpenTransitionRight ? "translate-x-0" : "translate-x-full"}`}>
-                {isOpenCreateOrEdit && <ConsultationTypeForm setIsOpen={openCreate} itemParam={item} reload={load} />}
+                {isOpenCreateOrEdit && <ServiceForm setIsOpen={openCreate} itemParam={item} reload={load} />}
             </div>
         </PageComponent>
     );

@@ -9,3 +9,8 @@ export interface ClinicalSession {
     consultationTypeId: number;
     statusId: number;
 }
+
+export interface ClinicalSessionShortInfo {
+    id: number;
+    consultationNumber: string;
+}

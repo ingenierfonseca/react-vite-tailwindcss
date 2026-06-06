@@ -1,6 +1,6 @@
-export interface Specialty {
+export interface Service {
     id: number;
     name: string;
-    description: string;
+    description?: string;
     isActive: boolean;
 }

@@ -86,7 +86,7 @@ export default function TickectModal({ title, textBtnConfirm, isOpen, onClose, c
 }
 
 const LoadingBaucher = () => (
-  <div className="flex flex-col items-center justify-center py-20 gap-5 min-h-[300px]">
+  <div className="flex flex-col items-center justify-center py-20 gap-5 min-h-75">
     <div className="relative">
       <div className="absolute inset-0 bg-primary/20 rounded-full blur-xl animate-pulse" />
       <div className="relative p-3.5 rounded-2xl bg-primary/10">

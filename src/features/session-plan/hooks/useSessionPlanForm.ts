@@ -1,6 +1,5 @@
 import type { Customer } from "@/services/customer/customer.type";
 import { useSessionPlanStepper } from "./useSessionPlanStepper";
-import { useDoctors } from "./useDoctors";
 import { useSessionPlanSubmit } from "./useSessionPlanSubmit";
 import { useSessionPlan } from "./useSessionPlan";
 

@@ -1,6 +1,7 @@
 import api from "../../api/api";
 import { ENDPOINTS } from "../../api/endpoints";
 import type { PaginatedResponse } from "../../models/paginatedResponse";
+import type { InvoicePrint } from "../../models/invoicePrint.type";
 import { createCatalogService } from "../baseCatalogService";
 import type { CustomerDashboard } from "../customer/customer.type";
 import type { PaymentDTO } from "../payment/payment.type";
@@ -32,6 +33,10 @@ export const InvoiceService =  {
     },
     getPaymentHistoryByCustomer: async (id:number): Promise<PaymentDTO[]> => {
         const { data } = await api.get<PaymentDTO[]>(`${method}customer/${id}/payments`);
+        return data;
+    },
+    print: async (id: number): Promise<InvoicePrint> => {
+        const { data } = await api.get<InvoicePrint>(`${method}${id}/print`);
         return data;
     }
 }

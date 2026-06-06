@@ -1,7 +1,9 @@
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import AvatarInfo from "../../../components/commons/AvatarInfo"
 import PageRightComponent from "../../../components/commons/PageRightComponent"
 import type { CustomerInvoiceDTO } from "../../../services/invoice/customerinvoice.dto.type"
+import type { InvoicePrint } from "../../../models/invoicePrint.type"
+import { InvoiceService } from "../../../services/invoice/invoice.service"
 import { usePatientBill } from "../hooks/patientBill.hook"
 import PaymentModal from "./PaymentModal"
 import { formatDateToMMDameDDYYYY } from "../../../utils/date.util"
@@ -21,17 +23,7 @@ interface PatientBillInfoProps {
     openInvoiceDetail: (id: string) => void
 }
 
-const datosEjemplo = {
-    clienteNombre: "Juan Pérez",
-    clienteId: "12345678-K",
-    numeroFactura: "2026-001",
-    items: [
-        { descripcion: "Limpieza Dental Pro", cantidad: 1, precioUnitario: 45.00 },
-        { descripcion: "Resina Simple", cantidad: 2, precioUnitario: 35.00 }
-    ]
-};
-
-export default function PatientBillInfo({ customer, setIsOpen, reload, openInvoiceDetail }: PatientBillInfoProps) {
+export default function PatientBillInfo({ customer, setIsOpen, reload/*, openInvoiceDetail*/ }: PatientBillInfoProps) {
     const {
         setCustomer,
         invoiceData,
@@ -51,6 +43,9 @@ export default function PatientBillInfo({ customer, setIsOpen, reload, openInvoi
         setIsOpenInvoicePDF,
         setPaymentId
     } = usePatientBill()
+
+    const [invoicePrintData, setInvoicePrintData] = useState<InvoicePrint | null>(null)
+    const [printLoading, setPrintLoading] = useState(false)
 
     useEffect(() => {
         if (customer) {
@@ -91,15 +86,27 @@ export default function PatientBillInfo({ customer, setIsOpen, reload, openInvoi
                         </div>
                         {openPopUp === `inv-${invoice.id}` && (
                             <div className="absolute flex flex-col w-fit right-0 mt-2 mr-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-900 rounded-lg shadow-lg z-50" onMouseLeave={() => setOpenPopUp('')}>
-                                <TooltipButton
+                                {/*<TooltipButton
                                     text="Ver Factura"
                                     icon={<Receipt />}
                                     onClick={() => openInvoiceDetail(invoice.id.toString())}
-                                />
+                                />*/}
                                 <TooltipButton
                                     text="Imprimir Factura"
                                     icon={<Printer />}
-                                    onClick={() => setIsOpenInvoicePDF(true)}
+                                    onClick={async () => {
+                                        setInvoicePrintData(null)
+                                        setPrintLoading(true)
+                                        setIsOpenInvoicePDF(true)
+                                        try {
+                                            const data = await InvoiceService.print(invoice.id)
+                                            setInvoicePrintData(data)
+                                        } catch {
+                                            setIsOpenInvoicePDF(false)
+                                        } finally {
+                                            setPrintLoading(false)
+                                        }
+                                    }}
                                 />
                             </div>
                         )}
@@ -185,10 +192,16 @@ export default function PatientBillInfo({ customer, setIsOpen, reload, openInvoi
             <PaymentModal id={paymentId} customer={customer!} isModalOpen={isOpenModal} setIsModalOpen={setIsOpenModal} onClick={() => { setReload((prev) => prev + 1); reload() }} />
             <TickectModal id={paymentId} isOpen={isOpenTicket} onClose={() => setIsOpenTicket(false)} title={"Baucher"} textBtnConfirm={"Imprimir"} clickBtnConfirm={() => { }} />
             <InvoicePrintModal isOpen={false} onClose={() => setIsOpenTicket(false)} title={"Baucher"} textBtnConfirm={"Imprimir"} clickBtnConfirm={() => { }} />
-            <ModalInvoice isOpen={isOpenInvoicePDF} onClose={() => setIsOpenInvoicePDF(false)} title={"Factura"}>
-                <PDFViewer width="100%" height="98%">
-                    <InvoicePDF {...datosEjemplo} />
-                </PDFViewer>
+            <ModalInvoice isOpen={isOpenInvoicePDF} onClose={() => { setIsOpenInvoicePDF(false); setInvoicePrintData(null) }} title={"Factura"}>
+                {printLoading || !invoicePrintData ? (
+                    <div className="flex items-center justify-center h-full">
+                        <CircularProgress size={60} color="primary" />
+                    </div>
+                ) : (
+                    <PDFViewer width="100%" height="98%">
+                        <InvoicePDF {...invoicePrintData} />
+                    </PDFViewer>
+                )}
             </ModalInvoice>
         </PageRightComponent>
     )

@@ -20,7 +20,9 @@ export const createDefaultSessionPlanValues = (
     session: {
         id: 0,
         customerId: customer.id,
-        doctorId: 1,
+        specialtyId: 0,
+        doctorId: 0,
+        consultationTypeId: 0,
         date: dayjs().format("YYYY-MM-DD"),
         reasonForVisit: "",
         clinicalNotes: "",

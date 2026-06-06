@@ -15,8 +15,9 @@ export const sessionPlanSchema = z.object({
     doctorId: z.number().min(1, "Médico requerido"),
     specialtyId: z.number().min(1, "Especialidad requerida"),
     consultationTypeId: z.number().min(1, "Tipo de consulta requerido"),
+    consultationId: z.number().optional(),
     date: z.string(),
-    reasonForVisit: z.string(),
+    reasonForVisit: z.string().min(10, "Motivo de consulta requerido"),
     clinicalNotes: z.string(),
   }),
 

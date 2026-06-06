@@ -1,7 +1,7 @@
 import api from "../api/api";
 import type { PaginatedResponse, Result } from "../models/paginatedResponse";
 
-interface GetParams {
+export interface GetParams {
     size?: number;
     page: number;
     search: string;

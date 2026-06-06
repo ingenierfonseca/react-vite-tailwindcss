@@ -1,6 +1,6 @@
 import { useCatalog } from "../../../../hooks/useCatalog";
 import { ConsultationTypeService } from "../../../../services/consultation-type/consultationType.service";
-import type { ConsultationType } from "../../../../models/consultation.type";
+import type { ConsultationType } from "../../../../models/consultationType.type";
 
 export const useConsultationTypes = () => {
     const { setItem, ...rest } = useCatalog<ConsultationType>({
@@ -9,7 +9,7 @@ export const useConsultationTypes = () => {
 
     const resetItem = () => {
         setItem({
-            id: 0, name: ""
+            id: 0, name: "", description: "", isActive: true
         });
     };
 

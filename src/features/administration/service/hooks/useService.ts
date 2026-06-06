@@ -1,11 +1,11 @@
+import type { Service } from "@/models/service.type";
+import { ServiceService } from "@/services/service/service.service";
 import { useState } from "react";
 import { toast } from "react-toastify";
-import type { ConsultationType } from "../../../../models/consultationType.type";
-import { ConsultationTypeService } from "../../../../services/consultation-type/consultationType.service";
 
-export const useConsultationType = () => {
-    const [item, setItem] = useState<ConsultationType>({
-        id: 0, name: "", description: "", isActive: true
+export const useService = () => {
+    const [item, setItem] = useState<Service>({
+        id: 0, name: "", isActive: true
     });
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<any>(null);
@@ -17,10 +17,10 @@ export const useConsultationType = () => {
         if (!validate()) { setLoading(false); return success; }
         try {
             if (item.id) {
-                await ConsultationTypeService.put(item.id, item);
+                await ServiceService.put(item.id, item);
                 toast.success("Tipo de consulta actualizado correctamente");
             } else {
-                await ConsultationTypeService.post(item);
+                await ServiceService.post(item);
                 toast.success("Tipo de consulta creado correctamente");
             }
             success = true;
