@@ -146,7 +146,7 @@ export const routesConfig = [
     element: <PatientBulkUploadPage />
   },
   {
-    path: "/patients/:id/treatment-history/:treatmentId",
+    path: "/patients/:id/treatment-plan/:treatmentId",
     title: "Historial clinico",
     element: <CustomerClinicalHistoryDashboard />
   }

@@ -10,6 +10,7 @@ import type { SessionPlan } from "@/services/treatment-plan/treatmentPlan.type";
 import { formatDateToMMDameDDYYYY } from "@/utils/date.util";
 import { useNavigate } from "react-router";
 import type { ClinicalSession } from "@/services/clinical-session/clinicalSession.type";
+import { ClinicalSessionService } from "@/services/clinical-session/clinicalSession.service";
 
 const cardinfo = [
     {
@@ -38,10 +39,9 @@ interface PatientProfileProps {
     customer: Customer;
     setIsOpen: (value: boolean) => void;
     setIsOpenTransition: (value: boolean) => void;
-    openSessionTreatmentPlan: (value: boolean) => void;
 }
 
-export default function PatientProfile({ customer, setIsOpen, setIsOpenTransition, openSessionTreatmentPlan }: PatientProfileProps) {
+export default function PatientProfile({ customer, setIsOpen, setIsOpenTransition }: PatientProfileProps) {
     const [treatmentHistory, setTreatmentHistory] = useState<SessionPlan[]>([])
     const [consultationHistory, setConsultationHistory] = useState<ClinicalSession[]>([])
     const navigate = useNavigate();
@@ -53,6 +53,13 @@ export default function PatientProfile({ customer, setIsOpen, setIsOpenTransitio
             })
             .catch((error) => {
                 console.error("Error fetching treatment history:", error);
+            });
+        ClinicalSessionService.getSessionHistory(customer.id)
+            .then((response) => {
+                setConsultationHistory(response)
+            })
+            .catch((error) => {
+                console.error("Error fetching consultation history:", error);
             });
     }, [customer.id])
 
@@ -108,7 +115,7 @@ export default function PatientProfile({ customer, setIsOpen, setIsOpenTransitio
                 treatmentHistory.map((treatment) => (
                     <div key={treatment.id}
                         className="flex mt-4 p-2 rounded-md bg-slate-100 dark:bg-slate-900 cursor-pointer dark:hover:bg-slate-700 hover:bg-slate-200 transition-colors"
-                        onClick={() => navigate(`/patients/${customer.id}/treatment-history/${treatment.id}`)}>
+                        onClick={() => navigate(`/patients/${customer.id}/treatment-plan/${treatment.id}`)}>
                         <div className="w-10 h-10 p-2 rounded-full dark:bg-slate-300 flex items-center justify-center">
                             <p>MF</p>
                         </div>
@@ -153,7 +160,6 @@ export default function PatientProfile({ customer, setIsOpen, setIsOpenTransitio
                 <div className="grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-4 mt-4">
                     <button className="flex-1 px-4 py-2 bg-primary text-white rounded-md hover:bg-primary/90">Agendar Cita</button>
                     <button className="flex-1 px-4 py-2 border border-slate-300 text-black dark:text-white rounded-md hover:bg-slate-300 dark:hover:bg-slate-700" onClick={() => setIsOpenTransition(true)}>Iniciar Consulta</button>
-                    <button className="flex-1 px-4 py-2 border border-slate-300 text-black dark:text-white rounded-md hover:bg-slate-300 dark:hover:bg-slate-700" onClick={() => openSessionTreatmentPlan(true)}>Continuar Plan de Tratamiento</button>
                     <button className="flex-1 px-4 py-2 border border-slate-300 text-black dark:text-white rounded-md hover:bg-slate-300 dark:hover:bg-slate-700">Actualizar Información</button>
                     <button className="flex-1 px-4 py-2 border border-slate-300 text-black dark:text-white rounded-md hover:bg-slate-300 dark:hover:bg-slate-700">Ver Facturas</button>
                 </div>

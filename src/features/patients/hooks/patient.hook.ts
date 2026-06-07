@@ -11,7 +11,6 @@ export const usePatient = () => {
     const [isOpenProfileInfo, setIsOpenProfileInfo] = useState(false)
     const [isOpenCreateOrEdit, setIsOpenCreateOrEdit] = useState(false)
     const [isOpenSession, setIsOpenSession] = useState(false)
-    const [isOpenSessionPlan, setIsOpenSessionPlan] = useState(false)
     const [customer, setCustomer] = useState<Customer | null>(null)
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<any>(null);
@@ -68,21 +67,6 @@ export const usePatient = () => {
         setIsOpenSession(value)
     }
 
-    function openSessionTreatmentPlan(value: boolean) {
-        if (isOpenSession)
-            openClinicalAssessment(false)
-        
-        if (value) {
-            setIsOpenTransition(value)
-            setIsOpenSessionPlan(value)
-        } else {
-            setIsOpenTransition(false)
-            setTimeout(() => {
-                setIsOpenSessionPlan(false)
-            }, 500);
-        }
-    }
-
     return {
         data,
         dashboardData,
@@ -98,10 +82,8 @@ export const usePatient = () => {
         isOpenProfileInfo,
         isOpenCreateOrEdit,
         isOpenSession,
-        isOpenSessionPlan,
         openProfileInfo,
         openCreate,
-        openClinicalAssessment,
-        openSessionTreatmentPlan
+        openClinicalAssessment
     };
 };

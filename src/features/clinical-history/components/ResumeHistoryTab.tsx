@@ -9,6 +9,8 @@ import { useEffect, useState } from "react";
 import { formatNumber } from "@/utils/number.util";
 import { calculateMonthsBetweenDates } from "@/utils/date.util";
 import { SessionPlanService } from "@/services/session-plan/sessionPlan.service";
+import type { ClinicalFile } from "@/models/clinicalFile.type";
+import { ClinicalFileService } from "@/services/clinical-file/clinicalFile.service";
 
 const notes = [
     {
@@ -30,12 +32,14 @@ interface ResumeHistoryTabProps {
 export default function ResumeHistoryTab({ treatment }: ResumeHistoryTabProps) {
     const [progress, setProgress] = useState<ProgressInfo>({ percentage: 0, nextPlan: null, currentPlan: null, currentId: 0, estimatedMonths: 0, transcurredMonths: 0 })
     const [totalPaid, setTotalPaid] = useState<number>(0);
+    const [images, setImages] = useState<ClinicalFile[]>([]);
     const loading = true
 
     useEffect(() => {
         if (treatment) {
             setProgress(getProgress(treatment!))
             SessionPlanService.getPlanTotalPaid(treatment!.id!).then(data => setTotalPaid(data.value))
+            ClinicalFileService.getImagesFromSession(treatment!.sessionId!).then(data => setImages(data))
         }
     }, [treatment])
 
@@ -83,14 +87,14 @@ export default function ResumeHistoryTab({ treatment }: ResumeHistoryTabProps) {
                         </div>
 
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                            {[1, 2, 3, 4].map((i) => (
-                                <div key={i} className="rounded-xl overflow-hidden border">
+                            {images && images.map((image) => (
+                                <div key={image.id} className="rounded-xl overflow-hidden border">
                                     <img
-                                        src={`https://i.pravatar.cc/150/?teeth,${i}`}
+                                        src={image.url}
                                         alt="evolucion"
                                         className="w-full h-32 object-cover"
                                     />
-                                    <div className="p-2 text-xs text-center">Mes {i * 4}</div>
+                                    <div className="p-2 text-xs text-center">Mes {image.description}</div>
                                 </div>
                             ))}
                         </div>

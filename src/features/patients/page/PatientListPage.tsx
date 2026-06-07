@@ -48,11 +48,9 @@ export default function PatientListPage() {
         isOpenProfileInfo,
         isOpenCreateOrEdit,
         isOpenSession,
-        //isOpenSessionPlan,
         openProfileInfo,
         openCreate,
-        openClinicalAssessment,
-        openSessionTreatmentPlan
+        openClinicalAssessment
     } = usePatient()
 
     return (
@@ -149,7 +147,7 @@ export default function PatientListPage() {
                     ${isOpenTransitionRight ? 'translate-x-0' : 'translate-x-full'
                 }`}
             >
-                {isOpenProfileInfo && <PatientProfile setIsOpen={openProfileInfo} customer={customer!} setIsOpenTransition={openClinicalAssessment} openSessionTreatmentPlan={openSessionTreatmentPlan} />}
+                {isOpenProfileInfo && <PatientProfile setIsOpen={openProfileInfo} customer={customer!} setIsOpenTransition={openClinicalAssessment} />}
                 {isOpenCreateOrEdit && <PatientCreate setIsOpen={openCreate} customerParam={customer!} reload={loadCustomers} />}
             </div>
             <div

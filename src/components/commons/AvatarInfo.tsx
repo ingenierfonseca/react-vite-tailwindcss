@@ -36,6 +36,29 @@ export default function AvatarInfo({ avatar, name, title, subTitle, className, o
     )
 }
 
+export function AvatarInfoSmall({ avatar, name, title, className, onClick }: AvatarInfoProps) {
+    return (
+        <button
+            className={`flex my-2 cursor-pointer ${className || ""}`}
+            onClick={onClick}
+        >
+            <div className="shrink-0">
+            {avatar && !avatar.includes('null') ? (
+                <img src={avatar} className="w-10 h-10 rounded-full" />
+            ) : (
+                <div className="w-10 h-10 rounded-full p-2 bg-slate-200 dark:bg-slate-300 flex items-center justify-center">
+                    <User className="w-10 h-10 text-slate-500" />
+                </div>
+            )}
+            </div>
+            <div className="flex-1 min-w-0 text-left">
+                <p className="text-md font-semibold px-2 text-black dark:text-slate-200 truncate">{name}</p>
+                <p className="px-2 text-md text-slate-600 dark:text-slate-400 truncate">{title}</p>
+            </div>
+        </button>
+    )
+}
+
 const getFirstNameAndLastName = (fullName: string): string => {
     const parts = fullName.trim().split(/\s+/);
     if (parts.length === 1) return parts[0]; // solo un nombre

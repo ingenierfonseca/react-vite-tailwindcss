@@ -1,9 +1,8 @@
-import { Card, CardContent } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { BanknoteArrowDownIcon, CreditCard, FileSpreadsheet, FileText, Notebook, Phone, SquareChartGantt, TrendingUp } from "lucide-react";
-//import { CircleDot } from "@/components/commons/CircleDot";
+import { Notebook, Phone, SquareChartGantt, TrendingUp } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { CustomerService } from "@/services/customer/customer.service";
@@ -14,6 +13,7 @@ import ResumeHistoryTab from "./components/ResumeHistoryTab";
 import EvolutionTab from "./components/EvolutionTab";
 import type { SessionPlan } from "@/services/treatment-plan/treatmentPlan.type";
 import { SessionPlanService } from "@/services/session-plan/sessionPlan.service";
+import NotesTab from "./components/NotesTab";
 
 const tabs = [
   {
@@ -26,7 +26,7 @@ const tabs = [
     label: "Evolución",
     icon: <TrendingUp />
   },
-  {
+  /*{
     value: "payment",
     label: "Pagos",
     icon: <BanknoteArrowDownIcon />
@@ -35,7 +35,7 @@ const tabs = [
     value: "documents",
     label: "Documentos",
     icon: <FileSpreadsheet />
-  },
+  },*/
   {
     value: "notes",
     label: "Notas",
@@ -122,8 +122,13 @@ export default function CustomerClinicalHistoryDashboard() {
           <EvolutionTab sessionPlan={treatment} setSessionPlan={setTreatment} />
         </TabsContent>
 
+        {/* Notas */}
+        <TabsContent value="notes">
+          <NotesTab sessionPlan={treatment} />
+        </TabsContent>
+
         {/* Pagos */}
-        <TabsContent value="payment">
+        {/*<TabsContent value="payment">
           <div className="grid md:grid-cols-3 gap-4">
             <Card>
               <CardContent className="p-4">
@@ -159,10 +164,10 @@ export default function CustomerClinicalHistoryDashboard() {
           <div className="mt-4">
             <Button className="w-full md:w-auto">Registrar pago</Button>
           </div>
-        </TabsContent>
+        </TabsContent>*/}
 
         {/* Documentos */}
-        <TabsContent value="documents">
+        {/*<TabsContent value="documents">
           <div className="space-y-3">
             {["Radiografía", "Fotografías", "Plan tratamiento"].map((doc) => (
               <Card key={doc}>
@@ -176,7 +181,7 @@ export default function CustomerClinicalHistoryDashboard() {
               </Card>
             ))}
           </div>
-        </TabsContent>
+        </TabsContent>*/}
       </Tabs>
     </div>
   );
