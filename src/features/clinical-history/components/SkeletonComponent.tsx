@@ -1,6 +1,6 @@
 import { Skeleton } from "@mui/material"
 
-export const SkeletonIndicatorLoader = () => {
+export const SkeletonNotesLoader = () => {
   return (
     <div className="p-4">
         <Skeleton width="40%" />

@@ -1,0 +1,6 @@
+export { default as TreatmentProgressSkeleton } from "./TreatmentProgressSkeleton"
+export { default as TreatmentEvolutionSkeleton } from "./TreatmentEvolutionSkeleton"
+export { default as NextAppointmentSkeleton } from "./NextAppointmentSkeleton"
+export { default as TreatmentPlanSkeleton } from "./TreatmentPlanSkeleton"
+export { default as PaymentHistorySkeleton } from "./PaymentHistorySkeleton"
+export { default as IndicatorsSkeleton } from "./IndicatorsSkeleton"
