@@ -3,6 +3,7 @@ import type { SessionPlan } from "@/services/treatment-plan/treatmentPlan.type"
 import { useEffect } from "react"
 import { useClinicalNote } from "../hooks/useClinicalNote"
 import ClinicalNoteForm from "./ClinicalNoteForm"
+import { Card } from "@/components/ui/card"
 
 export default function NotesTab({ sessionPlan }: { sessionPlan?: SessionPlan }) {
     const {
@@ -16,7 +17,8 @@ export default function NotesTab({ sessionPlan }: { sessionPlan?: SessionPlan })
     }, [load])
 
     return (
-        <div className="p-4">
+        <div className="flex flex-col gap-4">
+            <Card className="p-3">
             <div className="flex justify-end mb-3">
                 <button
                     onClick={() => { resetItem(); openCreate(true); }}
@@ -29,7 +31,7 @@ export default function NotesTab({ sessionPlan }: { sessionPlan?: SessionPlan })
                 {notes.map((note) => (
                     <div key={note.id} className="p-3 border border-slate-300 dark:border-slate-700 rounded-lg bg-slate-50 dark:bg-slate-800/50">
                         <AvatarInfoSmall
-                            name={`Dr. ${note.doctor?.staff.firstName} ${note.doctor?.staff.lastName}`}
+                            name={`${note.doctor?.title} ${note.doctor?.staff.firstName} ${note.doctor?.staff.lastName}`}
                             title={new Date(note.createdAt).toLocaleString()}
                             avatar={note.doctor?.staff.avatar}
                         />
@@ -58,6 +60,7 @@ export default function NotesTab({ sessionPlan }: { sessionPlan?: SessionPlan })
                     />
                 )}
             </div>
+            </Card>
         </div>
     )
 }

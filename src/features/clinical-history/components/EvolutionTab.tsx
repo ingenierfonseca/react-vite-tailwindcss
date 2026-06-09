@@ -73,19 +73,6 @@ export default function EvolutionTab({ sessionPlan, setSessionPlan }: EvolutionT
                         ))}
                     </div>
                 </div>
-
-                {/* Sección de Notas */}
-                <div className="flex flex-col mt-6 mb-3">
-                    <p className="text-lg font-medium dark:text-slate-200 mb-2">Notas</p>
-                    <TextField
-                        id="outlined-multiline-flexible"
-                        label="Notas del plan"
-                        multiline
-                        rows={4}
-                        value={sessionPlan?.comments ?? ""}
-                        disabled
-                    />
-                </div>
             </Card>
         </div>
     );

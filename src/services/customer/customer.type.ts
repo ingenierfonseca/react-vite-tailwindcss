@@ -6,8 +6,7 @@ export interface Customer {
     phone: string
     email: string
     address: string
-    age: number
-    //dateOfBirth: string
+    birthDate: string
     gender: string
     avatar?: string
 }
@@ -33,4 +32,25 @@ export interface CustomerFormData {
     lastVisit: string
     nextAppointment: string
     balanceDue: number
+}
+
+export interface CustomerImportDto {
+    DNI: string;
+    firstName: string;
+    lastName: string;
+    phone?: string;
+    email?: string;
+}
+
+export interface ResponseImportResult {
+    totalRows: number
+    successCount: number
+    errorCount: number
+    errors: RowError[]
+    processingTimeSeconds: number
+}
+
+export interface RowError {
+    rowNumber: number
+    errorMessage: string
 }

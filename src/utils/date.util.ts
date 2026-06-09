@@ -1,3 +1,32 @@
+const MAX_VALID_AGE = 120;
+export const validateBirthDate = (birthDate: Date): { isValid: boolean; message: string } => {
+  const today = new Date();
+  
+  const todayNoTime = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+  const birthDateNoTime = new Date(birthDate.getFullYear(), birthDate.getMonth(), birthDate.getDate());
+
+  if (birthDateNoTime > todayNoTime) {
+    return { isValid: false, message: "La fecha de nacimiento no puede ser una fecha futura." };
+  }
+
+  let age = today.getFullYear() - birthDate.getFullYear();
+  const monthDiff = today.getMonth() - birthDate.getMonth();
+  const dayDiff = today.getDate() - birthDate.getDate();
+
+  if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
+    age--;
+  }
+
+  if (age > MAX_VALID_AGE) {
+    return { 
+      isValid: false, 
+      message: `La fecha de nacimiento es inválida (edad máxima permitida: ${MAX_VALID_AGE} años).` 
+    };
+  }
+
+  return { isValid: true, message: "OK" };
+};
+
 export const calculateAgeFromString = (dateString: string) => {
   const fechaNacimiento = new Date(dateString);
   const hoy = new Date();

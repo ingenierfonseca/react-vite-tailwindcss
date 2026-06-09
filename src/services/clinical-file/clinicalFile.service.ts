@@ -13,4 +13,20 @@ export const ClinicalFileService =  {
         const { data } = await api.get(`${method}session/${sessionId}/images`);
         return data;
     },
+
+    uploadFile: async (item: ClinicalFile, file: any) => {
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("clinicalSessionId", String(item.clinicalSessionId));
+        formData.append("customerId", String(item.customerId));
+        formData.append("typeId", String(item.typeId));
+        formData.append("description", String(item.description));
+        
+        const { data } = await api.post(`${method}${'upload-file'}`, formData, {
+            headers: {
+                "Content-Type": undefined
+            }
+        });
+        return data;
+    }
 };

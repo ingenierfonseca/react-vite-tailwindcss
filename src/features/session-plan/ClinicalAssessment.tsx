@@ -3,7 +3,6 @@ import PatientInfo from "@/components/commons/PatientInfo";
 import ThreatmentPlanModal from "@/features/invoice/components/TreatmentPlanModal";
 import type { Customer } from "@/services/customer/customer.type";
 import FooterActions from "./components/footer/FooterActions";
-import DiagnosisStep from "./components/steps/DiagnosisStep";
 import OdontogramStep from "./components/steps/OdontogramStep";
 import DiseasesStep from "./components/steps/DiseasesStep";
 import TreatmentPlanStep from "./components/steps/TreatmentPlanStep";
@@ -21,7 +20,6 @@ export default function ClinicalAssessment({ customer, setIsOpen }: ClinicalAsse
     const {
         form,
         loading,
-        doctors,
         step,
         next,
         back,
@@ -30,7 +28,7 @@ export default function ClinicalAssessment({ customer, setIsOpen }: ClinicalAsse
 
     return (
         <PageRightComponent
-            title={"Nuevo Diagnostico"}
+            title={"Nueva Consulta"}
             onClick={() => setIsOpen(false)}>
 
             <div className="flex flex-col gap-4 mt-3 max-w-full min-w-0 w-full">
@@ -43,7 +41,7 @@ export default function ClinicalAssessment({ customer, setIsOpen }: ClinicalAsse
                         style={{ transform: `translateX(-${(step - 1) * 100}%)` }}
                     >
                         {/* Step 1 */}
-                        <ConsultationStep doctors={doctors!} />
+                        <ConsultationStep />
 
                         {/* Step 2 */}
                         <OdontogramStep />

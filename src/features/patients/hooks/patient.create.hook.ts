@@ -4,6 +4,7 @@ import { CustomerService } from "../../../services/customer/customer.service";
 import { toast } from "react-toastify";
 import { validatePhoneNumber } from "../../../utils/number.util";
 import { validateEmail } from "../../../utils/email.util";
+import { validateBirthDate } from "@/utils/date.util";
 
 export const usePatientCreateEdit = () => {
     const [customer, setCustomer] = useState<Customer | null>(null)
@@ -92,9 +93,17 @@ export const usePatientCreateEdit = () => {
             toast.error("El Apellido del Paciente es requerido");
             return false;
         }
-        if (customer?.age <= 0) {
-            toast.error("La Edad debe ser mayor a 0");
+        if (customer?.gender.length === 0) {
+            toast.error("El gener del Paciente es requerido");
             return false;
+        }
+        if (customer?.birthDate.trim().length >  0)
+        {
+            const resultValidate = validateBirthDate(new Date(customer.birthDate));
+            if (!resultValidate.isValid) {
+                toast.error(resultValidate.message);
+                return;
+            }
         }
 
         if (customer?.phone.trim().length > 0 && !validatePhoneNumber(customer.phone.trim())) {

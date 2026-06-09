@@ -1,17 +1,26 @@
-import { TextField } from "@mui/material"
 import { useEffect } from "react"
 import type { Customer } from "../../../services/customer/customer.type"
 import { usePatientCreateEdit } from "../hooks/patient.create.hook"
 import TextFieldApp from "../../../components/commons/TextFieldApp"
 import ButtonSaveApp from "../../../components/commons/ButtonSaveApp"
 import { ASSETS_URLS } from "../../../config/constants"
+import dayjs from "dayjs"
+import { DatePicker } from "@mui/x-date-pickers"
+import DropDownApp from "@/components/commons/DropDownApp"
+
+const genders: { id: number; value: string }[] = [
+    { id: 1, value: "Femenino" },
+    { id: 2, value: "Masculino" },
+    { id: 3, value: "Otro" },
+];
+
 interface PatientCreateProps {
     customerParam?: Customer
     setIsOpen: (value: boolean) => void
     reload: () => void
 }
 export default function PatientCreate({ customerParam, setIsOpen, reload }: PatientCreateProps) {
-    const { 
+    const {
         customer,
         setCustomer,
         savePatient,
@@ -32,7 +41,7 @@ export default function PatientCreate({ customerParam, setIsOpen, reload }: Pati
                 dni: '',
                 firstName: '',
                 lastName: '',
-                age: 0,
+                birthDate: '',
                 phone: '',
                 email: '',
                 address: '',
@@ -43,12 +52,15 @@ export default function PatientCreate({ customerParam, setIsOpen, reload }: Pati
 
     const handleSave = async () => {
         const response = await savePatient()
-        if (response) {
+        if (response && selectedImage) {
             const responseUpload = await uploadAvatar()
             if (responseUpload) {
                 reload()
                 setIsOpen(false)
             }
+        } else if (response) {
+            reload()
+            setIsOpen(false)
         }
     }
 
@@ -117,39 +129,34 @@ export default function PatientCreate({ customerParam, setIsOpen, reload }: Pati
                 </div>
                 <div className="flex gap-2 pt-3">
                     <TextFieldApp
-                        className="flex-3"
+                        className="flex-1"
                         label="Telefono"
                         value={customer?.phone}
                         maxLength={15}
                         onChange={(value) => setCustomer({ ...customer!, phone: value })}
                     />
                     <TextFieldApp
-                        className="flex-5"
+                        className="flex-1"
                         label="Correo Electronico"
                         value={customer?.email}
                         maxLength={60}
                         onChange={(value) => setCustomer({ ...customer!, email: value })}
                     />
-                    <TextField
-                        className="flex-2"
-                        label="Edad"
-                        variant="outlined"
-                        type="number"
-                        value={customer?.age ? customer!.age : ''}
-                        slotProps={{
-                            htmlInput: {
-                                min: 0,
-                                max: 120,
-                                step: 1,
-                            },
-                        }}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                            const val = parseInt(e.target.value, 10);
-                            setCustomer({ ...customer!, age: isNaN(val) ? 0 : val });
-                        }}
+                    <DatePicker
+                        className="flex-1"
+                        label="Fecha de nacimiento"
+                        value={dayjs(customer?.birthDate)}
+                        onChange={(val) => setCustomer({ ...customer!, birthDate: val ? val.format("YYYY-MM-DD") : "" })}
                     />
                 </div>
                 <div className="flex gap-2 pt-3">
+                    <DropDownApp title="Complejidad"
+                        data={genders as any}
+                        value={customer?.gender!}
+                        onChange={(val) => {
+                            let g = genders.find(x => x.id === parseInt(val));
+                            setCustomer({ ...customer!, gender: g?.value ?? "" });
+                        }} />
                     <TextFieldApp
                         className="flex-1"
                         label="Direccion"

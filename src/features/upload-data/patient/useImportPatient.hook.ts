@@ -4,6 +4,7 @@ import { validatePhoneNumber } from "../../../utils/number.util";
 import { validateEmail } from "../../../utils/email.util";
 import { CustomerService } from "../../../services/customer/customer.service";
 import type { CustomerExcelRow } from "../../../models/customerExcelRow.type";
+import type { CustomerImportDto } from "@/services/customer/customer.type";
 
 interface ErrorResume {
     ok: number
@@ -76,7 +77,7 @@ export const useImportPatientHook = () => {
         }
 
         const llavesDuplicadas = previewData
-            .map(p => `${p.Nombre?.trim()}|${p.Apellido?.trim()}`.toLowerCase())
+            .map(p => `${p.DNI?.trim()}`.toLowerCase())
             .filter((llave, index, array) =>
                 llave !== "|" && array.indexOf(llave) !== index
             );
@@ -84,8 +85,13 @@ export const useImportPatientHook = () => {
         setIsProcessing(true);
         const updatedData = previewData.map((row) => {
             const newRow = { ...row, Error: '' };
-            const nombreFull = `${row.Nombre?.trim()}|${row.Apellido?.trim()}`.toLowerCase();
             let isDuplicated = false
+
+            if (!newRow.DNI || newRow.DNI.trim().length < 2)
+                newRow.Error = 'Nombre es obligatorio y muy corto'
+
+            if (llavesDuplicadas.includes(newRow.DNI.toLowerCase()))
+                isDuplicated = true
 
             if (!newRow.Nombre || newRow.Nombre.trim().length < 2)
                 newRow.Error = 'Nombre es obligatorio y muy corto'
@@ -93,17 +99,11 @@ export const useImportPatientHook = () => {
             if (!newRow.Apellido || newRow.Apellido.trim().length < 2)
                 newRow.Error = 'Apellido es obligatorio y muy corto'
 
-            if (nombreFull !== "|" && llavesDuplicadas.includes(nombreFull))
-                isDuplicated = true
-
-            if (!newRow.Edad || isNaN(Number(newRow.Edad)))
-                newRow.Error += ' | Edad debe ser un número válido'
-
-            if (newRow.Telefono && validatePhoneNumber(newRow.Telefono))
+            if (newRow.Telefono && !validatePhoneNumber(newRow.Telefono))
                 newRow.Error += ' | Telefono inválido'
 
-            if (newRow.Email && validateEmail(newRow.Email))
-                newRow.Error += ' | Telefono inválido'
+            if (newRow.Email && !validateEmail(newRow.Email))
+                newRow.Error += ' | Email inválido'
 
             newRow.Estado = 'valido'
             if (isDuplicated) {
@@ -138,7 +138,7 @@ export const useImportPatientHook = () => {
     const importData = async (): Promise<boolean> => {
         let success = false
         try {
-            await CustomerService.bulkImport(previewData.filter((e => e.Error?.length !== 0)));
+            await CustomerService.bulkImport(mapExcelToDto(previewData));
             success = true;
         } catch (err: any) {
             //const errorMessage = err.response?.data?.message || "Error al crear el paciente";
@@ -148,6 +148,26 @@ export const useImportPatientHook = () => {
             //setLoading(false);
             return success;
         }
+    }
+
+const mapExcelToDto = (excelRows: CustomerExcelRow[]): CustomerImportDto[] => {
+    return excelRows
+        .filter(row => !row.Error && row.Estado !== 'Invalido') 
+        .map(row => ({
+            DNI: row.DNI,
+            firstName: row.Nombre,
+            lastName: row.Apellido,
+            phone: row.Telefono?.trim() || undefined, 
+            email: row.Email?.trim() || undefined,
+        }));
+};
+
+    const resetData = () => {
+        setCurrentItems([])
+        setPreviewData([])
+        setErrorResume({ok: 0, error: 0, duplicated: 0})
+        setIsProcessing(false);
+        setStepActive(1)
     }
 
     return {
@@ -163,6 +183,7 @@ export const useImportPatientHook = () => {
         setStepActive,
         handleFileUpload,
         validateData,
-        importData
+        importData,
+        resetData
     }
 }

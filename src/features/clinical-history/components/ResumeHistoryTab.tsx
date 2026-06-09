@@ -25,9 +25,10 @@ import {
 
 interface ResumeHistoryTabProps {
     treatment?: SessionPlan
+    customerId?: number
 }
 
-export default function ResumeHistoryTab({ treatment }: ResumeHistoryTabProps) {
+export default function ResumeHistoryTab({ treatment, customerId }: ResumeHistoryTabProps) {
     const [loading, setLoading] = useState(true)
     const [progress, setProgress] = useState<ProgressInfo>({
         percentage: 0,
@@ -40,6 +41,11 @@ export default function ResumeHistoryTab({ treatment }: ResumeHistoryTabProps) {
     const [totalPaid, setTotalPaid] = useState(0)
     const [images, setImages] = useState<ClinicalFile[]>([])
     const [recentNotes, setRecentNotes] = useState<ClinicalNote[]>([])
+
+    const loadImages = () => {
+        if (!treatment?.sessionId) return
+        ClinicalFileService.getImagesFromSession(treatment.sessionId!).then((data) => setImages(data))
+    }
 
     useEffect(() => {
         if (!treatment) {
@@ -83,7 +89,7 @@ export default function ResumeHistoryTab({ treatment }: ResumeHistoryTabProps) {
                 ) : (
                     <>
                         <TreatmentProgressCard progress={progress} treatment={treatment} />
-                        <TreatmentEvolutionCard images={images} />
+                        <TreatmentEvolutionCard images={images} customerId={customerId} sessionId={treatment.sessionId} onImageUploaded={loadImages} />
                     </>
                 )}
             </div>

@@ -5,6 +5,7 @@ export interface Doctor {
     staffId: number,
     serviceId: number,
     specialtyId: number,
+    title: string,
     staff: Staff
 }
 

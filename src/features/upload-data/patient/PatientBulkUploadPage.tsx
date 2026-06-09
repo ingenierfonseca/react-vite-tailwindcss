@@ -11,15 +11,15 @@ import SelectFile from "../components/SelectFile";
 
 const headers: Header[] = [
   {
+    header: 'Identificación',
+    className: 'flex-1'
+  },
+  {
     header: 'Nombre',
     className: 'flex-1'
   },
   {
     header: 'Apellido',
-    className: 'flex-1'
-  },
-  {
-    header: 'Edad',
     className: 'flex-1'
   },
   {
@@ -51,7 +51,8 @@ export default function PatientBulkUploadPage() {
     handleChangePage,
     handleFileUpload,
     validateData,
-    importData
+    importData,
+    resetData
   } = useImportPatientHook()
 
   return (
@@ -74,7 +75,7 @@ export default function PatientBulkUploadPage() {
           <p className="text-black dark:text-slate-200 font-bold">1. Subir archivo</p>
           <p className="text-xs dark:text-slate-400">Selecciona o arrastra el archivo con los datos de los pacientes</p>
           
-          <SelectFile onFileSelect={handleFileUpload} />
+          <SelectFile onFileSelect={handleFileUpload} onReset={resetData} />
           
           <div className="flex gap-3 p-2 mt-3 rounded-lg dark:bg-slate-900">
             <div className="flex-1">
@@ -120,9 +121,9 @@ export default function PatientBulkUploadPage() {
             </div>
             {currentItems.map((patient, index) => (
               <div key={index} className="flex px-2 py-1.5 dark:bg-slate-900 text-sm text-black dark:text-slate-200 border border-slate-100 dark:border-slate-700">
+                <div className="flex-1">{patient.DNI}</div>
                 <div className="flex-1 font-semibold">{patient.Nombre}</div>
                 <div className="flex-1">{patient.Apellido}</div>
-                <div className="flex-1">{patient.Edad}</div>
                 <div className="flex-1">{patient.Telefono}</div>
                 <div className="flex-1">{patient.Email}</div>
                 <div className="flex-1">{patient.Estado !== undefined ? getStatusBadge(patient.Estado as "valido" | "invalido" | "duplicado") : <div></div>}</div>

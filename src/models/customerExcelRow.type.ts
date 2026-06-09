@@ -1,8 +1,7 @@
 export interface CustomerExcelRow {
+    DNI: string;
     Nombre: string;
     Apellido: string;
-    //DNI: string;
-    Edad: number;
     Telefono?: string;
     Email?: string;
     Estado: string;

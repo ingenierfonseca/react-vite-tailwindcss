@@ -1,8 +1,7 @@
 import api from "../../api/api";
 import { ENDPOINTS } from "../../api/endpoints";
-import type { CustomerExcelRow } from "../../models/customerExcelRow.type";
 import { createCatalogService } from "../baseCatalogService";
-import type { Customer } from "./customer.type";
+import type { Customer, CustomerImportDto, ResponseImportResult } from "./customer.type";
 
 const method = ENDPOINTS.CUSTOMERS
 const baseService = createCatalogService<Customer>(method);
@@ -14,7 +13,7 @@ export const CustomerService = {
         const { data } = await api.get(`${method}${`dashboard`}`);
         return data;
     },
-    bulkImport: async (customers: CustomerExcelRow[]) => {
+    bulkImport: async (customers: CustomerImportDto[]) : Promise<ResponseImportResult> => {
         const { data } = await api.post(`${method}${`bulk-import`}`, customers);
         return data;
     },

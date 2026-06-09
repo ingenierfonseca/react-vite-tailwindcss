@@ -3,10 +3,11 @@ import type { ChangeEvent, DragEvent } from 'react';
 import { Upload, FileText, X } from 'lucide-react';
 
 interface SelectFileProps {
-    onFileSelect: (file: File) => void
+    onFileSelect: (file: File) => void,
+    onReset: () => void
 }
 
-export default function SelectFile({onFileSelect}: SelectFileProps) {
+export default function SelectFile({onFileSelect, onReset}: SelectFileProps) {
     const [fileName, setFileName] = useState<string>("");
     const [isDragging, setIsDragging] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
@@ -37,6 +38,7 @@ export default function SelectFile({onFileSelect}: SelectFileProps) {
     };
 
     const resetFile = (e: React.MouseEvent) => {
+        onReset()
         e.stopPropagation(); // Evita que se abra el selector al borrar
         setFileName("");
         if (fileInputRef.current) fileInputRef.current.value = "";

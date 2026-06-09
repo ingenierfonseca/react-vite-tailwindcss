@@ -14,6 +14,7 @@ import EvolutionTab from "./components/EvolutionTab";
 import type { SessionPlan } from "@/services/treatment-plan/treatmentPlan.type";
 import { SessionPlanService } from "@/services/session-plan/sessionPlan.service";
 import NotesTab from "./components/NotesTab";
+import { calculateAgeFromString } from "@/utils/date.util";
 
 const tabs = [
   {
@@ -80,7 +81,7 @@ export default function CustomerClinicalHistoryDashboard() {
               <div className="bg-green-400/10 text-green-600 font-semibold rounded-2xl px-3">Activo</div>
             </div>
             <div className="flex gap-3 items-center text-sm text-slate-800 dark:text-slate-400">
-              <p>{customer?.age} años</p>
+              <p>{calculateAgeFromString(customer?.birthDate!)} años</p>
               {/*<CircleDot />
               <p>{customer?.birthDate}</p>
               <CircleDot />
@@ -114,7 +115,7 @@ export default function CustomerClinicalHistoryDashboard() {
 
         {/* Resume */}
         <TabsContent value="resume">
-          <ResumeHistoryTab treatment={treatment} />
+          <ResumeHistoryTab treatment={treatment} customerId={customer?.id} />
         </TabsContent>
 
         {/* Evolución */}

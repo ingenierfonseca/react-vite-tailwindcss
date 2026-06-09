@@ -1,5 +1,6 @@
 import { Card, CardContent } from "@/components/ui/card"
 import type { ClinicalNote } from "@/models/clinicalNote.type"
+import { formatDateDDMMYYYY } from "@/utils/date.util"
 
 interface RecentNotesCardProps {
     recentNotes: ClinicalNote[]
@@ -16,7 +17,7 @@ export default function RecentNotesCard({ recentNotes }: RecentNotesCardProps) {
                     {recentNotes.map((note, index) => (
                         <div key={note.id ?? index} className="flex flex-col gap-2 mt-3">
                             <div className="flex items-center gap-2 text-slate-600">
-                                <p>{note.createdAt}</p>
+                                <p>{formatDateDDMMYYYY(note.createdAt)}</p>
                                 <p>
                                     {note.doctor?.title}
                                     {note.doctor?.staff.firstName} {note.doctor?.staff.lastName}
