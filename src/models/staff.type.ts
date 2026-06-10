@@ -7,4 +7,5 @@ export interface Staff {
     phone: string,
     address: string,
     avatar: string
+    birthDate: string
 }

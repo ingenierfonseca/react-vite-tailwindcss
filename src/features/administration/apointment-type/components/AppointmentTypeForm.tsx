@@ -4,7 +4,6 @@ import ButtonSaveApp from "../../../../components/commons/ButtonSaveApp";
 import PageRightComponent from "../../../../components/commons/PageRightComponent";
 import type { AppointmentType } from "../../../../models/appointmentType.type";
 import { useAppointmentType } from "../hooks/appointmentType.hook";
-import { minutesToTime, timeToMinutes } from "../../../../utils/date.util";
 import NumberInputApp from "@/components/commons/NumberInputApp";
 
 interface AppointmentTypeFormProps {
@@ -16,7 +15,6 @@ export default function AppointmentTypeForm({ itemParam, setIsOpen, reload }: Ap
     const { item, setItem, loading, saveTreatment } = useAppointmentType()
     useEffect(() => {
         if (itemParam) {
-            //itemParam.durationMinutes = timeToMinutes(itemParam.time)
             setItem(itemParam)
         }
     }, [itemParam])

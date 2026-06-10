@@ -5,7 +5,7 @@ import { DoctorService } from "../../../../services/doctor/doctor.service";
 
 export const useDoctor = () => {
     const [item, setItem] = useState<Doctor>({
-        id: 0, firstName: "", lastName: "", age: 0, specialist: "", phone: ""
+        id: 0, serviceId: 0, specialtyId: 0, staffId: 0, title: ""
     });
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<any>(null);
@@ -35,9 +35,10 @@ export const useDoctor = () => {
     };
 
     function validate() {
-        if (!item.firstName.trim()) { toast.error("El nombre es requerido"); return false; }
-        if (!item.lastName.trim()) { toast.error("El apellido es requerido"); return false; }
-        if (!item.specialist.trim()) { toast.error("La especialidad es requerida"); return false; }
+        if (item.staffId === 0) { toast.error("Seleccione un empleado"); return false; }
+        if (item.serviceId === 0) { toast.error("Seleccione un area"); return false; }
+        if (item.specialtyId === 0) { toast.error("Seleccione una especialidad"); return false; }
+        if (!item.title.trim()) { toast.error("Seleccione un titulo"); return false; }
         return true;
     }
 
