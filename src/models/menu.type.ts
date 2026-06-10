@@ -83,7 +83,8 @@ export function getMenuData() {
                 { id: "resources", label: "Recursos", path: "resources", resource: "resources" },
                 { id: "appointmentStatuses", label: "Estados de Cita", path: "appointment-statuses", resource: "appointmentstatuses" },
                 { id: "consultationTypes", label: "Tipos de Consulta", path: "consultation-types", resource: "consultationtypes" },
-                { id: "specialties", label: "Especialidades", path: "specialties", resource: "specialties" }
+                { id: "specialties", label: "Especialidades", path: "specialties", resource: "specialties" },
+                { id: "staff", label: "Staff", path: "staff", resource: "staff" }
             ]
         },
         {

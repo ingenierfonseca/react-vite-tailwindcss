@@ -1,17 +1,13 @@
+import { useState } from "react";
 import { useCatalog } from "../../../../hooks/useCatalog";
 import { DoctorService } from "../../../../services/doctor/doctor.service";
-import type { Doctor } from "../../../../services/doctor/doctor.type";
+import type {  DoctorInfoDTO } from "../../../../services/doctor/doctor.type";
 
 export const useDoctors = () => {
-    const { setItem, ...rest } = useCatalog<Doctor>({
+    const [id, setId] = useState(0)
+    const { ...rest } = useCatalog<DoctorInfoDTO>({
         fetchFn: DoctorService.get
     });
 
-    const resetItem = () => {
-        setItem({
-            id: 0, firstName: "", lastName: "", age: 0, specialist: "", phone: ""
-        });
-    };
-
-    return { resetItem, setItem, ...rest };
+    return { id, setId, ...rest };
 };

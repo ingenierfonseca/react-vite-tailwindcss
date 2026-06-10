@@ -6,11 +6,16 @@ export interface Doctor {
     serviceId: number,
     specialtyId: number,
     title: string,
-    staff: Staff
+    staff?: Staff
 }
 
 export interface DoctorInfoDTO {
     id: number,
+    avatarUrl: string,
+    title: string,
     firstName: string,
-    lastName: string
+    lastName: string,
+    staffName: string,
+    serviceName: string,
+    specialtyName: string
 }

@@ -82,7 +82,7 @@ export default function PatientCreate({ customerParam, setIsOpen, reload }: Pati
                             <img
                                 src={selectedImage ? URL.createObjectURL(selectedImage) : (customer?.avatar !== undefined && customer?.avatar !== null) ? `${ASSETS_URLS.avatars}/${customer?.avatar}` : './src/assets/landscape-placeholder.svg'}
                                 alt={`${customer?.firstName} ${customer?.lastName}`}
-                                className="w-32 h-32 rounded-lg object-cover border-2 border-primary/20 shadow-sm transition-all group-hover:border-primary"
+                                className="w-50 h-50 rounded-lg object-cover border-2 border-primary/20 shadow-sm transition-all group-hover:border-primary"
                             />
                             {/* Input oculto */}
                             <input
@@ -97,34 +97,36 @@ export default function PatientCreate({ customerParam, setIsOpen, reload }: Pati
                         <button
                             onClick={handleUploadClick}
                             type="button"
-                            className="mt-2 w-full text-xs font-medium bg-primary/10 text-primary border border-primary/20 px-3 py-2 rounded-md hover:bg-primary hover:text-primary-foreground transition-colors cursor-pointer"
+                            className="mt-2 w-full text-xs font-medium bg-primary/10 dark:bg-primary-dark text-primary border border-primary/20 px-3 py-2 rounded-md hover:bg-primary hover:text-primary-foreground transition-colors cursor-pointer"
                         >
                             Subir Foto
                         </button>
                     </div>
-                    <div className="flex-2 flex flex-col gap-3">
-                        <TextFieldApp
-                            className="flex-1"
-                            label="Identificación"
-                            value={customer?.dni}
-                            maxLength={20}
-                            onChange={(value) => setCustomer({ ...customer!, dni: value })}
-                            disabled={customer && customer.id ? true : false}
-                        />
-                        <TextFieldApp
-                            className="flex-1"
-                            label="Nombre del Paciente"
-                            value={customer?.firstName}
-                            maxLength={50}
-                            onChange={(value) => setCustomer({ ...customer!, firstName: value })}
-                        />
-                        <TextFieldApp
-                            className="flex-1"
-                            label="Apellido del Paciente"
-                            value={customer?.lastName}
-                            maxLength={50}
-                            onChange={(value) => setCustomer({ ...customer!, lastName: value })}
-                        />
+                    <div className="flex-2">
+                        <div className=" flex flex-col gap-3">
+                            <TextFieldApp
+                                className="flex-1"
+                                label="Identificación"
+                                value={customer?.dni}
+                                maxLength={20}
+                                onChange={(value) => setCustomer({ ...customer!, dni: value })}
+                                disabled={customer && customer.id ? true : false}
+                            />
+                            <TextFieldApp
+                                className="flex-1"
+                                label="Nombre del Paciente"
+                                value={customer?.firstName}
+                                maxLength={50}
+                                onChange={(value) => setCustomer({ ...customer!, firstName: value })}
+                            />
+                            <TextFieldApp
+                                className="flex-1"
+                                label="Apellido del Paciente"
+                                value={customer?.lastName}
+                                maxLength={50}
+                                onChange={(value) => setCustomer({ ...customer!, lastName: value })}
+                            />
+                        </div>
                     </div>
                 </div>
                 <div className="flex gap-2 pt-3">
@@ -150,7 +152,7 @@ export default function PatientCreate({ customerParam, setIsOpen, reload }: Pati
                     />
                 </div>
                 <div className="flex gap-2 pt-3">
-                    <DropDownApp title="Complejidad"
+                    <DropDownApp title="Genero"
                         data={genders as any}
                         value={customer?.gender!}
                         onChange={(val) => {

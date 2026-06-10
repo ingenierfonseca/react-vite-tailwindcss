@@ -23,6 +23,7 @@ import AppointmentStatusListPage from "@/features/administration/appointment-sta
 import SpecialtyListPage from "@/features/administration/specialty/SpecialtyListPage";
 import ServiceListPage from "@/features/administration/service/ServicesListPage";
 import ConsultationTypeListPage from "@/features/administration/consultation-type/ConsultationTypeListPage";
+import StaffListPage from "@/features/administration/staff/StaffListPage";
 
 export const routesConfig = [
   {
@@ -139,6 +140,11 @@ export const routesConfig = [
     path: "/specialties",
     title: "Especialidades",
     element: <SpecialtyListPage />
+  },
+  {
+    path: "/staff",
+    title: "Staff",
+    element: <StaffListPage />
   },
   {
     path: "/imports/patients",

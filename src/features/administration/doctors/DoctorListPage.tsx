@@ -10,8 +10,8 @@ import type { Header } from "../../invoice/components/InvoiceDetail";
 const headers: Header[] = [
     { header: "Nombre", className: "flex-2" },
     { header: "Apellido", className: "flex-2" },
-    { header: "Especialidad", className: "flex-3 hidden md:block" },
-    { header: "Teléfono", className: "flex-2 hidden sm:block" },
+    { header: "Area", className: "flex-3 hidden md:block" },
+    { header: "Especialidad", className: "flex-2 hidden sm:block" },
 ];
 
 const RESOURCE = "doctors";
@@ -20,8 +20,8 @@ export default function DoctorListPage() {
     const { can } = usePermissions();
     const {
         isOpenCreateOrEdit, isOpenTransitionRight, openCreate,
-        load, data, item, openPopUp, setItem, setOpenPopUp,
-        setCurrentPage, pages, resetItem
+        load, data, openPopUp, setOpenPopUp,
+        setCurrentPage, pages, id, setId
     } = useDoctors();
 
     if (!can("view", RESOURCE)) {
@@ -34,7 +34,7 @@ export default function DoctorListPage() {
             description="Administra los doctores registrados en la clínica"
             textButton="Agregar Doctor"
             showButton={can("create", RESOURCE)}
-            onclick={() => { resetItem(); openCreate(true); }}
+            onclick={() => { setId(0); openCreate(true); }}
         >
             <PaginatedDataTable
                 columns={headers}
@@ -48,8 +48,8 @@ export default function DoctorListPage() {
                             className={`flex px-4 py-3 gap-2 items-center ${index % 2 !== 0 ? "bg-slate-200 dark:bg-slate-800" : ""} hover:bg-slate-300 dark:hover:bg-slate-800/50 transition-colors`}>
                             <span className="flex-2 dark:text-slate-200">{item.firstName}</span>
                             <span className="flex-2 dark:text-slate-200">{item.lastName}</span>
-                            <span className="flex-3 hidden md:block dark:text-slate-400">{item.specialist}</span>
-                            <span className="flex-2 hidden sm:block dark:text-slate-400">{item.phone}</span>
+                            <span className="flex-3 hidden md:block dark:text-slate-400">{item.serviceName}</span>
+                            <span className="flex-2 hidden sm:block dark:text-slate-400">{item.specialtyName}</span>
                             <div className="flex-1 flex justify-end relative">
                                 <button onClick={() => setOpenPopUp(item.id)}
                                     className="p-1 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-full transition-colors">
@@ -60,7 +60,7 @@ export default function DoctorListPage() {
                                         onMouseLeave={() => setOpenPopUp(0)}>
                                         {can("update", RESOURCE) && (
                                             <button className="w-full text-left px-4 py-2 hover:bg-slate-100 dark:hover:bg-slate-700 text-sm dark:text-slate-200"
-                                                onClick={() => { setItem(item); openCreate(true); }}>
+                                                onClick={() => { setId(item.id); openCreate(true); }}>
                                                 Editar
                                             </button>
                                         )}
@@ -75,7 +75,7 @@ export default function DoctorListPage() {
             <div className={`fixed top-0 right-0 h-full w-full md:w-7/12 bg-white dark:bg-slate-800 shadow-2xl z-50 
                             transform transition-transform duration-500 ease-in-out 
                             ${isOpenTransitionRight ? "translate-x-0" : "translate-x-full"}`}>
-                {isOpenCreateOrEdit && <DoctorForm setIsOpen={openCreate} itemParam={item} reload={load} />}
+                {isOpenCreateOrEdit && <DoctorForm setIsOpen={openCreate} id={id} reload={load} />}
             </div>
         </PageComponent>
     );
