@@ -4,7 +4,7 @@ import { validatePhoneNumber } from "../../../utils/number.util";
 import { validateEmail } from "../../../utils/email.util";
 import { CustomerService } from "../../../services/customer/customer.service";
 import type { CustomerExcelRow } from "../../../models/customerExcelRow.type";
-import type { CustomerImportDto } from "@/services/customer/customer.type";
+import type { CustomerImportDto, ResponseImportResult } from "@/services/customer/customer.type";
 
 interface ErrorResume {
     ok: number
@@ -17,6 +17,8 @@ export const useImportPatientHook = () => {
     const [fileName, setFileName] = useState("")
     const [previewData, setPreviewData] = useState<CustomerExcelRow[]>([]);
     const [isProcessing, setIsProcessing] = useState(false);
+    const [isImporting, setIsImporting] = useState(false);
+    const [importResult, setImportResult] = useState<ResponseImportResult | null>(null);
     const [errorResume, setErrorResume] = useState<ErrorResume>({
         ok: 0,
         error: 0,
@@ -135,37 +137,48 @@ export const useImportPatientHook = () => {
         setCurrentItems(currentItems)
     }
 
-    const importData = async (): Promise<boolean> => {
-        let success = false
+    const importData = async () => {
+        setIsImporting(true);
         try {
-            await CustomerService.bulkImport(mapExcelToDto(previewData));
-            success = true;
+            const payload = mapExcelToDto(previewData)
+            const result = await CustomerService.bulkImport(payload);
+            setImportResult(result);
+            if (result.errorCount === 0)
+                resetData();
         } catch (err: any) {
-            //const errorMessage = err.response?.data?.message || "Error al crear el paciente";
-            //setError(errorMessage);
-            throw err;
+            setImportResult({
+                totalRows: previewData.length,
+                successCount: 0,
+                errorCount: 0,
+                errors: [{ rowNumber: 0, errorMessage: err.response?.data?.message || "Error al conectar con el servidor" }],
+                processingTimeSeconds: 0
+            });
         } finally {
-            //setLoading(false);
-            return success;
+            setIsImporting(false);
         }
     }
 
-const mapExcelToDto = (excelRows: CustomerExcelRow[]): CustomerImportDto[] => {
-    return excelRows
-        .filter(row => !row.Error && row.Estado !== 'Invalido') 
-        .map(row => ({
-            DNI: row.DNI,
-            firstName: row.Nombre,
-            lastName: row.Apellido,
-            phone: row.Telefono?.trim() || undefined, 
-            email: row.Email?.trim() || undefined,
-        }));
-};
+    const mapExcelToDto = (excelRows: CustomerExcelRow[]): CustomerImportDto[] => {
+        return excelRows
+            .filter(row => !row.Error && row.Estado === 'valido') 
+            .map(row => ({
+                DNI: row.DNI,
+                firstName: row.Nombre,
+                lastName: row.Apellido,
+                phone: String(row.Telefono),
+                email: String(row.Email),
+            }));
+    };
+
+    const clearImportResult = () => {
+        setImportResult(null);
+    }
 
     const resetData = () => {
         setCurrentItems([])
         setPreviewData([])
         setErrorResume({ok: 0, error: 0, duplicated: 0})
+        setImportResult(null);
         setIsProcessing(false);
         setStepActive(1)
     }
@@ -174,6 +187,8 @@ const mapExcelToDto = (excelRows: CustomerExcelRow[]): CustomerImportDto[] => {
         stepActive,
         fileName,
         isProcessing,
+        isImporting,
+        importResult,
         previewData,
         errorResume,
         currentItems,
@@ -184,6 +199,7 @@ const mapExcelToDto = (excelRows: CustomerExcelRow[]): CustomerImportDto[] => {
         handleFileUpload,
         validateData,
         importData,
-        resetData
+        resetData,
+        clearImportResult
     }
 }

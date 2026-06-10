@@ -1,6 +1,8 @@
+import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import PageComponent from "../../../components/commons/PageComponent";
 import StepComponent from "../components/StepComponent";
-import { ArrowRight, Check, Download, File, Grid, Info } from "lucide-react";
+import { ArrowRight, Check, Clock, Download, File, Grid, Info, Loader2, XCircle } from "lucide-react";
 import type { Header } from "../../../models/header.type";
 import { useImportPatientHook } from "./useImportPatient.hook";
 import { ASSETS_URLS } from "../../../config/constants";
@@ -48,12 +50,33 @@ export default function PatientBulkUploadPage() {
     currentItems,
     currentPage,
     totalPages,
+    isImporting,
+    importResult,
     handleChangePage,
     handleFileUpload,
     validateData,
     importData,
-    resetData
+    resetData,
+    clearImportResult
   } = useImportPatientHook()
+
+  const [showSummary, setShowSummary] = useState(false);
+
+  useEffect(() => {
+    if (importResult) setShowSummary(true);
+  }, [importResult]);
+
+  useEffect(() => {
+    if (isImporting) {
+      document.body.style.overflow = "hidden";
+      return () => { document.body.style.overflow = ""; };
+    }
+  }, [isImporting]);
+
+  const handleCloseSummary = () => {
+    setShowSummary(false);
+    clearImportResult();
+  };
 
   return (
     <PageComponent
@@ -168,7 +191,7 @@ export default function PatientBulkUploadPage() {
           />
         </div>
         <div className="flex mt-3">
-          {errorResume.ok > 0 && <button className="flex gap-2 ml-auto bg-primary rounded-lg text-white p-2.5"
+          {errorResume.ok > 0 && <button className="flex gap-2 ml-auto bg-primary rounded-lg text-white p-2.5 cursor-pointer"
             onClick={importData}>
             Finalizar Importación
             <ArrowRight />
@@ -179,6 +202,69 @@ export default function PatientBulkUploadPage() {
           </div>}
         </div>
       </div>}
+
+      {isImporting && createPortal(
+        <div className="fixed inset-0 z-100 flex flex-col items-center justify-center bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="flex flex-col items-center gap-3 p-8 rounded-2xl bg-white dark:bg-slate-800 shadow-2xl">
+            <Loader2 className="animate-spin text-primary" size={40} />
+            <p className="text-sm font-semibold text-slate-700 dark:text-slate-300">Importando pacientes...</p>
+          </div>
+        </div>,
+        document.body
+      )}
+
+      {showSummary && importResult && createPortal(
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm animate-in fade-in duration-300" onClick={handleCloseSummary} />
+          <div className="relative w-xl max-h-[90vh] bg-white dark:bg-slate-900 rounded-3xl shadow-2xl dark:border dark:border-slate-700/50 overflow-hidden animate-in zoom-in-95 duration-200">
+            <div className="flex items-center justify-between p-6 bg-primary dark:bg-slate-900 dark:border-b dark:border-slate-800">
+              <h3 className="text-xl font-bold text-white">Importación Completada</h3>
+              <button onClick={handleCloseSummary} className="p-2 text-white/70 hover:text-white hover:bg-white/10 rounded-full transition-colors">
+                <XCircle size={20} />
+              </button>
+            </div>
+            <div className="p-6 space-y-5 overflow-y-auto max-h-[calc(90vh-140px)]">
+              <div className="grid grid-cols-3 gap-3">
+                <div className="flex flex-col items-center gap-1 p-4 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50">
+                  <span className="text-2xl font-bold text-slate-800 dark:text-slate-200">{importResult.totalRows}</span>
+                  <span className="text-xs text-slate-500 dark:text-slate-400">Total registros</span>
+                </div>
+                <div className="flex flex-col items-center gap-1 p-4 rounded-xl border border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-900/20">
+                  <span className="text-2xl font-bold text-emerald-600 dark:text-emerald-400">{importResult.successCount}</span>
+                  <span className="text-xs text-emerald-600 dark:text-emerald-400">Importados</span>
+                </div>
+                <div className="flex flex-col items-center gap-1 p-4 rounded-xl border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-900/20">
+                  <span className="text-2xl font-bold text-red-600 dark:text-red-400">{importResult.errorCount}</span>
+                  <span className="text-xs text-red-600 dark:text-red-400">Con errores</span>
+                </div>
+              </div>
+              <div className="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400">
+                <Clock size={16} />
+                <span>Tiempo de procesamiento: {importResult.processingTimeSeconds.toFixed(2)}s</span>
+              </div>
+              {importResult.errors.length > 0 && (
+                <div>
+                  <p className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Detalle de errores:</p>
+                  <div className="max-h-40 overflow-y-auto space-y-1">
+                    {importResult.errors.map((err, i) => (
+                      <div key={i} className="flex gap-2 p-2 text-xs rounded-lg bg-red-50 dark:bg-red-900/10 border border-red-100 dark:border-red-800/30 text-red-700 dark:text-red-400">
+                        <XCircle size={14} className="shrink-0 mt-0.5" />
+                        <span>{err.errorMessage}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+            <div className="flex justify-end p-6 bg-slate-50 dark:bg-slate-800/50">
+              <button onClick={handleCloseSummary}
+                className="px-6 py-2 text-sm font-semibold text-white bg-primary hover:bg-primary/70 rounded-xl shadow-lg shadow-indigo-600/20 transition-all active:scale-95">
+                Aceptar
+              </button>
+            </div>
+          </div>
+        </div>, document.body
+      )}
     </PageComponent>
   );
 }
