@@ -1,34 +1,44 @@
 import { PaymentService } from "@/services/payment/payment.service";
 import type { PaymentBaucherDto } from "@/services/payment/payment.type";
+import { PrinterHelper } from "@/utils/printer.util";
 import { Receipt, X } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface TicketModalProps {
   isOpen: boolean;
   onClose: () => void;
   title: string;
   id: number;
-  textBtnConfirm: string,
-  clickBtnConfirm: () => void;
 }
 
-export default function TickectModal({ title, textBtnConfirm, isOpen, onClose, clickBtnConfirm, id }: TicketModalProps) {
+export default function TickectModal({ title, isOpen, onClose, id }: TicketModalProps) {
+  const ticketRef = useRef<HTMLDivElement>(null)
   const [baucher, setBaucher] = useState<PaymentBaucherDto>()
   const [loading, setLoading] = useState(false);
+  const [printing, setPrinting] = useState(false);
 
   useEffect(() => {
     if (id) {
       setLoading(true);
       PaymentService.getBaucher(id)
         .then(setBaucher)
-        .catch((error) => {
-          console.error("Error fetching baucher:", error);
-        })
         .finally(() => {
           setLoading(false);
         });
     }
   }, [id]);
+
+  const handlePrint = async () => {
+    if (!ticketRef.current) return
+    setPrinting(true)
+    try {
+      await PrinterHelper.print(ticketRef.current.innerHTML, 'ticket')
+    } catch (error) {
+      console.error('Error al imprimir:', error)
+    } finally {
+      setPrinting(false)
+    }
+  }
 
   if (!isOpen) return null;
 
@@ -59,7 +69,7 @@ export default function TickectModal({ title, textBtnConfirm, isOpen, onClose, c
         {loading ? (
           <LoadingBaucher />
         ) : baucher && (
-          <div className="animate-in fade-in duration-500">
+          <div ref={ticketRef} className="animate-in fade-in duration-500">
             <TicketBaucher baucher={baucher} />
           </div>
         )}
@@ -73,10 +83,11 @@ export default function TickectModal({ title, textBtnConfirm, isOpen, onClose, c
             Cancelar
           </button>
           <button
-            onClick={clickBtnConfirm}
-            className="px-6 py-2 text-sm font-semibold text-white hover:text-white/70 bg-primary hover:bg-primary/70 rounded-xl shadow-lg shadow-indigo-600/20 transition-all active:scale-95"
+            onClick={handlePrint}
+            disabled={printing}
+            className="px-6 py-2 text-sm font-semibold text-white hover:text-white/70 bg-primary hover:bg-primary/70 rounded-xl shadow-lg shadow-indigo-600/20 transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {textBtnConfirm}
+            {printing ? 'Imprimiendo...' : 'Imprimir'}
           </button>
         </div>
       </div>
