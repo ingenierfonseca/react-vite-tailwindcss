@@ -2,7 +2,7 @@ import { Controller } from "react-hook-form";
 import { useEffect } from "react";
 import TextFieldApp from "@/components/commons/TextFieldApp";
 import DropDownApp from "@/components/commons/DropDownApp";
-import ButtonSaveApp from "@/components/commons/ButtonSaveApp";
+import { SubmitSaveApp } from "@/components/commons/ButtonSaveApp";
 import PageRightComponent from "@/components/commons/PageRightComponent";
 import type { DropDownAppModel } from "@/models/dropdownapp.type";
 import type { Staff } from "@/models/staff.type";
@@ -26,7 +26,8 @@ const GENDER_OPTIONS: DropDownAppModel[] = [
 export default function StaffForm({ itemParam, setIsOpen, reload }: StaffFormProps) {
     const {
         control, handleSubmit, formState: { errors }, reset, loading, save,
-        selectedImage, fileInputRef, handleFileChange, handleUploadClick
+        selectedImage, fileInputRef, handleFileChange, handleUploadClick,
+        uploadAvatar
     } = useStaff(itemParam);
 
     useEffect(() => {
@@ -35,7 +36,15 @@ export default function StaffForm({ itemParam, setIsOpen, reload }: StaffFormPro
 
     const onSubmit = async () => {
         const success = await save();
-        if (success) { reload(); setIsOpen(false); }
+        if (success) {
+            if (selectedImage)
+                uploadAvatar()
+            reload(); setIsOpen(false); 
+        }
+    };
+
+    const onError = (errors: any) => {
+        console.log("❌ Errores de validación:", errors);
     };
 
     return (
@@ -43,13 +52,13 @@ export default function StaffForm({ itemParam, setIsOpen, reload }: StaffFormPro
             title={itemParam?.id ? "Editar Empleado" : "Nuevo Empleado"}
             onClick={() => setIsOpen(false)}
         >
-            <form onSubmit={handleSubmit(onSubmit)} noValidate>
+            <form onSubmit={handleSubmit(onSubmit, onError)} noValidate>
                 <fieldset disabled={loading}>
                     <div className="flex gap-3">
                         <div className="flex flex-col items-center">
                             <div className="relative group">
                                 <img
-                                    src={selectedImage ? URL.createObjectURL(selectedImage) : itemParam?.avatar ? `${ASSETS_URLS.avatars}/${itemParam?.avatar}` : landscapePlaceholder}
+                                    src={selectedImage ? URL.createObjectURL(selectedImage) : itemParam!.avatar ? `${ASSETS_URLS.staffAvatars}${itemParam?.avatar}` : landscapePlaceholder}
                                     alt={`${itemParam?.firstName} ${itemParam?.lastName}`}
                                     className="w-54 h-54 rounded-lg object-cover border-2 border-primary/20 shadow-sm transition-all group-hover:border-primary"
                                 />
@@ -203,11 +212,8 @@ export default function StaffForm({ itemParam, setIsOpen, reload }: StaffFormPro
                         </div>
                     </div>
 
-
-
-
                     <div className="flex justify-center">
-                        <ButtonSaveApp className="flex-6" label="Staff" onClick={handleSubmit(onSubmit)} loading={loading} />
+                        <SubmitSaveApp className="flex-6" label="Staff" loading={loading} />
                     </div>
                 </fieldset>
             </form>

@@ -19,8 +19,8 @@ export default function RecentNotesCard({ recentNotes }: RecentNotesCardProps) {
                             <div className="flex items-center gap-2 text-slate-600">
                                 <p>{formatDateDDMMYYYY(note.createdAt)}</p>
                                 <p>
-                                    {note.doctor?.title}
-                                    {note.doctor?.staff.firstName} {note.doctor?.staff.lastName}
+                                    {note.doctor!.title}
+                                    {note.doctor!.staff!.firstName} {note.doctor!.staff!.lastName}
                                 </p>
                             </div>
                             <p>{note.note}</p>

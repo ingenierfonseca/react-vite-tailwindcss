@@ -17,7 +17,6 @@ export default function TickectModal({ title, textBtnConfirm, isOpen, onClose, c
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    console.log("Valores actuales del Modal -> isOpen:", isOpen, " | id:", id);
     if (id) {
       setLoading(true);
       PaymentService.getBaucher(id)

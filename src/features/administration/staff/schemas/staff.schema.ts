@@ -8,10 +8,10 @@ export const staffSchema = z.object({
   gender: z.string().min(1, "El género es requerido"),
   birthDate: z.string().optional().or(z.literal(""))
     .superRefine((val, ctx) => zodDateValidation(val, ctx)),
-  email: z.string().optional(),
-  phone: z.string().optional(),
-  address: z.string().optional(),
-  avatar: z.string().optional(),
+  email: z.string().nullable().or(z.literal("")),
+  phone: z.string().nullable().or(z.literal("")),
+  address: z.string().nullable().or(z.literal("")),
+  avatar: z.string().nullable().or(z.literal("")),
 });
 
 export type StaffFormValues = z.infer<typeof staffSchema>;

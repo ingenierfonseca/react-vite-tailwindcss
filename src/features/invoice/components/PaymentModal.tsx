@@ -20,14 +20,8 @@ const transactionTypes: DropDownAppModel[] = [
 ]
 
 const moneys: DropDownAppModel[] = [
-    {
-        id: 1,
-        value: 'COR - Peso Nicaraguense'
-    },
-    {
-        id: 2,
-        value: 'USD - Dolares'
-    }
+    { id: 1, value: 'COR - Peso Nicaraguense' },
+    { id: 2, value: 'USD - Dolares' }
 ]
 
 interface PaymentModalProps {
@@ -35,10 +29,11 @@ interface PaymentModalProps {
     customer: CustomerInvoiceDTO,
     isModalOpen: boolean,
     setIsModalOpen: (value: boolean) => void,
+    setPaymentId: (value: number) => void
     onClick: () => void,
 }
 
-export default function PaymentModal({ id, customer, isModalOpen, setIsModalOpen, onClick }: PaymentModalProps) {
+export default function PaymentModal({ id, customer, isModalOpen, setIsModalOpen, setPaymentId, onClick }: PaymentModalProps) {
     const { 
         invoiceData,
         invoice,
@@ -51,10 +46,14 @@ export default function PaymentModal({ id, customer, isModalOpen, setIsModalOpen
         setTransactionId,
         registerPayment
     } = useQuickPayment();
-    const [disabled, setDisabled] = useState((id !== 0))
+    const [disabled, setDisabled] = useState(id !== 0)
 
     useEffect(() => {
-        if (id == 0) return
+        if (id === 0) {
+            setPayment({id: 0, amount: 0, currencyId: 0, customerId: customer.id, invoiceId: 0, paymentTypeId: 0})
+            setDisabled(false)
+            return
+        }
         
         setDisabled(true)
 
@@ -82,14 +81,16 @@ export default function PaymentModal({ id, customer, isModalOpen, setIsModalOpen
                 setIsModalOpen(false);
             }}
             title="Información del Pago"
+            disabled={disabled}
             textBtnConfirm="Agregar"
             clickBtnConfirm={async () => {
                 if (validateFields(transactionId, payment, invoice!, customer)) {
-                    const { success, error: apiError } = await registerPayment();
+                    const { success, paymentId, error: apiError } = await registerPayment();
                     if (!success) {
                         toast.error("Error al registrar el pago: " + (apiError?.message || "Error desconocido"));
                     } else {
                         onClick()
+                        setPaymentId(paymentId!)
                         setDisabled(true)
                     }
                 }

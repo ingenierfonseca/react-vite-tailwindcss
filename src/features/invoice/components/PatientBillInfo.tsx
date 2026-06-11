@@ -189,7 +189,16 @@ export default function PatientBillInfo({ customer, setIsOpen, reload/*, openInv
                 </div>
             </div>
 
-            <PaymentModal id={paymentId} customer={customer!} isModalOpen={isOpenModal} setIsModalOpen={setIsOpenModal} onClick={() => { setReload((prev) => prev + 1); reload() }} />
+            <PaymentModal id={paymentId} customer={customer!} 
+                isModalOpen={isOpenModal} 
+                setIsModalOpen={setIsOpenModal} 
+                setPaymentId={setPaymentId}
+                onClick={() => { 
+                    setReload((prev) => prev + 1); 
+                    reload();
+                    setIsOpenModal(false)
+                    setIsOpenTicket(true) 
+                }} />
             <TickectModal id={paymentId} isOpen={isOpenTicket} onClose={() => setIsOpenTicket(false)} title={"Baucher"} textBtnConfirm={"Imprimir"} clickBtnConfirm={() => { }} />
             <InvoicePrintModal isOpen={false} onClose={() => setIsOpenTicket(false)} title={"Baucher"} textBtnConfirm={"Imprimir"} clickBtnConfirm={() => { }} />
             <ModalInvoice isOpen={isOpenInvoicePDF} onClose={() => { setIsOpenInvoicePDF(false); setInvoicePrintData(null) }} title={"Factura"}>

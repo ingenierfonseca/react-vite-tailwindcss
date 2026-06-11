@@ -44,8 +44,9 @@ export const useQuickPayment = () => {
                 paymentTypeId: payment.paymentTypeId,
                 operationTypeId: transactionId
             }
-            await PaymentService.post(request).then(setPayment);
-            return { success: true }
+            const result = await PaymentService.post(request);
+            setPayment(result)
+            return { success: true, paymentId: result.id }
         } catch (error: any) {
             const msg = error.response?.data?.message || error.message || "Error inesperado";
             const errorObject = new Error(msg);

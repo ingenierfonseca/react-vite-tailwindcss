@@ -4,6 +4,7 @@ import { useEffect } from "react"
 import { useClinicalNote } from "../hooks/useClinicalNote"
 import ClinicalNoteForm from "./ClinicalNoteForm"
 import { Card } from "@/components/ui/card"
+import { ASSETS_URLS } from "@/config/constants"
 
 export default function NotesTab({ sessionPlan }: { sessionPlan?: SessionPlan }) {
     const {
@@ -31,9 +32,9 @@ export default function NotesTab({ sessionPlan }: { sessionPlan?: SessionPlan })
                 {notes.map((note) => (
                     <div key={note.id} className="p-3 border border-slate-300 dark:border-slate-700 rounded-lg bg-slate-50 dark:bg-slate-800/50">
                         <AvatarInfoSmall
-                            name={`${note.doctor?.title} ${note.doctor?.staff.firstName} ${note.doctor?.staff.lastName}`}
+                            name={`${note.doctor?.title} ${note.doctor?.staff!.firstName} ${note.doctor?.staff!.lastName}`}
                             title={new Date(note.createdAt).toLocaleString()}
-                            avatar={note.doctor?.staff.avatar}
+                            avatar={`${ASSETS_URLS.staffAvatars}${note.doctor?.staff!.avatar}`}
                         />
                         <p className="text-base text-slate-800 dark:text-slate-300">{note.note}</p>
                         <div className="ml-auto">

@@ -9,18 +9,18 @@ import { staffSchema, type StaffFormValues } from "../schemas/staff.schema";
 export function useStaff(initialData?: Staff) {
     const [loading, setLoading] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
-        const [selectedImage, setSelectedImage] = useState<File | null>(null);
-    
-        const handleUploadClick = () => {
-            fileInputRef.current?.click();
-        };
-    
-        const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
-            const file = event.target.files?.[0];
-            if (file) {
-                setSelectedImage(file);
-            }
-        };
+    const [selectedImage, setSelectedImage] = useState<File | null>(null);
+
+    const handleUploadClick = () => {
+        fileInputRef.current?.click();
+    };
+
+    const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0];
+        if (file) {
+            setSelectedImage(file);
+        }
+    };
 
     const form = useForm<StaffFormValues>({
         resolver: zodResolver(staffSchema),
@@ -29,6 +29,7 @@ export function useStaff(initialData?: Staff) {
             firstName: "",
             lastName: "",
             gender: "",
+            birthDate: "",
             email: "",
             phone: "",
             address: "",
@@ -69,5 +70,24 @@ export function useStaff(initialData?: Staff) {
         }
     };
 
-    return { ...form, loading, save, selectedImage, fileInputRef, handleFileChange, handleUploadClick };
+    const uploadAvatar = async (): Promise<boolean> => {
+        var success = false;
+        setLoading(true);
+
+        try {
+            const values = form.getValues();
+            await StaffService.uploadAvatar(values.id, selectedImage);
+            toast.success("Avatar actualizado correctamente");
+            success = true;
+        } catch (err: any) {
+            const errorMessage = err.response?.data?.message || "Error al crear el paciente";
+            toast.error(errorMessage);
+            success = false;
+        } finally {
+            setLoading(false);
+            return success;
+        }
+    }
+
+    return { ...form, loading, save, selectedImage, fileInputRef, handleFileChange, handleUploadClick, uploadAvatar };
 }
