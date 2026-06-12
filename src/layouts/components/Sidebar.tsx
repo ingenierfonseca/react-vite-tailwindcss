@@ -7,6 +7,7 @@ import { useLocation, useNavigate } from "react-router";
 import { useAuth } from "../../provider/AuthProvider";
 import { usePermissions } from "../../hooks/usePermissions";
 import { Avatar, AvatarFallback, AvatarImage } from "../../components/ui/avatar";
+import { ASSETS_URLS } from "@/config/constants";
 
 interface SidebarProps {
   collapsed: boolean;
@@ -38,14 +39,14 @@ function Sidebar({collapsed, isMobileMenuOpen}: SidebarProps) {
       navigate("/login", { replace: true });
     };
 
-    const userInitials = user?.name
-      ? user.name.split(" ").map((n) => n[0]).join("").toUpperCase().slice(0, 2)
+    const userInitials = user?.userName
+      ? user.userName.split(" ").map((n) => n[0]).join("").toUpperCase().slice(0, 2)
       : "AD";
 
-    const { can, isAdmin } = usePermissions();
+    const { can, isSuperAdmin } = usePermissions();
 
     const filteredMenuItems = menuItems.map((item) => {
-      if (item.id !== "superAdmin" || isAdmin) return item;
+      if (item.id !== "superAdmin" || isSuperAdmin) return item;
       const filteredSubmenu = item.submenu?.filter(
         (sub) => sub.resource && can("view", sub.resource)
       );
@@ -116,7 +117,7 @@ function Sidebar({collapsed, isMobileMenuOpen}: SidebarProps) {
                 <div className={`${collapsed ? "p-2 flex-col items-center gap-2 " : "p-3 "} flex rounded-xl bg-slate-50 dark:bg-slate-800/50`}>
                   <div className="flex items-center space-x-3 flex-1 min-w-0">
                     <Avatar size="sm">
-                      <AvatarImage src="" alt={user?.name || "Usuario"} />
+                      <AvatarImage src={`${ASSETS_URLS.staffAvatars}${user?.avatar}`} alt={user?.userName || "Usuario"} />
                       <AvatarFallback className="text-xs bg-primary/10 text-primary">
                         {userInitials}
                       </AvatarFallback>
@@ -124,7 +125,7 @@ function Sidebar({collapsed, isMobileMenuOpen}: SidebarProps) {
                     {(!collapsed || !isDesktop) && (
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-medium text-slate-800 dark:text-white truncate">
-                          {user?.name || "Usuario"}
+                          {user?.userName || "Usuario"}
                         </p>
                         <p className="text-xs text-slate-500 dark:text-slate-400 truncate">
                           {user?.roles?.[0] || "Sin rol"}

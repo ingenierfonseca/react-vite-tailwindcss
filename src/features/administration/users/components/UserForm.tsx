@@ -14,7 +14,8 @@ interface UserFormProps {
 }
 
 const roleOptions = [
-    { id: Role.Admin, value: "SuperAdmin" },
+    { id: Role.SuperAdmin, value: "SuperAdmin" },
+    { id: Role.Admin, value: "Admin" },
     { id: Role.Doctor, value: "Doctor" },
     { id: Role.Recepcionista, value: "Recepcionista" },
 ];

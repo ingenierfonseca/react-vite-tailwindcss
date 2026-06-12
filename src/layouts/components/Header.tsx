@@ -4,6 +4,7 @@ import { useLocation, useNavigate } from "react-router";
 import { routesConfig } from "../../app/routesConfig";
 import { useAuth } from "../../provider/AuthProvider";
 import { Avatar, AvatarFallback, AvatarImage } from "../../components/ui/avatar";
+import { ASSETS_URLS } from "@/config/constants";
 
 interface HeaderProps {
     onToggle: () => void;
@@ -36,8 +37,8 @@ function Header({onToggle}: HeaderProps) {
         navigate("/login", { replace: true });
     };
 
-    const userInitials = user?.name
-        ? user.name.split(" ").map((n) => n[0]).join("").toUpperCase().slice(0, 2)
+    const userInitials = user?.userName
+        ? user.userName.split(" ").map((n) => n[0]).join("").toUpperCase().slice(0, 2)
         : "AD";
 
     return(
@@ -60,13 +61,13 @@ function Header({onToggle}: HeaderProps) {
                         className="flex items-center gap-2 p-1.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
                     >
                         <Avatar size="sm">
-                            <AvatarImage src="" alt={user?.name || "Usuario"} />
+                            <AvatarImage src={`${ASSETS_URLS.staffAvatars}${user?.avatar}`} alt={user?.userName || "Usuario"} />
                             <AvatarFallback className="text-xs bg-primary/10 text-primary">
                                 {userInitials}
                             </AvatarFallback>
                         </Avatar>
                         <span className="hidden sm:block text-sm font-medium text-slate-700 dark:text-slate-300">
-                            {user?.name || "Usuario"}
+                            {user?.userName || "Usuario"}
                         </span>
                     </button>
 
@@ -74,7 +75,7 @@ function Header({onToggle}: HeaderProps) {
                         <div className="absolute right-0 mt-2 w-48 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-xl py-1 z-50">
                             <div className="px-3 py-2 border-b border-slate-100 dark:border-slate-700">
                                 <p className="text-sm font-medium text-slate-800 dark:text-white truncate">
-                                    {user?.name || "Usuario"}
+                                    {user?.userName || "Usuario"}
                                 </p>
                                 <p className="text-xs text-slate-500 dark:text-slate-400 truncate">
                                     {user?.email || ""}

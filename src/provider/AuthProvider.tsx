@@ -1,9 +1,9 @@
 import { createContext, useContext, useState, useEffect, useCallback, type ReactNode } from "react";
-import type { User, LoginCredentials, UserProfileResponse } from "../models/auth.type";
+import type { LoginCredentials, UserProfileResponse, UserProfile } from "../models/auth.type";
 import { AuthService } from "../services/auth/auth.service";
 
 interface AuthContextType {
-  user: User | null;
+  user: UserProfile | null;
   isAuthenticated: boolean;
   loading: boolean;
   login: (credentials: LoginCredentials) => Promise<void>;
@@ -35,19 +35,23 @@ function isTokenExpired(token: string): boolean {
   return Date.now() >= exp - 30000;
 }
 
-function mapProfileToUser(profile: UserProfileResponse): User {
+function mapProfileToUser(profile: UserProfileResponse): UserProfile {
   return {
     id: profile.id,
-    name: profile.username,
+    userName: profile.username,
     email: profile.email,
     roles: profile.roles,
     permissions: profile.permissions,
     staffId: profile.staffId,
+    firstName: profile.firstName,
+    lastName: profile.lastName,
+    staffTypeName: profile.staffTypeName,
+    avatar: profile.avatar
   };
 }
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
 
   const getAccessToken = useCallback(() => {
@@ -67,10 +71,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     localStorage.setItem(REFRESH_TOKEN_KEY, response.refreshToken);
     setUser({
       id: response.userId,
-      name: response.username,
+      userName: response.username,
       roles: response.roles,
       permissions: response.permissions,
       staffId: response.staffId,
+      firstName: "",
+      lastName: ""
     });
   }, []);
 
