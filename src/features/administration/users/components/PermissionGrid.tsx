@@ -138,6 +138,7 @@ export default function PermissionGrid({ allPermissions, permissions, onChange, 
 
   const RESOURCES = [
     { resource: "appointments", label: "Citas" },
+    { resource: "patients", label: "Pacientes" },
     { resource: "doctors", label: "Doctores" },
     { resource: "treatments", label: "Tratamientos" },
     { resource: "treatmentplans", label: "Planes de Tratamiento" },
@@ -149,6 +150,8 @@ export default function PermissionGrid({ allPermissions, permissions, onChange, 
     { resource: "rolepermissions", label: "Roles y Permisos" },
     { resource: "roles", label: "Roles" },
     { resource: "permissions", label: "Permisos" },
+    { resource: "invoice", label: "Facturación" },
+    { resource: "consultationhistory", label: "Historial de Consultas" },
   ];
 
   const allSelectedLegacy = (resource: string) =>

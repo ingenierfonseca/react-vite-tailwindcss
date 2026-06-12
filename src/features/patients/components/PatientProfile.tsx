@@ -7,10 +7,11 @@ import { formatPhoneNumber } from "@/utils/number.util";
 import { useEffect, useState } from "react";
 import { SessionPlanService } from "@/services/session-plan/sessionPlan.service";
 import type { SessionPlan } from "@/services/treatment-plan/treatmentPlan.type";
-import { formatDateToMMDameDDYYYY } from "@/utils/date.util";
+import { formatDateToMMDameDDYYYY, calculateAgeFromString } from "@/utils/date.util";
 import { useNavigate } from "react-router";
 import type { ClinicalSession } from "@/services/clinical-session/clinicalSession.type";
 import { ClinicalSessionService } from "@/services/clinical-session/clinicalSession.service";
+import { usePermissions } from "../../../hooks/usePermissions";
 
 const cardinfo = [
     {
@@ -39,9 +40,11 @@ interface PatientProfileProps {
     customer: Customer;
     setIsOpen: (value: boolean) => void;
     setIsOpenTransition: (value: boolean) => void;
+    onEdit?: (value: boolean) => void;
 }
 
-export default function PatientProfile({ customer, setIsOpen, setIsOpenTransition }: PatientProfileProps) {
+export default function PatientProfile({ customer, setIsOpen, setIsOpenTransition, onEdit }: PatientProfileProps) {
+    const { can } = usePermissions();
     const [treatmentHistory, setTreatmentHistory] = useState<SessionPlan[]>([])
     const [consultationHistory, setConsultationHistory] = useState<ClinicalSession[]>([])
     const navigate = useNavigate();
@@ -87,7 +90,7 @@ export default function PatientProfile({ customer, setIsOpen, setIsOpenTransitio
                             {customer.firstName} {customer.lastName}
                         </p>
                         <p className="dark:text-slate-400">Id: {customer.dni}</p>
-                        <p className="dark:text-slate-400">Edad: {customer.age} {customer.age > 1 ? 'años' : 'año'}</p>
+                        <p className="dark:text-slate-400">Edad: {calculateAgeFromString(customer.birthDate)}</p>
                         <p className="dark:text-slate-400">Tel: {formatPhoneNumber(customer.phone)}</p>
                         <p className="dark:text-slate-400">Email: {customer.email}</p>
                     </div>
@@ -114,8 +117,8 @@ export default function PatientProfile({ customer, setIsOpen, setIsOpenTransitio
                 ) : (
                 treatmentHistory.map((treatment) => (
                     <div key={treatment.id}
-                        className="flex mt-4 p-2 rounded-md bg-slate-100 dark:bg-slate-900 cursor-pointer dark:hover:bg-slate-700 hover:bg-slate-200 transition-colors"
-                        onClick={() => navigate(`/patients/${customer.id}/treatment-plan/${treatment.id}`)}>
+                        className={`flex mt-4 p-2 rounded-md bg-slate-100 dark:bg-slate-900 ${can("view", "treatmentplans") ? "cursor-pointer dark:hover:bg-slate-700 hover:bg-slate-200" : ""} transition-colors`}
+                        onClick={() => can("view", "treatmentplans") && navigate(`/patients/${customer.id}/treatment-plan/${treatment.id}`)}>
                         <div className="w-10 h-10 p-2 rounded-full dark:bg-slate-300 flex items-center justify-center">
                             <p>MF</p>
                         </div>
@@ -138,8 +141,8 @@ export default function PatientProfile({ customer, setIsOpen, setIsOpenTransitio
                 ) : (
                 consultationHistory.map((consultation) => (
                     <div key={consultation.id}
-                        className="flex mt-4 p-2 rounded-md bg-slate-100 dark:bg-slate-900 cursor-pointer dark:hover:bg-slate-700 hover:bg-slate-200 transition-colors"
-                        onClick={() => navigate(`/patients/${customer.id}/consultation-history/${consultation.id}`)}>
+                        className={`flex mt-4 p-2 rounded-md bg-slate-100 dark:bg-slate-900 ${can("view", "consultationhistory") ? "cursor-pointer dark:hover:bg-slate-700 hover:bg-slate-200" : ""} transition-colors`}
+                        onClick={() => can("view", "consultationhistory") && navigate(`/patients/${customer.id}/consultation-history/${consultation.id}`)}>
                         <div className="w-10 h-10 p-2 rounded-full dark:bg-slate-300 flex items-center justify-center">
                             <p>MF</p>
                         </div>
@@ -158,10 +161,30 @@ export default function PatientProfile({ customer, setIsOpen, setIsOpenTransitio
             <div className="mt-4 rounded-md p-2 border dark:border-slate-300">
                 <p className="font-semibold text-black dark:text-white">Acciones Rapidas</p>
                 <div className="grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-4 mt-4">
-                    <button className="flex-1 px-4 py-2 bg-primary text-white rounded-md hover:bg-primary/90">Agendar Cita</button>
-                    <button className="flex-1 px-4 py-2 border border-slate-300 text-black dark:text-white rounded-md hover:bg-slate-300 dark:hover:bg-slate-700" onClick={() => setIsOpenTransition(true)}>Iniciar Consulta</button>
-                    <button className="flex-1 px-4 py-2 border border-slate-300 text-black dark:text-white rounded-md hover:bg-slate-300 dark:hover:bg-slate-700">Actualizar Información</button>
-                    <button className="flex-1 px-4 py-2 border border-slate-300 text-black dark:text-white rounded-md hover:bg-slate-300 dark:hover:bg-slate-700">Ver Facturas</button>
+                    {can("create", "appointments") && (
+                    <button className="flex-1 px-4 py-2 bg-primary text-white rounded-md hover:bg-primary/90"
+                        onClick={() => navigate(`/appointments?customerId=${customer.id}`)}>
+                        Agendar Cita
+                    </button>
+                    )}
+                    {can("create", "appointments") && (
+                    <button className="flex-1 px-4 py-2 border border-slate-300 text-black dark:text-white rounded-md hover:bg-slate-300 dark:hover:bg-slate-700"
+                        onClick={() => setIsOpenTransition(true)}>
+                        Iniciar Consulta
+                    </button>
+                    )}
+                    {can("update", "patients") && (
+                    <button className="flex-1 px-4 py-2 border border-slate-300 text-black dark:text-white rounded-md hover:bg-slate-300 dark:hover:bg-slate-700"
+                        onClick={() => onEdit?.(true)}>
+                        Actualizar Información
+                    </button>
+                    )}
+                    {can("view", "invoice") && (
+                    <button className="flex-1 px-4 py-2 border border-slate-300 text-black dark:text-white rounded-md hover:bg-slate-300 dark:hover:bg-slate-700"
+                        onClick={() => navigate(`/invoice?customerId=${customer.id}`)}>
+                        Ver Facturas
+                    </button>
+                    )}
                 </div>
             </div>
         </PageRightComponent>

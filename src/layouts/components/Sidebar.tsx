@@ -46,12 +46,18 @@ function Sidebar({collapsed, isMobileMenuOpen}: SidebarProps) {
     const { can, isSuperAdmin } = usePermissions();
 
     const filteredMenuItems = menuItems.map((item) => {
-      if (item.id !== "superAdmin" || isSuperAdmin) return item;
-      const filteredSubmenu = item.submenu?.filter(
-        (sub) => sub.resource && can("view", sub.resource)
-      );
-      if (!filteredSubmenu || filteredSubmenu.length === 0) return null;
-      return { ...item, submenu: filteredSubmenu };
+      if (item.id === "superAdmin") {
+        if (!isSuperAdmin) {
+          const filteredSubmenu = item.submenu?.filter(
+            (sub) => sub.resource && can("view", sub.resource)
+          );
+          if (!filteredSubmenu || filteredSubmenu.length === 0) return null;
+          return { ...item, submenu: filteredSubmenu };
+        }
+        return item;
+      }
+      if (item.resource && !can("view", item.resource)) return null;
+      return item;
     }).filter(Boolean);
 
     return (

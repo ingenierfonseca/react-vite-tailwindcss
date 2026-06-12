@@ -14,6 +14,7 @@ export interface MenuAppModel {
     path?: string,
     badge?: string,
     count?: string,
+    resource?: string,
     submenu?: SubMenuAppModel[]
 }
 
@@ -31,26 +32,30 @@ export function getMenuData() {
             icon: Calendar,
             label: "Citas",   //"Appointments",
             path: "/appointments",
-            badge: "3"
+            badge: "3",
+            resource: "appointments"
         },
         {
             id: "patients",
             icon: Users,
             label: "Pacientes",   //"Patients",
             count: "2.4k",
-            path: "/patients"
+            path: "/patients",
+            resource: "patients"
         },
         {
             id: "treatments",
             icon: BarChart3,
             label: "Tratamientos y expedientes",   //"Treatments and Records",
-            path: "treatments"
+            path: "treatments",
+            resource: "treatments"
         },
         {
             id: "invoice",
             icon: Receipt,
             label: "Facturación y pagos",   //"Billing and Insurance",
-            path: "/invoice"
+            path: "/invoice",
+            resource: "invoice"
         },
         /*{
             id: "performance",
@@ -62,6 +67,7 @@ export function getMenuData() {
             icon: Users,
             label: "Odontograma",
             path: "/odontogram",
+            resource: "odontogram"
         },
         {
             id: "superAdmin",
@@ -91,6 +97,7 @@ export function getMenuData() {
             id: "import",
             icon: Upload,
             label: "Carga de Datos",
+            resource: "uploads",
             submenu: [
                 { id: "patients", label: "Importar Pacientes", path: "imports/patients" }
             ]

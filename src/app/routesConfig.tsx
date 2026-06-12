@@ -7,6 +7,7 @@ import SettingsPage from "../features/settings/SettingsPage";
 import AppointmentTypeListPage from "../features/administration/apointment-type/AppointmentTypeListPage";
 import PatientBulkUploadPage from "../features/upload-data/patient/PatientBulkUploadPage";
 import CustomerClinicalHistoryDashboard from "@/features/clinical-history/CustomerClinicalHistoryPage";
+import ConsultationHistoryDetailPage from "@/features/clinical-history/ConsultationHistoryDetailPage";
 import TreatmentListPage from "@/features/administration/treatments/TreatmentListPage";
 import DoctorListPage from "@/features/administration/doctors/DoctorListPage";
 import TreatmentPlanListPage from "@/features/administration/treatment-plans/TreatmentPlanListPage";
@@ -155,5 +156,10 @@ export const routesConfig = [
     path: "/patients/:id/treatment-plan/:treatmentId",
     title: "Historial clinico",
     element: <CustomerClinicalHistoryDashboard />
+  },
+  {
+    path: "/patients/:id/consultation-history/:consultationId",
+    title: "Detalle de consulta",
+    element: <ConsultationHistoryDetailPage />
   }
 ];

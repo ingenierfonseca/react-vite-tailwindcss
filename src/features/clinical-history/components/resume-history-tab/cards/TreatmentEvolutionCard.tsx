@@ -5,6 +5,7 @@ import type { ClinicalFile } from "@/models/clinicalFile.type"
 import { ClinicalFileService } from "@/services/clinical-file/clinicalFile.service"
 import { toast } from "react-toastify"
 import { Camera, X, Loader2, ImageIcon, ChevronLeft } from "lucide-react"
+import { ASSETS_URLS } from "@/config/constants"
 
 const IMAGE_TYPE_OPTIONS = [
     { value: 1, label: "Antes del tratamiento" },
@@ -140,7 +141,7 @@ export default function TreatmentEvolutionCard({ images, customerId, sessionId, 
                             {images.map((image) => (
                                 <div key={image.id} className="group relative rounded-xl overflow-hidden border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50">
                                     <img
-                                        src={image.url}
+                                        src={`${ASSETS_URLS.clinicalImages.replace("id", image.customerId.toString())}${image.url}`}
                                         alt="evolucion"
                                         className="w-full h-32 object-cover transition-transform duration-300 group-hover:scale-105"
                                     />

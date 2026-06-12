@@ -54,6 +54,7 @@ export const usePatient = () => {
         if (value) {
             setIsOpenTransitionRight(value)
             setIsOpenCreateOrEdit(value)
+            setIsOpenProfileInfo(false)
         } else {
             setIsOpenTransitionRight(false)
             setTimeout(() => {

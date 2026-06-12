@@ -1,15 +1,18 @@
 import { Calendar, Pencil, User } from "lucide-react"
+import { Navigate } from "react-router"
 import { PaginatedAutocomplete } from "../../../components/pagination-data/PaginatedAutocomplete"
 import { CustomerService } from "../../../services/customer/customer.service"
 import DashboardCard from "../../../components/dashboard/DashboardCard"
 import PatientProfile from "../components/PatientProfile"
 import PatientCreate from "../components/PatientCreateEdit"
 import { usePatient } from "../hooks/patient.hook"
+import { usePermissions } from "../../../hooks/usePermissions"
 import AvatarInfo from "../../../components/commons/AvatarInfo"
 import PageComponent from "../../../components/commons/PageComponent"
 import type { Header } from "../../../models/header.type"
 import DashboardCardII from "../../../components/dashboard/DashboardCardII"
-import { ASSETS_URLS } from "../../../config/constants" 
+import { ASSETS_URLS } from "../../../config/constants"
+import { calculateAgeFromString } from "../../../utils/date.util"
 import ClinicalAssessment from "@/features/session-plan/ClinicalAssessment"
 
 const headers:Header[]  = [
@@ -34,7 +37,10 @@ const headers:Header[]  = [
         className: 'flex-1 text-right'
     }
 ]
+const RESOURCE = "patients";
+
 export default function PatientListPage() {
+    const { can } = usePermissions();
     const { 
         data,
         dashboardData,
@@ -53,11 +59,16 @@ export default function PatientListPage() {
         openClinicalAssessment
     } = usePatient()
 
+    if (!can("view", RESOURCE)) {
+        return <Navigate to="/not-found" replace />;
+    }
+
     return (
         <PageComponent
             title="Administración de Pacientes"
             description="Administra la información de tus pacientes"
             textButton="Agregar Nuevo Paciente"
+            showButton={can("create", RESOURCE)}
             onclick={() => {
                 setCustomer(null)
                 openCreate(true)
@@ -116,7 +127,7 @@ export default function PatientListPage() {
                                 openProfileInfo(true)
                             }}
                         />
-                        <div className="flex-1 hidden md:block">{patient!.age}</div>
+                        <div className="flex-1 hidden md:block">{calculateAgeFromString(patient!.birthDate)}</div>
                         <div className="flex-1 hidden md:block">{patient!.phone}</div>
                         <div className="flex-1 hidden md:block">
                             <div className="flex justify-center w-fit px-3 rounded-2xl bg-green-400/10 dark:bg-green-400/20 font-semibold text-green-600 dark:text-green-400">Activo</div>
@@ -128,6 +139,7 @@ export default function PatientListPage() {
                             <button className="w-8 h-8 bg-primary/10 p-1 text-primary dark:bg-primary-dark/10 dark:text-primary-dark px-2 rounded-sm hover:bg-primary/30 cursor-pointer">
                                 <Calendar size={18} />
                             </button>
+                            {can("update", RESOURCE) && (
                             <button
                                 onClick={() => {
                                     setCustomer(patient)
@@ -136,6 +148,7 @@ export default function PatientListPage() {
                                 className="w-8 h-8 bg-primary/10 p-1 text-primary dark:bg-slate-700/50 dark:text-slate-300 px-2 ml-1 rounded-sm hover:bg-primary/30 cursor-pointer">
                                 <Pencil size={18} />
                             </button>
+                            )}
                         </div>
                     </div>
                 ))}
@@ -147,7 +160,7 @@ export default function PatientListPage() {
                     ${isOpenTransitionRight ? 'translate-x-0' : 'translate-x-full'
                 }`}
             >
-                {isOpenProfileInfo && <PatientProfile setIsOpen={openProfileInfo} customer={customer!} setIsOpenTransition={openClinicalAssessment} />}
+                {isOpenProfileInfo && <PatientProfile setIsOpen={openProfileInfo} customer={customer!} setIsOpenTransition={openClinicalAssessment} onEdit={(value) => { if (value) openCreate(true); }} />}
                 {isOpenCreateOrEdit && <PatientCreate setIsOpen={openCreate} customerParam={customer!} reload={loadCustomers} />}
             </div>
             <div
