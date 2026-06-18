@@ -63,10 +63,10 @@ export default function UserForm({ itemParam, setIsOpen, reload }: UserFormProps
                         <p className="text-sm font-semibold text-slate-700 dark:text-slate-200 mb-2">
                             Permisos
                         </p>
-                        <PermissionGrid
+                        {/*<PermissionGrid
                             permissions={item.permissions}
                             onChange={(permissions) => setItem({ ...item, permissions })}
-                        />
+                        />*/}
                     </div>
                 </div>
 

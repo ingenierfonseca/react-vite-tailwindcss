@@ -1,19 +1,19 @@
 import { z } from "zod";
 
-const surfaceSchema = z.object({
+/*const surfaceSchema = z.object({
   center: z.string().nullable(),
   top: z.string().nullable(),
   bottom: z.string().nullable(),
   right: z.string().nullable(),
   left: z.string().nullable(),
-});
+});*/
 
 export const sessionPlanSchema = z.object({
   session: z.object({
     id: z.number(),
     customerId: z.number().min(1, "Cliente requerido"),
     doctorId: z.number().min(1, "Médico requerido"),
-    specialtyId: z.number().min(1, "Especialidad requerida"),
+    consultationSpecialtyId: z.number().min(1, "Especialidad requerida"),
     consultationTypeId: z.number().min(1, "Tipo de consulta requerido"),
     consultationId: z.number().optional(),
     date: z.string(),
@@ -49,7 +49,7 @@ export const sessionPlanSchema = z.object({
     }
   ),
 
-  odontogram: z.array(z.object({
+  /*odontogram: z.array(z.object({
     toothId: z.number(),
     surfaces: surfaceSchema,
   })),
@@ -57,7 +57,7 @@ export const sessionPlanSchema = z.object({
   diseases: z.array(z.object({
     id: z.string(),
     name: z.string(),
-  })),
+  })),*/
 
   items: z.array(z.any()).min(1, "Tiene que agregar un plan de tratamiento para continuar"),
   plansIds: z.array(z.number()),

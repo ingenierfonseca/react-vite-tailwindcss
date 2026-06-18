@@ -21,7 +21,7 @@ export const useSessionPlanSubmit = (
             toast.success("Plan guardado");
 
             navigate(
-                `/patients/${values.session.customerId}/treatment-history/${_.planId}`
+                `/patients/${values.session.customerId}/treatment-plan/${_.planId}`
             );
         },
 

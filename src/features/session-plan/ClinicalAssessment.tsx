@@ -3,8 +3,6 @@ import PatientInfo from "@/components/commons/PatientInfo";
 import ThreatmentPlanModal from "@/features/invoice/components/TreatmentPlanModal";
 import type { Customer } from "@/services/customer/customer.type";
 import FooterActions from "./components/footer/FooterActions";
-import OdontogramStep from "./components/steps/OdontogramStep";
-import DiseasesStep from "./components/steps/DiseasesStep";
 import TreatmentPlanStep from "./components/steps/TreatmentPlanStep";
 import ResumeStep from "./components/steps/ResumeStep";
 import { useSessionPlanForm } from "./hooks/useSessionPlanForm";
@@ -44,10 +42,10 @@ export default function ClinicalAssessment({ customer, setIsOpen }: ClinicalAsse
                         <ConsultationStep />
 
                         {/* Step 2 */}
-                        <OdontogramStep />
+                        {/*<OdontogramStep />*/}
 
                         {/* Step 3 */}
-                        <DiseasesStep />
+                        {/*<DiseasesStep />*/}
 
                         {/* Step 4 */}
                         <TreatmentPlanStep

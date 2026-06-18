@@ -6,12 +6,13 @@ import { useDoctors } from "./hooks/useDoctors";
 import DoctorForm from "./components/DoctorForm";
 import { usePermissions } from "../../../hooks/usePermissions";
 import type { Header } from "../../invoice/components/InvoiceDetail";
+import { calculateAgeFromString } from "@/utils/date.util";
 
 const headers: Header[] = [
-    { header: "Nombre", className: "flex-2" },
-    { header: "Apellido", className: "flex-2" },
-    { header: "Area", className: "flex-3 hidden md:block" },
-    { header: "Especialidad", className: "flex-2 hidden sm:block" },
+    { header: "Doctor(a)", className: "flex-2" },
+    { header: "Edad", className: "flex-1" },
+    { header: "Area", className: "flex-1 hidden md:block" },
+    { header: "Especialidad", className: "flex-1 hidden sm:block" },
 ];
 
 const RESOURCE = "doctors";
@@ -46,10 +47,10 @@ export default function DoctorListPage() {
                     {data?.data?.map((item, index) => (
                         <div key={item.id}
                             className={`flex px-4 py-3 gap-2 items-center ${index % 2 !== 0 ? "bg-slate-200 dark:bg-slate-800" : ""} hover:bg-slate-300 dark:hover:bg-slate-800/50 transition-colors`}>
-                            <span className="flex-2 dark:text-slate-200">{item.firstName}</span>
-                            <span className="flex-2 dark:text-slate-200">{item.lastName}</span>
-                            <span className="flex-3 hidden md:block dark:text-slate-400">{item.serviceName}</span>
-                            <span className="flex-2 hidden sm:block dark:text-slate-400">{item.specialtyName}</span>
+                            <span className="flex-2 dark:text-slate-200">{`${item.firstName} ${item.lastName}`}</span>
+                            <span className="flex-1 dark:text-slate-200">{calculateAgeFromString(item.birthDate)}</span>
+                            <span className="flex-1 hidden md:block dark:text-slate-400">{item.service}</span>
+                            <span className="flex-1 hidden sm:block dark:text-slate-400">{item.specialty}</span>
                             <div className="flex-1 flex justify-end relative">
                                 <button onClick={() => setOpenPopUp(item.id)}
                                     className="p-1 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-full transition-colors">

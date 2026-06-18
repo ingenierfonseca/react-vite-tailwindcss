@@ -51,7 +51,7 @@ export default function DoctorForm({ id, setIsOpen, reload }: DoctorFormProps) {
                     <PaginatedAutocomplete
                         label="Area"
                         value={item.serviceId}
-                        onChange={(value) => setItem({...item, specialtyId: value})}
+                        onChange={(value) => setItem({...item, serviceId: value, specialtyId: 0})}
                         fetchData={ServiceService.get}
                         getValue={(item) => item.id}
                         getLabel={(item) => `${item.name.trim()}`}
@@ -59,16 +59,19 @@ export default function DoctorForm({ id, setIsOpen, reload }: DoctorFormProps) {
                 </div>
                 <div className="flex gap-2 pt-3">
                     <PaginatedAutocomplete
+                        key={`specialty-${item.serviceId}`}
                         label="Especialidad"
                         value={item.specialtyId}
                         onChange={(value) => setItem({...item, specialtyId: value})}
-                        fetchData={SpecialtyService.get}
+                        fetchData={async (params) => {
+                            return SpecialtyService.get({ ...params, serviceId: item.serviceId || undefined });
+                        }}
                         getValue={(item) => item.id}
                         getLabel={(item) => `${item.name.trim()}`}
                     />
                     <DropDownApp title="Titulo"
                         data={titles as any}
-                        value={item?.title}
+                        value={item.title ? titles.find(t => t.value === item.title)?.id ?? "" : ""}
                         onChange={(val) => {
                             let g = titles.find(x => x.id === parseInt(val));
                             setItem({ ...item!, title: g?.value ?? "" });

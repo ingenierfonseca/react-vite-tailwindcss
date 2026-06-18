@@ -18,7 +18,7 @@ import ClinicalAssessment from "@/features/session-plan/ClinicalAssessment"
 const headers:Header[]  = [
     {
         header: 'Paciente',
-        className: 'flex-2'
+        className: 'flex-3'
     },
     {
         header: 'Edad',
@@ -91,7 +91,7 @@ export default function PatientListPage() {
                             icon: User
                         }} />
                 ))}
-                <DashboardCardII title="Pacientes activos" value={95} />
+                <DashboardCardII title="Pacientes activos" value={100} />
             </div>
 
             <div className="mt-4">
@@ -109,7 +109,7 @@ export default function PatientListPage() {
             <div className="mt-4 bg-white dark:bg-slate-900 rounded-lg shadow-md">
                 <div className="flex mt-4 py-2 bg-slate-100 dark:bg-slate-800/50 dark:border dark:border-slate-800">
                     {headers.map((header) => (
-                        <div key={header.header} className={`font-semibold text-slate-700 dark:text-slate-100 ${header.className}`}>
+                        <div key={header.header} className={`px-2 font-semibold text-slate-700 dark:text-slate-100 ${header.className}`}>
                             {header.header}
                         </div>
                     ))}
@@ -117,7 +117,7 @@ export default function PatientListPage() {
                 {data.data.map((patient) => (
                     <div key={patient!.id} className="flex gap-4 pt-4 px-4 text-slate-700 dark:text-slate-300 border border-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 dark:border-slate-800">
                         <AvatarInfo
-                            className="flex-2 min-w-0"
+                            className="flex-3 min-w-0"
                             avatar={`${ASSETS_URLS.avatars}/${patient!.avatar}`}
                             name={patient!.firstName + " " + patient!.lastName}
                             title={`${patient!.email}`}

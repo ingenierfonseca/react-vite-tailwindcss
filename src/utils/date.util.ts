@@ -32,7 +32,7 @@ export const calculateAgeFromString = (dateString: string) => {
   const hoy = new Date();
 
   if (isNaN(fechaNacimiento.getTime())) {
-    return "Fecha inválida";
+    return "";
   }
 
   let edad = hoy.getFullYear() - fechaNacimiento.getFullYear();

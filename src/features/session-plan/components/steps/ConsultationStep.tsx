@@ -35,11 +35,11 @@ export default function ConsultationStep() {
                     />
                     <Controller
                         control={control}
-                        name="session.specialtyId"
+                        name="session.consultationSpecialtyId"
                         render={({ field }) => (
                             <PaginatedAutocomplete
                                 label="Especialidad"
-                                value={session ? session.specialtyId : 0}
+                                value={session ? session.consultationSpecialtyId : 0}
                                 onChange={(value) => {
                                     field.onChange(value);
                                     setValue("session.doctorId", 0);
@@ -57,12 +57,12 @@ export default function ConsultationStep() {
                         name="session.doctorId"
                         render={({ field }) => (
                             <PaginatedAutocomplete
-                                key={`doctor-${session.specialtyId}`}
+                                key={`doctor-${session.consultationSpecialtyId}`}
                                 label="Doctor(a)"
                                 value={session ? session.doctorId : 0}
                                 onChange={(value) => field.onChange(value)}
                                 fetchData={async (params) => {
-                                    return DoctorService.get({ ...params, specialtyId: session.specialtyId || undefined });
+                                    return DoctorService.get({ ...params, specialtyId: session.consultationSpecialtyId || undefined });
                                 }}
                                 getValue={(item) => item.id}
                                 getLabel={(item) => `${item.firstName} ${item.lastName}`}

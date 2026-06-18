@@ -21,7 +21,7 @@ export const DoctorService = {
         const { data } = await api.get(`${method}?${params.toString()}`);
         return data;
     },
-    find: async (id: number): Promise<DoctorInfoDTO> => {
+    find: async (id: number): Promise<Doctor> => {
         const { data } = await api.get(
             `${method}${id}`
         );

@@ -11,11 +11,11 @@ export interface Doctor {
 
 export interface DoctorInfoDTO {
     id: number,
-    avatarUrl: string,
+    avatar: string,
     title: string,
     firstName: string,
     lastName: string,
-    staffName: string,
-    serviceName: string,
-    specialtyName: string
+    service: string,
+    specialty: string,
+    birthDate: string
 }

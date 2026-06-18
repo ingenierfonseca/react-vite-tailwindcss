@@ -1,14 +1,16 @@
-import { TextField } from "@mui/material";
+import { InputAdornment, TextField } from "@mui/material";
+import type { ReactElement } from "react";
 
 interface TextEditAppProps {
     label: string
     value: string | undefined
     className: string
     disabled?: boolean
-    maxLength?: number
+    maxLength?: number,
+    startIcon?: ReactElement
     onChange: (newValue: string) => void
 }
-export default function TextEditApp({ label, value, className, disabled = false, maxLength, onChange }: TextEditAppProps) {
+export default function TextEditApp({ label, value, className, disabled = false, maxLength, startIcon, onChange }: TextEditAppProps) {
     return (
         <TextField
             className={`${className}`}
@@ -21,7 +23,12 @@ export default function TextEditApp({ label, value, className, disabled = false,
                     inputProps: {
                         maxLength: maxLength,
                         className: "dark: text-white",
-                    }
+                    },
+                    startAdornment: (
+                <InputAdornment position="start">
+                    {startIcon}
+                </InputAdornment>
+            ),
                 }
             }}
             onChange={(e) => onChange(e.target.value)}

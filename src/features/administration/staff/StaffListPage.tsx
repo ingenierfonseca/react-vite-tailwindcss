@@ -7,15 +7,16 @@ import type { Staff } from "@/models/staff.type";
 import { useStaffList } from "./hooks/useStaffList";
 import StaffForm from "./components/StaffForm";
 import type { Header } from "@/models/header.type";
+import { calculateAgeFromString } from "@/utils/date.util";
 
 const RESOURCE = "staff";
 
 const headers : Header[] = [
-    { header: "Nombre completo", className: "flex-[3_1_180px]" },
-    { header: "Email", className: "flex-[2_1_120px]" },
-    { header: "Teléfono", className: "flex-[1_1_80px]" },
-    { header: "Género", className: "flex-[1_1_80px]" },
-    { header: "Acciones", className: "flex-[0.5_0.5_40px]" }
+    { header: "Nombre completo", className: "flex-2" },
+    { header: "Edad", className: "flex-[0.5]" },
+    { header: "Género", className: "flex-[0.5]" },
+    { header: "Teléfono", className: "flex-[0.5]" },
+    { header: "Email", className: "flex-1" }
 ];
 
 export default function StaffListPage() {
@@ -54,19 +55,22 @@ export default function StaffListPage() {
                 <div className="divide-y divide-slate-200 dark:divide-slate-600">
                     {data?.data?.map((staff: Staff) => (
                         <div key={staff.id} className="flex px-4 py-3 gap-2 items-center hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
-                            <span className="flex-[3_1_180px] text-sm text-slate-800 dark:text-slate-200">
+                            <span className="flex-2 text-sm text-slate-800 dark:text-slate-200">
                                 {staff.firstName} {staff.lastName}
                             </span>
-                            <span className="flex-[2_1_120px] text-sm text-slate-600 dark:text-slate-400">
-                                {staff.email}
+                            <span className="flex-[0.5] text-sm text-slate-600 dark:text-slate-400">
+                                {calculateAgeFromString(staff.birthDate)}
                             </span>
-                            <span className="flex-[1_1_80px] text-sm text-slate-600 dark:text-slate-400">
-                                {staff.phone}
-                            </span>
-                            <span className="flex-[1_1_80px] text-sm text-slate-600 dark:text-slate-400">
+                            <span className="flex-[0.5] text-sm text-slate-600 dark:text-slate-400">
                                 {staff.gender}
                             </span>
-                            <div className="flex-[0.5_0.5_40px] flex justify-end relative">
+                            <span className="flex-[0.5] text-sm text-slate-600 dark:text-slate-400">
+                                {staff.phone}
+                            </span>
+                            <span className="flex-1 text-sm text-slate-600 dark:text-slate-400">
+                                {staff.email}
+                            </span>
+                            <div className="flex-1 flex justify-end relative">
                                 <button
                                     onClick={() => setOpenPopUp(staff.id)}
                                     className="p-1 rounded-md hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors cursor-pointer"

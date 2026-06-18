@@ -1,4 +1,5 @@
 import { CircularProgress } from "@mui/material";
+import { Save } from "lucide-react";
 
 interface ButtonSaveAppProps {
     onClick: () => void
@@ -27,7 +28,10 @@ export default function ButtonSaveApp({ label, children, onClick, loading, class
                     <span>Guardando...</span>
                 </>
             ) : (
-                <span className="text-sm font-semibold">{`Guardar ${label}`}</span>
+                <>
+                    <Save size={20} />
+                    <span className="text-sm font-semibold">{`Guardar ${label}`}</span>
+                </>
             )}
         </button>
     )
