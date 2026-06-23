@@ -7,6 +7,7 @@ import PatientProfile from "../components/PatientProfile"
 import PatientCreate from "../components/PatientCreateEdit"
 import { usePatient } from "../hooks/patient.hook"
 import { usePermissions } from "../../../hooks/usePermissions"
+import { PermissionAction, PermissionResource } from "../../../models/permission.enum"
 import AvatarInfo from "../../../components/commons/AvatarInfo"
 import PageComponent from "../../../components/commons/PageComponent"
 import type { Header } from "../../../models/header.type"
@@ -37,7 +38,7 @@ const headers:Header[]  = [
         className: 'flex-1 text-right'
     }
 ]
-const RESOURCE = "patients";
+const RESOURCE = PermissionResource.Patients;
 
 export default function PatientListPage() {
     const { can } = usePermissions();
@@ -59,7 +60,7 @@ export default function PatientListPage() {
         openClinicalAssessment
     } = usePatient()
 
-    if (!can("view", RESOURCE)) {
+    if (!can(PermissionAction.View, RESOURCE)) {
         return <Navigate to="/not-found" replace />;
     }
 
@@ -68,7 +69,7 @@ export default function PatientListPage() {
             title="Administración de Pacientes"
             description="Administra la información de tus pacientes"
             textButton="Agregar Nuevo Paciente"
-            showButton={can("create", RESOURCE)}
+            showButton={can(PermissionAction.Create, RESOURCE)}
             onclick={() => {
                 setCustomer(null)
                 openCreate(true)
@@ -117,7 +118,7 @@ export default function PatientListPage() {
                 {data.data.map((patient) => (
                     <div key={patient!.id} className="flex gap-4 pt-4 px-4 text-slate-700 dark:text-slate-300 border border-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 dark:border-slate-800">
                         <AvatarInfo
-                            className="flex-3 min-w-0"
+                            className="flex-3 min-w-0 shrink-0"
                             avatar={`${ASSETS_URLS.avatars}/${patient!.avatar}`}
                             name={patient!.firstName + " " + patient!.lastName}
                             title={`${patient!.email}`}
@@ -139,7 +140,7 @@ export default function PatientListPage() {
                             <button className="w-8 h-8 bg-primary/10 p-1 text-primary dark:bg-primary-dark/10 dark:text-primary-dark px-2 rounded-sm hover:bg-primary/30 cursor-pointer">
                                 <Calendar size={18} />
                             </button>
-                            {can("update", RESOURCE) && (
+                            {can(PermissionAction.Update, RESOURCE) && (
                             <button
                                 onClick={() => {
                                     setCustomer(patient)

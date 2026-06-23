@@ -8,9 +8,7 @@ export const useUsers = () => {
     });
 
     const resetItem = () => {
-        setItem({
-            id: 0, username: "", email: "", roles: [], permissions: [], isActive: true
-        });
+        setItem(undefined);
     };
 
     return { resetItem, setItem, ...rest };

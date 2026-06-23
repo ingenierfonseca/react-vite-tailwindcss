@@ -5,6 +5,7 @@ import PaginatedDataTable from "../../../components/pagination-data/PaginatedDat
 import { useDoctors } from "./hooks/useDoctors";
 import DoctorForm from "./components/DoctorForm";
 import { usePermissions } from "../../../hooks/usePermissions";
+import { PermissionAction, PermissionResource } from "../../../models/permission.enum";
 import type { Header } from "../../invoice/components/InvoiceDetail";
 import { calculateAgeFromString } from "@/utils/date.util";
 
@@ -15,7 +16,7 @@ const headers: Header[] = [
     { header: "Especialidad", className: "flex-1 hidden sm:block" },
 ];
 
-const RESOURCE = "doctors";
+const RESOURCE = PermissionResource.Doctors;
 
 export default function DoctorListPage() {
     const { can } = usePermissions();
@@ -25,7 +26,7 @@ export default function DoctorListPage() {
         setCurrentPage, pages, id, setId
     } = useDoctors();
 
-    if (!can("view", RESOURCE)) {
+    if (!can(PermissionAction.View, RESOURCE)) {
         return <Navigate to="/not-found" replace />;
     }
 
@@ -34,7 +35,7 @@ export default function DoctorListPage() {
             title="Doctores"
             description="Administra los doctores registrados en la clínica"
             textButton="Agregar Doctor"
-            showButton={can("create", RESOURCE)}
+            showButton={can(PermissionAction.Create, RESOURCE)}
             onclick={() => { setId(0); openCreate(true); }}
         >
             <PaginatedDataTable
@@ -59,7 +60,7 @@ export default function DoctorListPage() {
                                 {openPopUp === item.id && (
                                     <div className="absolute right-0 top-8 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-600 rounded-md shadow-xl z-50 min-w-30"
                                         onMouseLeave={() => setOpenPopUp(0)}>
-                                        {can("update", RESOURCE) && (
+                                        {can(PermissionAction.Update, RESOURCE) && (
                                             <button className="w-full text-left px-4 py-2 hover:bg-slate-100 dark:hover:bg-slate-700 text-sm dark:text-slate-200"
                                                 onClick={() => { setId(item.id); openCreate(true); }}>
                                                 Editar

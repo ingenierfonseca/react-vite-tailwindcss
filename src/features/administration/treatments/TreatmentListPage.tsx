@@ -5,12 +5,13 @@ import TreatmentForm from "./components/TreatmentForm";
 import { useTreatments } from "./hooks/useTreatmetns";
 import PaginationButton from "../../../components/pagination-data/PaginationButton";
 import { usePermissions } from "../../../hooks/usePermissions";
+import { PermissionAction, PermissionResource } from "../../../models/permission.enum";
 
 const headers = [
     'Tratamiento', 'Descripcion', 'Precio', 'Estado', ''
 ]
 
-const RESOURCE = "treatments";
+const RESOURCE = PermissionResource.Treatments;
 
 export default function TreatmentListPage() {
     const { can } = usePermissions();
@@ -28,7 +29,7 @@ export default function TreatmentListPage() {
         pages
     } = useTreatments()
 
-    if (!can("view", RESOURCE)) {
+    if (!can(PermissionAction.View, RESOURCE)) {
         return <Navigate to="/not-found" replace />;
     }
 
@@ -37,7 +38,7 @@ export default function TreatmentListPage() {
             title="Tratamientos"
             description="Administra los tratamientos que se realizan en esta clinica"
             textButton="Agregar Tratamiento"
-            showButton={can("create", RESOURCE)}
+            showButton={can(PermissionAction.Create, RESOURCE)}
             onclick={() => openCreate(true)}>
 
             <div className="flex mt-4 px-4 py-2 gap-2 bg-slate-100 border border-slate-200 dark:bg-slate-700/20 dark:border-slate-600">
@@ -60,7 +61,7 @@ export default function TreatmentListPage() {
                     <div className="flex-1 flex justify-end items-center dark:text-slate-200 dark:hover:text-slate-400 cursor-pointer" onClick={() => setOpenPopUp(item?.id ?? 0)}><EllipsisVertical /></div>
                     {openPopUp === item?.id &&(
                         <div className="absolute right-0 mt-2 bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-lg shadow-lg z-50" onMouseLeave={() => setOpenPopUp(0)}>
-                            {can("update", RESOURCE) && (
+                            {can(PermissionAction.Update, RESOURCE) && (
                                 <button
                                     className="w-full text-left px-2 py-0 hover:bg-slate-100 dark:hover:bg-slate-700 dark:text-slate-200"
                                     onClick={() => {

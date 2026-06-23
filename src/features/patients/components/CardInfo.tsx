@@ -7,13 +7,13 @@ interface CardInfoProps {
 }
 
 export default function CardInfo({ title, description, info, icon, riskLevel }: CardInfoProps) {
-    const { textColor, bgColor, borderColor, bgIconColor } = getColorByRiskLevel(riskLevel || 'low');
+    const { textColor, bgColor, borderColor, bgIconColor, iconColor } = getColorByRiskLevel(riskLevel || 'low');
 
     return(
         <div className={`flex-1 flex items-center ${bgColor || 'bg-gray-100'} ${borderColor || 'border-gray-300'} border rounded-md p-4`}>
-            <div className={`flex justify-content mr-3 p-1 h-fit rounded-md ${bgIconColor || 'bg-green-300/50'}`}>{icon}</div>
+            <div className={`flex justify-content mr-3 p-1 h-fit rounded-md ${iconColor} ${bgIconColor || 'bg-green-300/50'}`}>{icon}</div>
             <div>
-                <p className={`font-semibold ${textColor || 'text-black dark:text-white'}`}>{title}</p>
+                <p className={`font-semibold text-black dark:text-white`}>{title}</p>
                 <p className={`text-sm ${textColor || 'text-black dark:text-white'}`}>{description}</p>
                 <p className={`text-xs ${textColor || 'text-black dark:text-white'}`}>{info}</p>
             </div>
@@ -26,16 +26,18 @@ interface RiskLevelColors {
     bgColor?: string;
     borderColor?: string;
     bgIconColor?: string;
+    iconColor?: string
 }
 
 function getColorByRiskLevel(riskLevel: string): RiskLevelColors {
     switch (riskLevel) {
         case 'low':
             return {
-                textColor: 'text-green-900',
-                bgColor: 'bg-green-200/50',
-                borderColor: 'border-green-600',
-                bgIconColor: 'bg-green-300/50',
+                textColor: 'text-green-600',
+                bgColor: 'bg-green-300/10',
+                borderColor: 'border-green-900/20',
+                bgIconColor: 'bg-green-200/70',
+                iconColor: 'text-green-600'
             };
         case 'medium':
             return {

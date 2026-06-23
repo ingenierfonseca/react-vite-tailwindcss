@@ -14,6 +14,10 @@ export const ClinicalFileService =  {
         return data;
     },
 
+    delete: async (id: number): Promise<void> => {
+        await api.delete(`${method}${id}`);
+    },
+
     uploadFile: async (item: ClinicalFile, file: any) => {
         const formData = new FormData();
         formData.append("file", file);

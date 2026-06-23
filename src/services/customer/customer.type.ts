@@ -18,6 +18,11 @@ export interface CustomerDashboard {
     change: string
 }
 
+export interface CustomerRiskDashboard {
+    title: string
+    description: string
+    riskLevel: string
+}
 
 export interface CustomerFormData {
     id: number

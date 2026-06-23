@@ -1,10 +1,11 @@
 import { Checkbox, FormControlLabel, Typography } from "@mui/material";
 import type { Permission } from "../../../../models/permission.type";
+import { PermissionAction, PermissionResource } from "../../../../models/permission.enum";
 
 const ACTIONS = [
-  { action: "view", label: "Ver" },
-  { action: "create", label: "Crear" },
-  { action: "update", label: "Editar" },
+  { action: PermissionAction.View, label: "Ver" },
+  { action: PermissionAction.Create, label: "Crear" },
+  { action: PermissionAction.Update, label: "Editar" },
 ];
 
 interface PermissionGridProps {
@@ -137,21 +138,21 @@ export default function PermissionGrid({ allPermissions, permissions, onChange, 
   }
 
   const RESOURCES = [
-    { resource: "appointments", label: "Citas" },
-    { resource: "patients", label: "Pacientes" },
-    { resource: "doctors", label: "Doctores" },
-    { resource: "treatments", label: "Tratamientos" },
-    { resource: "treatmentplans", label: "Planes de Tratamiento" },
-    { resource: "currencies", label: "Monedas" },
-    { resource: "treatmentcategories", label: "Categorías de Tratamiento" },
-    { resource: "exchangerates", label: "Tipos de Cambio" },
-    { resource: "appointmenttypes", label: "Tipos de Cita" },
-    { resource: "users", label: "Usuarios" },
-    { resource: "rolepermissions", label: "Roles y Permisos" },
-    { resource: "roles", label: "Roles" },
-    { resource: "permissions", label: "Permisos" },
-    { resource: "invoice", label: "Facturación" },
-    { resource: "consultationhistory", label: "Historial de Consultas" },
+    { resource: PermissionResource.Appointments, label: "Citas" },
+    { resource: PermissionResource.Patients, label: "Pacientes" },
+    { resource: PermissionResource.Doctors, label: "Doctores" },
+    { resource: PermissionResource.Treatments, label: "Tratamientos" },
+    { resource: PermissionResource.TreatmentPlans, label: "Planes de Tratamiento" },
+    { resource: PermissionResource.Currencies, label: "Monedas" },
+    { resource: PermissionResource.TreatmentCategories, label: "Categorías de Tratamiento" },
+    { resource: PermissionResource.ExchangeRates, label: "Tipos de Cambio" },
+    { resource: PermissionResource.AppointmentTypes, label: "Tipos de Cita" },
+    { resource: PermissionResource.Users, label: "Usuarios" },
+    { resource: PermissionResource.RolePermissions, label: "Roles y Permisos" },
+    { resource: PermissionResource.Roles, label: "Roles" },
+    { resource: PermissionResource.Permissions, label: "Permisos" },
+    { resource: PermissionResource.Invoice, label: "Facturación" },
+    { resource: PermissionResource.ConsultationHistory, label: "Historial de Consultas" },
   ];
 
   const allSelectedLegacy = (resource: string) =>

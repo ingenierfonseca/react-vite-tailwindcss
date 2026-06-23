@@ -6,6 +6,7 @@ import { ClinicalFileService } from "@/services/clinical-file/clinicalFile.servi
 import { toast } from "react-toastify"
 import { Camera, X, Loader2, ImageIcon, ChevronLeft } from "lucide-react"
 import { ASSETS_URLS } from "@/config/constants"
+import ImageCarousel from "../../ImageCarousel"
 
 const IMAGE_TYPE_OPTIONS = [
     { value: 1, label: "Antes del tratamiento" },
@@ -28,6 +29,7 @@ export default function TreatmentEvolutionCard({ images, customerId, sessionId, 
     const [isUploading, setIsUploading] = useState(false)
     const [selectedTypeId, setSelectedTypeId] = useState(2)
     const [isDragging, setIsDragging] = useState(false)
+    const [carouselIndex, setCarouselIndex] = useState<number | null>(null)
     const fileInputRef = useRef<HTMLInputElement>(null)
 
     const openDrawer = () => {
@@ -104,6 +106,17 @@ export default function TreatmentEvolutionCard({ images, customerId, sessionId, 
         }
     }
 
+    const handleDeleteImage = async (fileId: number) => {
+        try {
+            await ClinicalFileService.delete(fileId)
+            toast.success("Imagen eliminada correctamente")
+            setCarouselIndex(null)
+            onImageUploaded?.()
+        } catch {
+            toast.error("Error al eliminar la imagen")
+        }
+    }
+
     const empty = images.length === 0
 
     return (
@@ -138,8 +151,12 @@ export default function TreatmentEvolutionCard({ images, customerId, sessionId, 
                         </div>
                     ) : (
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                            {images.map((image) => (
-                                <div key={image.id} className="group relative rounded-xl overflow-hidden border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50">
+                            {images.map((image, index) => (
+                                <div
+                                    key={image.id}
+                                    onClick={() => setCarouselIndex(index)}
+                                    className="group relative rounded-xl overflow-hidden border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 cursor-pointer"
+                                >
                                     <img
                                         src={`${ASSETS_URLS.clinicalImages.replace("id", image.customerId.toString())}${image.url}`}
                                         alt="evolucion"
@@ -312,6 +329,14 @@ export default function TreatmentEvolutionCard({ images, customerId, sessionId, 
                     </div>
                 </div>
             </div>
+        {carouselIndex !== null && (
+                <ImageCarousel
+                    images={images}
+                    initialIndex={carouselIndex}
+                    onClose={() => setCarouselIndex(null)}
+                    onDelete={handleDeleteImage}
+                />
+            )}
         </>
     )
 }

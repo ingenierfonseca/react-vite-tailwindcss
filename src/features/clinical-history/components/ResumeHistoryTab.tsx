@@ -12,7 +12,7 @@ import NextAppointmentCard from "./resume-history-tab/cards/NextAppointmentCard"
 import TreatmentPlanCard from "./resume-history-tab/cards/TreatmentPlanCard"
 import PaymentHistoryCard from "./resume-history-tab/cards/PaymentHistoryCard"
 import RecentNotesCard from "./resume-history-tab/cards/RecentNotesCard"
-import IndicatorsCard from "./resume-history-tab/cards/IndicatorsCard"
+//import IndicatorsCard from "./resume-history-tab/cards/IndicatorsCard"
 import { SkeletonNotesLoader } from "./SkeletonComponent"
 import {
     TreatmentProgressSkeleton,
@@ -20,8 +20,10 @@ import {
     NextAppointmentSkeleton,
     TreatmentPlanSkeleton,
     PaymentHistorySkeleton,
-    IndicatorsSkeleton,
+    //IndicatorsSkeleton,
 } from "./resume-history-tab/skeletons"
+import { CustomerService } from "@/services/customer/customer.service"
+import type { AppointmentInfoDto } from "@/models/appointment.types"
 
 interface ResumeHistoryTabProps {
     treatment?: SessionPlan
@@ -41,10 +43,12 @@ export default function ResumeHistoryTab({ treatment, customerId }: ResumeHistor
     const [totalPaid, setTotalPaid] = useState(0)
     const [images, setImages] = useState<ClinicalFile[]>([])
     const [recentNotes, setRecentNotes] = useState<ClinicalNote[]>([])
+    const [nextAppointment, setNextAppointment] = useState<AppointmentInfoDto>()
 
     const loadImages = () => {
         if (!treatment?.sessionId) return
         ClinicalFileService.getImagesFromSession(treatment.sessionId!).then((data) => setImages(data))
+        CustomerService.getCustomerNextAppointment(customerId!).then((data) => setNextAppointment(data))
     }
 
     useEffect(() => {
@@ -109,7 +113,7 @@ export default function ResumeHistoryTab({ treatment, customerId }: ResumeHistor
                     </>
                 ) : (
                     <>
-                        <NextAppointmentCard />
+                        <NextAppointmentCard appointment={nextAppointment}/>
                         <TreatmentPlanCard treatment={treatment} />
                         <PaymentHistoryCard treatment={treatment} totalPaid={totalPaid} />
                     </>
@@ -122,14 +126,14 @@ export default function ResumeHistoryTab({ treatment, customerId }: ResumeHistor
                         <div className="border border-slate-200 dark:border-slate-700 rounded-xl">
                             <SkeletonNotesLoader />
                         </div>
-                        <div className="border border-slate-200 dark:border-slate-700 rounded-xl">
+                        {/*<div className="border border-slate-200 dark:border-slate-700 rounded-xl">
                             <IndicatorsSkeleton />
-                        </div>
+                        </div>*/}
                     </>
                 ) : (
                     <>
                         <RecentNotesCard recentNotes={recentNotes} />
-                        <IndicatorsCard />
+                        {/*<IndicatorsCard />*/}
                     </>
                 )}
             </div>

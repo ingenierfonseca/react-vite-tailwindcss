@@ -1,5 +1,5 @@
-import { Car } from "lucide-react";
-import type { Customer } from "../../../services/customer/customer.type";
+import { Calendar, ChevronRight, Clock, FileText, IdCard, Mail, Phone, ShieldCheck, User } from "lucide-react";
+import type { Customer, CustomerRiskDashboard } from "../../../services/customer/customer.type";
 import CardInfo from "./CardInfo";
 import { ASSETS_URLS } from "../../../config/constants";
 import PageRightComponent from "@/components/commons/PageRightComponent";
@@ -12,30 +12,24 @@ import { useNavigate } from "react-router";
 import type { ClinicalSession } from "@/services/clinical-session/clinicalSession.type";
 import { ClinicalSessionService } from "@/services/clinical-session/clinicalSession.service";
 import { usePermissions } from "../../../hooks/usePermissions";
+import { PermissionAction, PermissionResource } from "../../../models/permission.enum";
+import { CustomerService } from "@/services/customer/customer.service";
+import CustomerItemInfo from "./ItemInfo";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import ItemList from "./ItemList";
 
-const cardinfo = [
+const tabs = [
     {
-        title: "Missed Visit Risk",
-        description: "2 citas perdidas en 6 meses",
-        info: "AI Confidence: 85%",
-        icon: <Car className="w-6 h-6" />,
-        riskLevel: "medium"
+        value: "history",
+        label: "Historial",
+        icon: <Clock />
     },
     {
-        title: "Payment Risk",
-        description: "Excelent payment history",
-        info: "Last updated: 12/12/2023",
-        icon: <Car className="w-6 h-6" />,
-        riskLevel: "low"
+        value: "additionalInfo",
+        label: "Información adicional",
+        icon: <FileText />
     },
-    {
-        title: "Preventive Care",
-        description: "Due for annual check-up",
-        info: "Last check-up: 01/01/2023",
-        icon: <Car className="w-6 h-6" />,
-        riskLevel: "high"
-    }
-];
+]
 interface PatientProfileProps {
     customer: Customer;
     setIsOpen: (value: boolean) => void;
@@ -47,9 +41,18 @@ export default function PatientProfile({ customer, setIsOpen, setIsOpenTransitio
     const { can } = usePermissions();
     const [treatmentHistory, setTreatmentHistory] = useState<SessionPlan[]>([])
     const [consultationHistory, setConsultationHistory] = useState<ClinicalSession[]>([])
+    const [risks, setRisks] = useState<CustomerRiskDashboard[]>([])
+    const [age] = useState(calculateAgeFromString(customer.birthDate))
     const navigate = useNavigate();
 
     useEffect(() => {
+        CustomerService.getCustomerRisk(customer.id)
+            .then((response) => {
+                setRisks(response)
+            })
+            .catch((error) => {
+                console.error("Error fetching treatment history:", error);
+            });
         SessionPlanService.getTreatmentHistory(customer.id)
             .then((response) => {
                 setTreatmentHistory(response)
@@ -69,13 +72,18 @@ export default function PatientProfile({ customer, setIsOpen, setIsOpenTransitio
     return (
         <PageRightComponent
             title={"Perfil del Paciente"}
+            icon={
+                <div className="p-2 bg-primary/5 text-primary rounded-lg">
+                    <User />
+                </div>
+            }
             onClick={() => setIsOpen(false)}>
-            <div className="flex mt-2 gap-2">
+            <div className="flex mt-2 gap-8">
                 {customer.avatar && !customer.avatar.includes('null') ? (
                     <img
                         src={`${ASSETS_URLS.avatars}/${customer.avatar}`}
                         alt={`${customer.firstName} ${customer.lastName}`}
-                        className="w-1/2 h-1/2 rounded-md object-cover"
+                        className="w-90 h-1/2 rounded-md object-cover"
                     />
                 ) : (
                     <div className="flex-1 aspect-square bg-gray-300 rounded-md flex items-center justify-center">
@@ -86,104 +94,129 @@ export default function PatientProfile({ customer, setIsOpen, setIsOpenTransitio
                 )}
                 <div className="flex-1">
                     <div>
-                        <p className="text-lg font-medium text-black dark:text-white">
+                        <p className="text-3xl font-medium mb-8 text-black dark:text-white">
                             {customer.firstName} {customer.lastName}
                         </p>
-                        <p className="dark:text-slate-400">Id: {customer.dni}</p>
-                        <p className="dark:text-slate-400">Edad: {calculateAgeFromString(customer.birthDate)}</p>
-                        <p className="dark:text-slate-400">Tel: {formatPhoneNumber(customer.phone)}</p>
-                        <p className="dark:text-slate-400">Email: {customer.email}</p>
+                        <CustomerItemInfo
+                            title="ID del paciente"
+                            value={customer.dni}
+                            icon={<IdCard size={30} />} />
+                        <CustomerItemInfo
+                            title="Edad"
+                            value={`${age} ${Number(age) > 1 ? "años" : "año"}`}
+                            icon={<Calendar size={30} />} />
+                        <CustomerItemInfo
+                            title="Teléfono"
+                            value={formatPhoneNumber(customer.phone)}
+                            icon={<Phone size={30} />} />
+                        <CustomerItemInfo
+                            title="Email"
+                            value={customer.email}
+                            icon={<Mail size={30} />} />
                     </div>
                 </div>
             </div>
 
             <div className="grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-4 w-full mt-4">
-                {cardinfo.map((info, index) => (
+                {risks.map((info, index) => (
                     <CardInfo
                         key={index}
                         title={info.title}
                         description={info.description}
-                        info={info.info}
-                        icon={info.icon}
-                        riskLevel={info.riskLevel as 'low' | 'medium' | 'high'}
+                        info=""
+                        icon={<ShieldCheck className="w-6 h-6" />}
+                        riskLevel={info.riskLevel.toLowerCase() as 'low' | 'medium' | 'high'}
                     />
                 ))}
             </div>
 
-            <div className="mt-4 rounded-md p-2 border dark:border-slate-300">
-                <p className="font-semibold text-black dark:text-white">Historial de tratamientos</p>
-                {treatmentHistory.length === 0 ? (
-                    <p className="text-sm text-gray-500 mt-2">No hay historial de tratamientos disponible.</p>
-                ) : (
-                treatmentHistory.map((treatment) => (
-                    <div key={treatment.id}
-                        className={`flex mt-4 p-2 rounded-md bg-slate-100 dark:bg-slate-900 ${can("view", "treatmentplans") ? "cursor-pointer dark:hover:bg-slate-700 hover:bg-slate-200" : ""} transition-colors`}
-                        onClick={() => can("view", "treatmentplans") && navigate(`/patients/${customer.id}/treatment-plan/${treatment.id}`)}>
-                        <div className="w-10 h-10 p-2 rounded-full dark:bg-slate-300 flex items-center justify-center">
-                            <p>MF</p>
+            <div className="mt-4 rounded-md p-2 border border-slate-300 dark:border-slate-300">
+                <Tabs defaultValue="history" className="w-full">
+                    <TabsList className="w-full overflow-x-auto flex">
+                        {tabs.map((tab, index) => (
+                            <TabsTrigger key={index} value={tab.value} className={`
+                                border-b-2 border-transparent
+                                data-[state=active]:border-b-primary-dark
+                                data-[state=active]:text-primary-dark
+                            `}>
+                                {tab.icon}{tab.label}
+                            </TabsTrigger>
+                        ))}
+                    </TabsList>
+                    <TabsContent value="history" className="p-3">
+                        <div className="flex">
+                            <p className="text-lg font-semibold text-black dark:text-white">Historial de tratamientos</p>
+                            <div className="flex ml-auto gap-2 text-primary">
+                                <p>Ver todos</p>
+                                <ChevronRight />
+                            </div>
                         </div>
-                        <div className="mx-2">
-                            <p className="text-sm text-black dark:text-white">{treatment.name}</p>
-                            <p className="text-xs dark:text-slate-300">Dra. Melissa Fonseca</p>
-                            <p className="text-xs dark:text-slate-400">{treatment.comments}</p>
+                        {treatmentHistory.length === 0 ? (
+                            <p className="text-sm text-gray-500 mt-2">No hay historial de tratamientos disponible.</p>
+                        ) : (
+                            treatmentHistory.map((treatment) => (
+                                <ItemList
+                                    key={treatment.id}
+                                    className={can(PermissionAction.View, PermissionResource.PatientsTreatmentPlans) ? "cursor-pointer dark:hover:bg-slate-700 hover:bg-slate-50" : ""}
+                                    title={treatment.name}
+                                    subTitle=""
+                                    content={treatment.comments}
+                                    date={formatDateToMMDameDDYYYY(treatment.startDate)}
+                                    onClick={() => can(PermissionAction.View, PermissionResource.PatientsTreatmentPlans) && navigate(`/patients/${customer.id}/treatment-plan/${treatment.id}`)}
+                                />
+                            )))}
+
+                        <div className="flex mt-5">
+                            <p className="text-lg font-semibold text-black dark:text-white">Historial de consultas</p>
+                            <div className="flex ml-auto gap-2 text-primary">
+                                <p>Ver todos</p>
+                                <ChevronRight />
+                            </div>
                         </div>
-                        <div className="ml-auto">
-                            <p className="text-xs text-gray-500 dark:text-slate-400">{formatDateToMMDameDDYYYY(treatment.startDate)}</p>
-                        </div>
-                    </div>
-                )))}
+                        {consultationHistory.length === 0 ? (
+                            <p className="text-sm text-gray-500 mt-2">No hay historial de consultas disponible.</p>
+                        ) : (
+                            consultationHistory.map((consultation) => (
+                                <ItemList
+                                    key={consultation.id}
+                                    className={can(PermissionAction.View, PermissionResource.ConsultationHistory) ? "cursor-pointer dark:hover:bg-slate-700 hover:bg-slate-50" : ""}
+                                    title=""
+                                    subTitle=""
+                                    content={consultation.reasonForVisit}
+                                    date={formatDateToMMDameDDYYYY(consultation.date)}
+                                    onClick={() => can(PermissionAction.View, PermissionResource.ConsultationHistory) && navigate(`/patients/${customer.id}/consultation-history/${consultation.id}`)}
+                                />
+                            )))}
+                    </TabsContent>
+                </Tabs>
             </div>
 
-            <div className="mt-4 rounded-md p-2 border dark:border-slate-300">
-                <p className="font-semibold text-black dark:text-white">Historial de consultas</p>
-                {consultationHistory.length === 0 ? (
-                    <p className="text-sm text-gray-500 mt-2">No hay historial de consultas disponible.</p>
-                ) : (
-                consultationHistory.map((consultation) => (
-                    <div key={consultation.id}
-                        className={`flex mt-4 p-2 rounded-md bg-slate-100 dark:bg-slate-900 ${can("view", "consultationhistory") ? "cursor-pointer dark:hover:bg-slate-700 hover:bg-slate-200" : ""} transition-colors`}
-                        onClick={() => can("view", "consultationhistory") && navigate(`/patients/${customer.id}/consultation-history/${consultation.id}`)}>
-                        <div className="w-10 h-10 p-2 rounded-full dark:bg-slate-300 flex items-center justify-center">
-                            <p>MF</p>
-                        </div>
-                        <div className="mx-2">
-                            <p className="text-sm text-black dark:text-white">{consultation.reasonForVisit}</p>
-                            <p className="text-xs dark:text-slate-300">Dra. Melissa Fonseca</p>
-                            <p className="text-xs dark:text-slate-400">{consultation.clinicalNotes}</p>
-                        </div>
-                        <div className="ml-auto">
-                            <p className="text-xs text-gray-500 dark:text-slate-400">{formatDateToMMDameDDYYYY(consultation.date)}</p>
-                        </div>
-                    </div>
-                )))}
-            </div>
-
-            <div className="mt-4 rounded-md p-2 border dark:border-slate-300">
+            <div className="mt-4 rounded-md p-3 border border-slate-300 bg-slate-50/50 dark:border-slate-300">
                 <p className="font-semibold text-black dark:text-white">Acciones Rapidas</p>
                 <div className="grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-4 mt-4">
-                    {can("create", "appointments") && (
-                    <button className="flex-1 px-4 py-2 bg-primary text-white rounded-md hover:bg-primary/90"
-                        onClick={() => navigate(`/appointments?customerId=${customer.id}`)}>
-                        Agendar Cita
-                    </button>
+                    {can(PermissionAction.Create, PermissionResource.Appointments) && (
+                        <button className="flex-1 px-4 py-2 bg-primary text-white rounded-md hover:bg-primary/90"
+                            onClick={() => navigate(`/appointments?customerId=${customer.id}`)}>
+                            Agendar Cita
+                        </button>
                     )}
-                    {can("create", "appointments") && (
-                    <button className="flex-1 px-4 py-2 border border-slate-300 text-black dark:text-white rounded-md hover:bg-slate-300 dark:hover:bg-slate-700"
-                        onClick={() => setIsOpenTransition(true)}>
-                        Iniciar Consulta
-                    </button>
+                    {can(PermissionAction.Create, PermissionResource.Appointments) && (
+                        <button className="flex-1 px-4 py-2 border border-slate-300 text-black dark:text-white rounded-md hover:bg-slate-300 dark:hover:bg-slate-700"
+                            onClick={() => setIsOpenTransition(true)}>
+                            Iniciar Consulta
+                        </button>
                     )}
-                    {can("update", "patients") && (
-                    <button className="flex-1 px-4 py-2 border border-slate-300 text-black dark:text-white rounded-md hover:bg-slate-300 dark:hover:bg-slate-700"
-                        onClick={() => onEdit?.(true)}>
-                        Actualizar Información
-                    </button>
+                    {can(PermissionAction.Update, PermissionResource.Patients) && (
+                        <button className="flex-1 px-4 py-2 border border-slate-300 text-black dark:text-white rounded-md hover:bg-slate-300 dark:hover:bg-slate-700"
+                            onClick={() => onEdit?.(true)}>
+                            Actualizar Información
+                        </button>
                     )}
-                    {can("view", "invoice") && (
-                    <button className="flex-1 px-4 py-2 border border-slate-300 text-black dark:text-white rounded-md hover:bg-slate-300 dark:hover:bg-slate-700"
-                        onClick={() => navigate(`/invoice?customerId=${customer.id}`)}>
-                        Ver Facturas
-                    </button>
+                    {can(PermissionAction.View, PermissionResource.Invoice) && (
+                        <button className="flex-1 px-4 py-2 border border-slate-300 text-black dark:text-white rounded-md hover:bg-slate-300 dark:hover:bg-slate-700"
+                            onClick={() => navigate(`/invoice?customerId=${customer.id}`)}>
+                            Ver Facturas
+                        </button>
                     )}
                 </div>
             </div>

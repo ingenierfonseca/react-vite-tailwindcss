@@ -5,6 +5,7 @@ import PaginatedDataTable from "../../../components/pagination-data/PaginatedDat
 import { useTreatmentPlans } from "./hooks/useTreatmentPlans";
 import TreatmentPlanForm from "./components/TreatmentPlanForm";
 import { usePermissions } from "../../../hooks/usePermissions";
+import { PermissionAction, PermissionResource } from "../../../models/permission.enum";
 import type { Header } from "../../invoice/components/InvoiceDetail";
 
 const headers: Header[] = [
@@ -14,7 +15,7 @@ const headers: Header[] = [
     { header: "Items", className: "flex-1 hidden md:block" },
 ];
 
-const RESOURCE = "treatmentplans";
+const RESOURCE = PermissionResource.TreatmentPlans;
 
 export default function TreatmentPlanListPage() {
     const { can } = usePermissions();
@@ -24,7 +25,7 @@ export default function TreatmentPlanListPage() {
         setCurrentPage, pages, resetItem
     } = useTreatmentPlans();
 
-    if (!can("view", RESOURCE)) {
+    if (!can(PermissionAction.View, RESOURCE)) {
         return <Navigate to="/not-found" replace />;
     }
 
@@ -33,7 +34,7 @@ export default function TreatmentPlanListPage() {
             title="Planes de Tratamiento"
             description="Administra los planes de tratamiento disponibles en la clínica"
             textButton="Agregar Plan"
-            showButton={can("create", RESOURCE)}
+            showButton={can(PermissionAction.Create, RESOURCE)}
             onclick={() => { resetItem(); openCreate(true); }}
         >
             <PaginatedDataTable
@@ -58,7 +59,7 @@ export default function TreatmentPlanListPage() {
                                 {openPopUp === item.id && (
                                     <div className="absolute right-0 top-8 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-600 rounded-md shadow-xl z-50 min-w-30"
                                         onMouseLeave={() => setOpenPopUp(0)}>
-                                        {can("update", RESOURCE) && (
+                                        {can(PermissionAction.Update, RESOURCE) && (
                                             <button className="w-full text-left px-4 py-2 hover:bg-slate-100 dark:hover:bg-slate-700 text-sm dark:text-slate-200"
                                                 onClick={() => { setItem(item); openCreate(true); }}>
                                                 Editar

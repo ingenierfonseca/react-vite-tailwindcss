@@ -20,6 +20,7 @@ export default function AppointmentList() {
     const [view, setView] = useState<ViewMode>("day")
     const [cursor, setCursor] = useState(new Date())
     const [selectedAppointment, setSelectedAppointment] = useState<Partial<Appointment> | null>(null)
+    const [isOpenCreateAppointment, setIsOpenCreateAppointment] = useState(false)
 
     const dateRange = useMemo(() => getDateRange(view, cursor), [view, cursor])
 
@@ -72,7 +73,7 @@ export default function AppointmentList() {
             appointmentTypeId: appt.appointmentTypeId,
             isConfirmed: appt.isConfirmed ?? false,
         })
-        setOpenTransition(true)
+        openCreateAppointment(true)
     }, [])
 
     const appointmentsBySlot = useMemo(() => {
@@ -85,12 +86,24 @@ export default function AppointmentList() {
         return map
     }, [appointments])
 
+    function openCreateAppointment(value: boolean) {
+        if (value) {
+            setOpenTransition(value)
+            setIsOpenCreateAppointment(value)
+        } else {
+            setOpenTransition(false)
+            setTimeout(() => {
+                setIsOpenCreateAppointment(false)
+            }, 500);
+        }
+    }
+
     return (
         <PageComponent
             title="Agenda de Citas"
             description="Gestiona las citas de tus pacientes"
             textButton="Nueva Cita"
-            onclick={() => { setSelectedAppointment(null); setOpenTransition(true) }}
+            onclick={() => { setSelectedAppointment(null); openCreateAppointment(true); }}
         >
 
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
@@ -152,7 +165,7 @@ export default function AppointmentList() {
                                 ${openTransition ? 'translate-x-0' : 'translate-x-full'
                     }`}
             >
-                <AppointmentCreate setIsOpen={(v) => { setOpenTransition(v); if (!v) setSelectedAppointment(null) }} itemParam={selectedAppointment ?? undefined} refetch={() => { refetchSchedule(); refetchStats() }} />
+                {isOpenCreateAppointment && <AppointmentCreate setIsOpen={(v) => { setOpenTransition(v); if (!v) setSelectedAppointment(null) }} itemParam={selectedAppointment ?? undefined} refetch={() => { refetchSchedule(); refetchStats() }} />}
             </div>
         </PageComponent>
     )

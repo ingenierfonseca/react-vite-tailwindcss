@@ -6,6 +6,7 @@ import { BriefcaseMedical } from "lucide-react";
 import { useLocation, useNavigate } from "react-router";
 import { useAuth } from "../../provider/AuthProvider";
 import { usePermissions } from "../../hooks/usePermissions";
+import { PermissionAction } from "../../models/permission.enum";
 import { Avatar, AvatarFallback, AvatarImage } from "../../components/ui/avatar";
 import { ASSETS_URLS } from "@/config/constants";
 
@@ -49,14 +50,14 @@ function Sidebar({collapsed, isMobileMenuOpen}: SidebarProps) {
       if (item.id === "superAdmin") {
         if (!isSuperAdmin) {
           const filteredSubmenu = item.submenu?.filter(
-            (sub) => sub.resource && can("view", sub.resource)
+            (sub) => sub.resource && can(PermissionAction.View, sub.resource)
           );
           if (!filteredSubmenu || filteredSubmenu.length === 0) return null;
           return { ...item, submenu: filteredSubmenu };
         }
         return item;
       }
-      if (item.resource && !can("view", item.resource)) return null;
+      if (item.resource && !can(PermissionAction.View, item.resource)) return null;
       return item;
     }).filter(Boolean);
 

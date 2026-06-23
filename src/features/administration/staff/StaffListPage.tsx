@@ -1,6 +1,7 @@
 import { Navigate } from "react-router";
 import { EllipsisVertical } from "lucide-react";
 import { usePermissions } from "@/hooks/usePermissions";
+import { PermissionAction, PermissionResource } from "@/models/permission.enum";
 import PageComponent from "@/components/commons/PageComponent";
 import PaginatedDataTable from "@/components/pagination-data/PaginatedDataTable";
 import type { Staff } from "@/models/staff.type";
@@ -9,7 +10,7 @@ import StaffForm from "./components/StaffForm";
 import type { Header } from "@/models/header.type";
 import { calculateAgeFromString } from "@/utils/date.util";
 
-const RESOURCE = "staff";
+const RESOURCE = PermissionResource.Staff;
 
 const headers : Header[] = [
     { header: "Nombre completo", className: "flex-2" },
@@ -36,14 +37,14 @@ export default function StaffListPage() {
         resetItem,
     } = useStaffList();
 
-    if (!can("view", RESOURCE)) return <Navigate to="/not-found" replace />;
+    if (!can(PermissionAction.View, RESOURCE)) return <Navigate to="/not-found" replace />;
 
     return (
         <PageComponent
             title="Empleados"
             description="Gestión del personal de la clínica"
             textButton="Agregar Empleado"
-            showButton={can("create", RESOURCE)}
+            showButton={can(PermissionAction.Create, RESOURCE)}
             onclick={() => { resetItem(); openCreate(true); }}
         >
             <PaginatedDataTable
@@ -82,7 +83,7 @@ export default function StaffListPage() {
                                         className="absolute right-0 top-8 bg-white dark:bg-slate-800 shadow-lg border border-slate-200 dark:border-slate-700 rounded-lg z-50 min-w-30"
                                         onMouseLeave={() => setOpenPopUp(0)}
                                     >
-                                        {can("update", RESOURCE) && (
+                                        {can(PermissionAction.Update, RESOURCE) && (
                                             <button
                                                 onClick={() => { setItem(staff); openCreate(true); }}
                                                 className="w-full text-left px-4 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors cursor-pointer"

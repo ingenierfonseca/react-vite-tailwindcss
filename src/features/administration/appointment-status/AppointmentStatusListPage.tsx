@@ -5,13 +5,14 @@ import PaginatedDataTable from "../../../components/pagination-data/PaginatedDat
 import { useAppointmentStatuses } from "./hooks/useAppointmentStatuses";
 import AppointmentStatusForm from "./components/AppointmentStatusForm";
 import { usePermissions } from "../../../hooks/usePermissions";
+import { PermissionAction, PermissionResource } from "../../../models/permission.enum";
 import type { Header } from "../../invoice/components/InvoiceDetail";
 
 const headers: Header[] = [
     { header: "Nombre", className: "flex-3" },
 ];
 
-const RESOURCE = "appointmentstatuses";
+const RESOURCE = PermissionResource.AppointmentStatuses;
 
 export default function AppointmentStatusListPage() {
     const { can } = usePermissions();
@@ -21,7 +22,7 @@ export default function AppointmentStatusListPage() {
         setCurrentPage, pages, resetItem
     } = useAppointmentStatuses();
 
-    if (!can("view", RESOURCE)) {
+    if (!can(PermissionAction.View, RESOURCE)) {
         return <Navigate to="/not-found" replace />;
     }
 
@@ -30,7 +31,7 @@ export default function AppointmentStatusListPage() {
             title="Estados de Cita"
             description="Administra los estados de las citas"
             textButton="Agregar Estado de Cita"
-            showButton={can("create", RESOURCE)}
+            showButton={can(PermissionAction.Create, RESOURCE)}
             onclick={() => { resetItem(); openCreate(true); }}
         >
             <PaginatedDataTable
@@ -52,7 +53,7 @@ export default function AppointmentStatusListPage() {
                                 {openPopUp === item.id && (
                                     <div className="absolute right-0 top-8 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-600 rounded-md shadow-xl z-50 min-w-30"
                                         onMouseLeave={() => setOpenPopUp(0)}>
-                                        {can("update", RESOURCE) && (
+                                        {can(PermissionAction.Update, RESOURCE) && (
                                             <button className="w-full text-left px-4 py-2 hover:bg-slate-100 dark:hover:bg-slate-700 text-sm dark:text-slate-200"
                                                 onClick={() => { setItem(item); openCreate(true); }}>
                                                 Editar

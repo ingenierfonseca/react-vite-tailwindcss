@@ -69,15 +69,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const response = await AuthService.login(credentials);
     localStorage.setItem(TOKEN_KEY, response.token);
     localStorage.setItem(REFRESH_TOKEN_KEY, response.refreshToken);
-    setUser({
-      id: response.userId,
-      userName: response.username,
-      roles: response.roles,
-      permissions: response.permissions,
-      staffId: response.staffId,
-      firstName: "",
-      lastName: ""
-    });
+
+    const profile = await AuthService.getProfile();
+    setUser(mapProfileToUser(profile));
   }, []);
 
   const tryRefresh = useCallback(async (): Promise<boolean> => {

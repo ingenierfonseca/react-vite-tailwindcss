@@ -11,7 +11,7 @@ export const ClinicalSessionService =  {
     ...baseService,
 
     getSessionHistory: async (customerId: number): Promise<ClinicalSession[]> => {
-        const { data } = await api.get(`${method}history/${customerId}`);
+        const { data } = await api.get(`${method}history-customer/${customerId}`);
         return data;
     },
     customerSessionsShortInfo: async (customerId: number, { page, search, size }: GetParams): Promise<PaginatedResponse<ClinicalSessionShortInfo>> => {

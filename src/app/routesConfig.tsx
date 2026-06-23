@@ -25,6 +25,7 @@ import SpecialtyListPage from "@/features/administration/specialty/SpecialtyList
 import ServiceListPage from "@/features/administration/service/ServicesListPage";
 import ConsultationTypeListPage from "@/features/administration/consultation-type/ConsultationTypeListPage";
 import StaffListPage from "@/features/administration/staff/StaffListPage";
+import UserRoleListPage from "@/features/administration/user-roles/UserRoleListPage";
 
 export const routesConfig = [
   {
@@ -146,6 +147,11 @@ export const routesConfig = [
     path: "/staff",
     title: "Staff",
     element: <StaffListPage />
+  },
+  {
+    path: "/user-roles",
+    title: "Roles de Usuario",
+    element: <UserRoleListPage />
   },
   {
     path: "/imports/patients",
