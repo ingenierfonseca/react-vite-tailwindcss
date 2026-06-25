@@ -101,7 +101,8 @@ export function getMenuData() {
             label: "Carga de Datos",
             resource: PermissionResource.Uploads,
             submenu: [
-                { id: "patients", label: "Importar Pacientes", path: "imports/patients" }
+                { id: "patients", label: "Importar pacientes", path: "imports/patients" },
+                { id: "clinical-history", label: "Importar historial", path: "imports/clinical-history" }
             ]
         }
         /*{

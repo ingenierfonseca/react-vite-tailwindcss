@@ -10,6 +10,12 @@ export const useCustomerInvoice = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<Error | null>(null);
     const [customer, setCustomer] = useState<CustomerInvoiceDTO | null>(null);
+    const [search, setSearch] = useState<string>('')
+    const [currentPage] = useState<number>(1)
+    const [isOpenTransitionRight, setIsOpenTransitionRight] = useState(false)
+    const [isOpenProfileBillInfo, setIsOpenProfileBillInfo] = useState(false)
+    const [isOpenMakeInvoice, setIsOpenMakeInvoice] = useState(false)
+    const [invoiceId, setInvoiceId] = useState("0")
 
     const loadDataPage = async () => {
         setLoading(true)
@@ -18,7 +24,7 @@ export const useCustomerInvoice = () => {
             .catch(setError)
             .finally(() => setLoading(false));
 
-        InvoiceService.getCustomerIvoicesDashboard({ page: 1, search: "" })
+        InvoiceService.getCustomerIvoicesDashboard({ page: currentPage, search: search })
             .then(setData)
             .catch(setError)
             .finally(() => setLoading(false));
@@ -26,7 +32,42 @@ export const useCustomerInvoice = () => {
 
     useEffect(() => {
         loadDataPage()
-    }, []);
+    }, [currentPage, search]);
+
+
+
+    function openProfileBillInfo(value: boolean) {
+        if (value) {
+            setIsOpenProfileBillInfo(true);
+            setIsOpenTransitionRight(true);
+        } else {
+            setIsOpenTransitionRight(false);
+            setTimeout(() => {
+                setIsOpenProfileBillInfo(false);
+            }, 500);
+        }
+    }
+
+    function openMakeInvoice(value: boolean) {
+        if (value) {
+            setIsOpenMakeInvoice(true);
+            setIsOpenTransitionRight(true);
+        } else {
+            setIsOpenTransitionRight(false);
+            setTimeout(() => {
+                setIsOpenMakeInvoice(false);
+            }, 500);
+        }
+    }
+
+
+    function openInvoiceDetail(id: string) {
+        setInvoiceId(id)
+        openProfileBillInfo(false)
+        setTimeout(() => {
+            openMakeInvoice(true)
+        }, 500);
+    }
 
     return {
         data,
@@ -35,6 +76,16 @@ export const useCustomerInvoice = () => {
         error,
         customer,
         setCustomer,
-        loadDataPage
+        loadDataPage,
+        search,
+        setSearch,
+        invoiceId,
+        setInvoiceId,
+        isOpenTransitionRight,
+        isOpenProfileBillInfo,
+        isOpenMakeInvoice,
+        openProfileBillInfo,
+        openMakeInvoice,
+        openInvoiceDetail
     };
 }

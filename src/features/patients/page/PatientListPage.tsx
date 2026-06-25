@@ -96,7 +96,7 @@ export default function PatientListPage() {
             </div>
 
             <div className="mt-4">
-                <PaginatedAutocomplete
+                <PaginatedAutocomplete 
                     label="Paciente"
                     value={search}
                     onChange={(value) => setSearch(data?.data.find(c => c?.id === value)?.firstName || '')}
@@ -118,7 +118,7 @@ export default function PatientListPage() {
                 {data.data.map((patient) => (
                     <div key={patient!.id} className="flex gap-4 pt-4 px-4 text-slate-700 dark:text-slate-300 border border-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 dark:border-slate-800">
                         <AvatarInfo
-                            className="flex-3 min-w-0 shrink-0"
+                            className="flex-3 min-w-0"
                             avatar={`${ASSETS_URLS.avatars}/${patient!.avatar}`}
                             name={patient!.firstName + " " + patient!.lastName}
                             title={`${patient!.email}`}

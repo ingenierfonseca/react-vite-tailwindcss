@@ -1,7 +1,7 @@
 import { PlanStatus, type SessionPlan, type SessionPlanItem } from "@/services/treatment-plan/treatmentPlan.type";
 import { formatNumber } from "@/utils/number.util";
 import { Card } from "@/components/ui/card";
-import { TextField, CircularProgress } from "@mui/material";
+import { CircularProgress } from "@mui/material";
 import { Calendar, Clock, BrickWall, CheckIcon, Loader, Play } from "lucide-react";
 
 import AlertDialogApp from "@/components/alert-modal/ConfirmDialog";

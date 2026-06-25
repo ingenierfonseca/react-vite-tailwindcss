@@ -94,11 +94,11 @@ export default function ImageCarousel({ images, initialIndex, onClose, onDelete 
   return (
     <div
       ref={containerRef}
-      className="fixed inset-0 z-[200] bg-black/85 backdrop-blur-sm animate-in fade-in duration-200 select-none"
+      className="fixed inset-0 z-200 bg-black/85 backdrop-blur-sm animate-in fade-in duration-200 select-none"
       onWheel={handleWheel}
     >
       {/* Toolbar */}
-      <div className="absolute top-0 inset-x-0 z-20 flex items-center justify-between px-5 h-16 bg-gradient-to-b from-black/40 to-transparent">
+      <div className="absolute top-0 inset-x-0 z-20 flex items-center justify-between px-5 h-16 bg-linear-to-b from-black/40 to-transparent">
         <span className="text-sm text-white/50 font-mono tracking-widest">
           {String(currentIndex + 1).padStart(2, "0")} / {String(images.length).padStart(2, "0")}
         </span>
@@ -164,7 +164,7 @@ export default function ImageCarousel({ images, initialIndex, onClose, onDelete 
       </div>
 
       {/* Thumbnail filmstrip */}
-      <div className="absolute bottom-0 inset-x-0 z-20 flex justify-center pb-4 pt-8 bg-gradient-to-t from-black/50 to-transparent">
+      <div className="absolute bottom-0 inset-x-0 z-20 flex justify-center pb-4 pt-8 bg-linear-to-t from-black/50 to-transparent">
         <div className="flex gap-3 px-5 py-2 overflow-x-auto max-w-full scrollbar-thin">
           {images.map((image, index) => (
             <button

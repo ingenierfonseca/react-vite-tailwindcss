@@ -6,6 +6,7 @@ import PatientListPage from "../features/patients/page/PatientListPage";
 import SettingsPage from "../features/settings/SettingsPage";
 import AppointmentTypeListPage from "../features/administration/apointment-type/AppointmentTypeListPage";
 import PatientBulkUploadPage from "../features/upload-data/patient/PatientBulkUploadPage";
+import ClinicalHistoryBulkUploadPage from "../features/upload-data/clinical-history/ClinicalHistoryBulkUploadPage";
 import CustomerClinicalHistoryDashboard from "@/features/clinical-history/CustomerClinicalHistoryPage";
 import ConsultationHistoryDetailPage from "@/features/clinical-history/ConsultationHistoryDetailPage";
 import TreatmentListPage from "@/features/administration/treatments/TreatmentListPage";
@@ -167,5 +168,10 @@ export const routesConfig = [
     path: "/patients/:id/consultation-history/:consultationId",
     title: "Detalle de consulta",
     element: <ConsultationHistoryDetailPage />
+  },
+  {
+    path: "/imports/clinical-history",
+    title: "Importar Historial Clínico",
+    element: <ClinicalHistoryBulkUploadPage />
   }
 ];

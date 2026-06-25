@@ -21,7 +21,7 @@ export const ConfirmDialog = ({
         </AlertDialog.Trigger>
         <AlertDialog.Portal>
             {/* El Overlay ahora actúa como un contenedor Flex para centrar el contenido perfectamente */}
-            <AlertDialog.Overlay className="fixed inset-0 z-50 bg-black/50 grid place-items-center p-4 data-[state=open]:animate-overlayShow">
+            <AlertDialog.Overlay className="fixed inset-0 z-100 bg-black/50 grid place-items-center p-4 data-[state=open]:animate-overlayShow">
                 
                 <AlertDialog.Content 
                     className="fixed left-1/2 top-1/2 z-50 max-h-[85vh] w-[95vw] max-w-md -translate-x-1/2 -translate-y-1/2 rounded-lg bg-gray-100 p-6 shadow-xl focus:outline-none dark:bg-slate-900 data-[state=open]:animate-contentShow"

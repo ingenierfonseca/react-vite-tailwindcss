@@ -5,4 +5,5 @@ export const ASSETS_URLS = {
   staffAvatars: `${API_BASE_URL}/uploads/staff-avatars/`,
   clinicalImages: `${API_BASE_URL}/`,
   fileImportPatient: `${API_BASE_URL}/formats/pacientes_importacion.xlsx`,
+  fileImportClinicalHistory: `${API_BASE_URL}/formats/historial_clinico_importacion.xlsx`,
 };

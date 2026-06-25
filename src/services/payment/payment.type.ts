@@ -11,6 +11,7 @@ export interface Payment {
 
 export interface PaymentDTO {
     id: number
+    currencySymbol: string
     amount: number
     invoiceNumber: string
     date: string

@@ -4,7 +4,6 @@ import { CustomerService } from "../../../services/customer/customer.service";
 import DashboardCard from "../../../components/dashboard/DashboardCard";
 import AvatarInfo from "../../../components/commons/AvatarInfo";
 import { Filter, Receipt } from "lucide-react";
-import { useState } from "react";
 import PatientBillInfo from "../components/PatientBillInfo";
 import { useCustomerInvoice } from "../hooks/customerInvoice.hook";
 import { formatNumber } from "../../../utils/number.util";
@@ -15,36 +14,23 @@ import type { Invoice } from "../../../services/invoice/invoice.types";
 import { ASSETS_URLS } from "../../../config/constants";
 
 export default function Invoice() {
-    const { data, dashboardData, customer, setCustomer, loadDataPage } = useCustomerInvoice()
-    const [isOpenTransitionRight, setIsOpenTransitionRight] = useState(false)
-    const [isOpenProfileBillInfo, setIsOpenProfileBillInfo] = useState(false)
-    const [isOpenMakeInvoice, setIsOpenMakeInvoice] = useState(false)
-    const [invoiceId, setInvoiceId] = useState("0")
-
-    function openProfileBillInfo(value: boolean) {
-        if (value) {
-            setIsOpenProfileBillInfo(true);
-            setIsOpenTransitionRight(true);
-        } else {
-            setIsOpenTransitionRight(false);
-            setTimeout(() => {
-                setIsOpenProfileBillInfo(false);
-            }, 500); 
-        }
-    }
-
-    function openMakeInvoice(value: boolean) {
-        if (value) {
-            setIsOpenMakeInvoice(true);
-            setIsOpenTransitionRight(true);
-        } else {
-            setIsOpenTransitionRight(false);
-            setTimeout(() => {
-                setIsOpenMakeInvoice(false);
-            }, 500);
-        }
-    }
-
+    const { 
+        data, 
+        dashboardData, 
+        customer, 
+        setCustomer, 
+        loadDataPage,
+        search,
+        setSearch,
+        invoiceId,
+        setInvoiceId,
+        isOpenTransitionRight,
+        isOpenProfileBillInfo,
+        isOpenMakeInvoice,
+        openProfileBillInfo,
+        openMakeInvoice,
+        openInvoiceDetail
+     } = useCustomerInvoice()
 
     return (
         <PageComponent
@@ -75,11 +61,9 @@ export default function Invoice() {
             <div className="flex mt-4 gap-2 items-center">
                 <PaginatedAutocomplete
                     label="Buscar Paciente"
-                    value={0}
-                    onChange={(value) => alert(value)
-                        //updateField("customerId", value)
-                    }
-                    fetchData={() => CustomerService.get({ page: 1, search: '' })}
+                    value={search}
+                    onChange={(value) => setSearch(data?.data.find(c => c?.id === value)?.fullName || '')}
+                    fetchData={CustomerService.get}
                     getValue={(item) => item.id}
                     getLabel={(item) => `${item.firstName.trim()} ${item.lastName.trim()}`}
                 />
@@ -139,13 +123,7 @@ export default function Invoice() {
                     customer={customer} 
                     setIsOpen={openProfileBillInfo} 
                     reload={loadDataPage}
-                    openInvoiceDetail={(id: string) => {
-                        setInvoiceId(id)
-                        openProfileBillInfo(false)
-                        setTimeout(() => {
-                             openMakeInvoice(true)
-                        }, 500);
-                    }} />}
+                    openInvoiceDetail={openInvoiceDetail} />}
 
                 {isOpenMakeInvoice && <InvoiceDetail idParam={invoiceId} setIsOpen={openMakeInvoice} reload={loadDataPage} />}
             </div>

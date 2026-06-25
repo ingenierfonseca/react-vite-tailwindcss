@@ -15,6 +15,8 @@ import type { SessionPlan } from "@/services/treatment-plan/treatmentPlan.type";
 import { SessionPlanService } from "@/services/session-plan/sessionPlan.service";
 import NotesTab from "./components/NotesTab";
 import { calculateAgeFromString } from "@/utils/date.util";
+import QuickAppointmentCreate from "../appointments/components/QuickAppointmentCreate";
+import { Bounce, ToastContainer } from "react-toastify";
 
 const tabs = [
   {
@@ -47,6 +49,8 @@ export default function CustomerClinicalHistoryDashboard() {
   const [customer, setCustomer] = useState<Customer>()
   const [treatment, setTreatment] = useState<SessionPlan>()
   const { id, treatmentId } = useParams();
+  const [isOpenQuickAppointment, setIsOpenQuickAppointment] = useState(false)
+  const [reloadNexAppointment, setReloadNexAppointment] = useState(0)
 
   useEffect(() => {
     CustomerService.find(Number(id)!)
@@ -95,7 +99,7 @@ export default function CustomerClinicalHistoryDashboard() {
 
         <div className="flex flex-wrap gap-2">
           <Button className="hidden" variant="outline">Enviar recordatorio</Button>
-          <Button>Nueva cita</Button>
+          <Button onClick={() => setIsOpenQuickAppointment(true)}>Nueva cita</Button>
         </div>
       </Card>
 
@@ -115,7 +119,7 @@ export default function CustomerClinicalHistoryDashboard() {
 
         {/* Resume */}
         <TabsContent value="resume">
-          <ResumeHistoryTab treatment={treatment} customerId={customer?.id} />
+          <ResumeHistoryTab treatment={treatment} customerId={customer?.id} reloadNexAppointment={reloadNexAppointment} />
         </TabsContent>
 
         {/* Evolución */}
@@ -184,6 +188,25 @@ export default function CustomerClinicalHistoryDashboard() {
           </div>
         </TabsContent>*/}
       </Tabs>
+      <ToastContainer
+        position="bottom-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick={false}
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+        transition={Bounce}
+      />
+      {isOpenQuickAppointment && <QuickAppointmentCreate
+        customer={customer!}
+        isOpen={isOpenQuickAppointment}
+        onSuccess={() => setReloadNexAppointment(reloadNexAppointment+1)}
+        setIsOpen={setIsOpenQuickAppointment}
+      />}
     </div>
   );
 }

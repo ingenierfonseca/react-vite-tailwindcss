@@ -8,7 +8,7 @@ import { usePatientBill } from "../hooks/patientBill.hook"
 import PaymentModal from "./PaymentModal"
 import { formatDateToMMDameDDYYYY } from "../../../utils/date.util"
 import { CircularProgress } from "@mui/material"
-import { Download, EllipsisVertical, Printer, Receipt, Share2 } from "lucide-react"
+import { EllipsisVertical, Printer, Receipt } from "lucide-react"
 import TickectModal from "./TicketModal"
 import InvoicePrintModal from "./InvoicePrint"
 import { PDFViewer } from '@react-pdf/renderer';
@@ -56,13 +56,18 @@ export default function PatientBillInfo({ customer, setIsOpen, reload/*, openInv
     return (
         <PageRightComponent
             title="Información de Pago del Paciente"
+            icon={
+                <div className="p-2 bg-primary/5 text-primary rounded-lg">
+                    <Receipt />
+                </div>
+            }
             onClick={() => setIsOpen(false)}
         >
             <AvatarInfo
                 className={"mt-6"}
                 avatar={`${ASSETS_URLS.avatars}/${customer!.avatar}`}
                 name={customer?.fullName || ""}
-                title={`Edad: ${customer?.age} . Ultima Visita: ${customer?.lastVisit ? formatDateToMMDameDDYYYY(customer.lastVisit) : 'No ha realizado visitas'}`}
+                title={`Ultima Visita: ${customer?.lastVisit ? formatDateToMMDameDDYYYY(customer.lastVisit) : 'No ha realizado visitas'}`}
                 onClick={() => { }}
             />
             <div className="w-full h-0.5 bg-slate-700 mb-12" />
@@ -124,7 +129,7 @@ export default function PatientBillInfo({ customer, setIsOpen, reload/*, openInv
             {!loading && paymentHistoryData && paymentHistoryData.length > 0 && paymentHistoryData.map((payment) => (
                 <div key={payment.id} className="flex justify-between items-center mt-4 p-4 bg-white dark:bg-slate-800 border-b-2 dark:border-slate-700">
                     <div>
-                        <p className="font-bold text-lg text-black dark:text-slate-200">C${payment.amount.toFixed(2)}</p>
+                        <p className="font-bold text-lg text-black dark:text-slate-200">{payment.currencySymbol}{payment.amount.toFixed(2)}</p>
                         <p className="text-lg text-slate-600 dark:text-slate-400">{payment.paymentTypeName}</p>
                     </div>
                     <div className="flex gap-3 relative">
@@ -153,7 +158,7 @@ export default function PatientBillInfo({ customer, setIsOpen, reload/*, openInv
                                         setIsOpenTicket(true)
                                     }}
                                 />
-                                <TooltipButton
+                                {/*<TooltipButton
                                     text="Descargar Pago"
                                     icon={<Download />}
                                     onClick={() => {}}
@@ -161,8 +166,8 @@ export default function PatientBillInfo({ customer, setIsOpen, reload/*, openInv
                                 <TooltipButton
                                     text="Compartir"
                                     icon={<Share2 />}
-                                    onClick={() => {}}
-                                />
+                                    />
+                                    onClick={() => {}}*/}
                             </div>
                         )}
                     </div>

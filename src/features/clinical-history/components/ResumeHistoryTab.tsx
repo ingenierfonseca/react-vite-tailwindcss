@@ -27,10 +27,11 @@ import type { AppointmentInfoDto } from "@/models/appointment.types"
 
 interface ResumeHistoryTabProps {
     treatment?: SessionPlan
-    customerId?: number
+    customerId?: number,
+    reloadNexAppointment: number
 }
 
-export default function ResumeHistoryTab({ treatment, customerId }: ResumeHistoryTabProps) {
+export default function ResumeHistoryTab({ treatment, customerId, reloadNexAppointment }: ResumeHistoryTabProps) {
     const [loading, setLoading] = useState(true)
     const [progress, setProgress] = useState<ProgressInfo>({
         percentage: 0,
@@ -48,7 +49,6 @@ export default function ResumeHistoryTab({ treatment, customerId }: ResumeHistor
     const loadImages = () => {
         if (!treatment?.sessionId) return
         ClinicalFileService.getImagesFromSession(treatment.sessionId!).then((data) => setImages(data))
-        CustomerService.getCustomerNextAppointment(customerId!).then((data) => setNextAppointment(data))
     }
 
     useEffect(() => {
@@ -65,8 +65,14 @@ export default function ResumeHistoryTab({ treatment, customerId }: ResumeHistor
             ClinicalNoteService.getNotesFromSession(treatment.sessionId!).then((data) =>
                 setRecentNotes(data.slice(0, 2))
             ),
+            CustomerService.getCustomerNextAppointment(customerId!).then((data) => setNextAppointment(data))
         ]).finally(() => setLoading(false))
     }, [treatment])
+
+    useEffect(() => {
+        if (reloadNexAppointment === 0) return
+        CustomerService.getCustomerNextAppointment(customerId!).then((data) => setNextAppointment(data))
+    }, [reloadNexAppointment])
 
     if (!treatment) {
         return (

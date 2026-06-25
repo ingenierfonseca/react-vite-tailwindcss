@@ -17,6 +17,7 @@ import { CustomerService } from "@/services/customer/customer.service";
 import CustomerItemInfo from "./ItemInfo";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ItemList from "./ItemList";
+import QuickAppointmentCreate from "../../appointments/components/QuickAppointmentCreate";
 
 const tabs = [
     {
@@ -44,6 +45,7 @@ export default function PatientProfile({ customer, setIsOpen, setIsOpenTransitio
     const [risks, setRisks] = useState<CustomerRiskDashboard[]>([])
     const [age] = useState(calculateAgeFromString(customer.birthDate))
     const navigate = useNavigate();
+    const [isOpenQuickAppointment, setIsOpenQuickAppointment] = useState(false)
 
     useEffect(() => {
         CustomerService.getCustomerRisk(customer.id)
@@ -196,7 +198,7 @@ export default function PatientProfile({ customer, setIsOpen, setIsOpenTransitio
                 <div className="grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-4 mt-4">
                     {can(PermissionAction.Create, PermissionResource.Appointments) && (
                         <button className="flex-1 px-4 py-2 bg-primary text-white rounded-md hover:bg-primary/90"
-                            onClick={() => navigate(`/appointments?customerId=${customer.id}`)}>
+                            onClick={() => setIsOpenQuickAppointment(true)}>
                             Agendar Cita
                         </button>
                     )}
@@ -220,6 +222,12 @@ export default function PatientProfile({ customer, setIsOpen, setIsOpenTransitio
                     )}
                 </div>
             </div>
+
+            {isOpenQuickAppointment && <QuickAppointmentCreate
+                customer={customer}
+                isOpen={isOpenQuickAppointment}
+                setIsOpen={setIsOpenQuickAppointment}
+            />}
         </PageRightComponent>
     )
 }

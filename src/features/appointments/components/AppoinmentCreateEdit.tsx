@@ -11,6 +11,8 @@ import ButtonSaveApp from "@/components/commons/ButtonSaveApp"
 import { ResourceService } from "@/services/resource/resource.service"
 import { AppointmentStatusService } from "@/services/appointment-status/appointmentStatus.service"
 import { Checkbox, FormControlLabel, TextField } from "@mui/material"
+import PageRightComponent from "@/components/commons/PageRightComponent"
+import { Calendar } from "lucide-react"
 
 interface AppointmentCreateProps {
     itemParam?: Partial<Appointment>
@@ -31,9 +33,9 @@ export default function AppointmentCreate({ itemParam, setIsOpen, refetch }: App
     } = useAppointmentForm()
 
     const isReadOnly = useMemo(
-        () => !!(appointment.id && appointment.id > 0 && 
-            appointment.statusId && 
-            TERMINAL_STATUSES.includes(appointment.statusId) && 
+        () => !!(appointment.id && appointment.id > 0 &&
+            appointment.statusId &&
+            TERMINAL_STATUSES.includes(appointment.statusId) &&
             appointment.statusId === lastStatusId),
         [appointment.id, appointment.statusId, lastStatusId]
     )
@@ -65,16 +67,15 @@ export default function AppointmentCreate({ itemParam, setIsOpen, refetch }: App
     }
 
     return (
-        <div className="w-full/2 h-screen py-5 px-4 overflow-y-auto overflow-x-hidden [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
-            <div className="flex">
-                <p className="font-semibold text-black dark:text-white">{appointment && appointment.id ? 'Editar Cita' : 'Nueva Cita'}</p>
-                <button
-                    onClick={() => setIsOpen(false)}
-                    className="text-slate-500 hover:text-red-500 text-2xl ml-auto"
-                >
-                    &times;
-                </button>
-            </div>
+        <PageRightComponent
+             title={appointment && appointment.id ? 'Editar Cita' : 'Nueva Cita'}
+             icon={
+                <div className="p-2 bg-primary/5 text-primary rounded-lg">
+                    <Calendar />
+                </div>
+            }
+            onClick={() => setIsOpen(false)}
+        >
             <div className="flex flex-col md:flex-row gap-8 mt-4">
                 <PaginatedAutocomplete
                     label="Paciente"
@@ -144,90 +145,93 @@ export default function AppointmentCreate({ itemParam, setIsOpen, refetch }: App
                 />
             </div>
 
-            {appointment && appointment.id !== 0 &&
-                <div className="flex flex-col md:flex-row gap-8 mt-4">
-                    <PaginatedAutocomplete
-                        label="Estado de Cita"
-                        value={appointment ? appointment.statusId : undefined}
-                        onChange={(value) =>
-                            updateAppointment("statusId", value)
-                        }
+            {
+        appointment && appointment.id !== 0 &&
+        <div className="flex flex-col md:flex-row gap-8 mt-4">
+            <PaginatedAutocomplete
+                label="Estado de Cita"
+                value={appointment ? appointment.statusId : undefined}
+                onChange={(value) =>
+                    updateAppointment("statusId", value)
+                }
+                disabled={isReadOnly}
+                fetchData={AppointmentStatusService.get}
+                getValue={(item) => item.id}
+                getLabel={(item) => `${item.name}`}
+            />
+            <FormControlLabel
+                label="Confirmar Cita"
+                className="flex-1 dark:text-slate-400"
+                disabled={isReadOnly}
+                control={
+                    <Checkbox className="dark:text-primary-dark!"
+                        checked={appointment.isConfirmed}
+                        onChange={(e) => updateAppointment("isConfirmed", e.target.checked)}
                         disabled={isReadOnly}
-                        fetchData={AppointmentStatusService.get}
-                        getValue={(item) => item.id}
-                        getLabel={(item) => `${item.name}`}
                     />
-                    <FormControlLabel
-                        label="Confirmar Cita"
-                        className="flex-1 dark:text-slate-400"
-                        disabled={isReadOnly}
-                        control={
-                            <Checkbox className="dark:text-primary-dark!"
-                                checked={appointment.isConfirmed}
-                                onChange={(e) => updateAppointment("isConfirmed", e.target.checked)}
-                                disabled={isReadOnly}
-                            />
-                        }
-                    />
-                </div>
-            }
-            <div className="flex flex-col md:flex-row gap-8 mt-4">
-                <TextField
-                    className="w-full"
-                    label="Notas"
-                    multiline
-                    rows={4}
-                    value={appointment.notes ?? ""}
-                    onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
-                        if (e.target.value.length <= 300) {
-                            updateAppointment("notes", e.target.value)
-                        }
-                    }}
-                    disabled={isReadOnly}
-                    helperText={`${appointment.notes?.length || 0}/${300}`}
-                    slotProps={{
-                        input: {
-                            inputProps: {
-                                maxLength: 300,
-                            },
-                        },
-                    }}
-                />
-            </div>
-            {appointment && appointment.statusId === AppointmentStatus.CANCELLED &&
-                <TextField
-                    className="w-full"
-                    label="Motivo cancelación"
-                    multiline
-                    rows={2}
-                    value={appointment.cancellationReason ?? ""}
-                    onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
-                        if (e.target.value.length <= 100) {
-                            updateAppointment("cancellationReason", e.target.value)
-                        }
-                    }}
-                    disabled={isReadOnly}
-                    helperText={`${appointment.cancellationReason?.length || 0}/${100}`}
-                    slotProps={{
-                        input: {
-                            inputProps: {
-                                maxLength: 100,
-                            },
-                        },
-                    }}
-                />
-            }
-
-            {!isReadOnly &&
-                <div className="flex justify-center">
-                    <ButtonSaveApp
-                        className="flex-6"
-                        label="Cita"
-                        onClick={() => handleSave()}
-                        loading={loading}
-                    />
-                </div>
-            }
+                }
+            />
         </div>
+    }
+    <div className="flex flex-col md:flex-row gap-8 mt-4">
+        <TextField
+            className="w-full"
+            label="Notas"
+            multiline
+            rows={4}
+            value={appointment.notes ?? ""}
+            onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
+                if (e.target.value.length <= 300) {
+                    updateAppointment("notes", e.target.value)
+                }
+            }}
+            disabled={isReadOnly}
+            helperText={`${appointment.notes?.length || 0}/${300}`}
+            slotProps={{
+                input: {
+                    inputProps: {
+                        maxLength: 300,
+                    },
+                },
+            }}
+        />
+    </div>
+    {
+        appointment && appointment.statusId === AppointmentStatus.CANCELLED &&
+        <TextField
+            className="w-full"
+            label="Motivo cancelación"
+            multiline
+            rows={2}
+            value={appointment.cancellationReason ?? ""}
+            onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
+                if (e.target.value.length <= 100) {
+                    updateAppointment("cancellationReason", e.target.value)
+                }
+            }}
+            disabled={isReadOnly}
+            helperText={`${appointment.cancellationReason?.length || 0}/${100}`}
+            slotProps={{
+                input: {
+                    inputProps: {
+                        maxLength: 100,
+                    },
+                },
+            }}
+        />
+    }
+
+    {
+        !isReadOnly &&
+        <div className="flex justify-center">
+            <ButtonSaveApp
+                className="flex-6"
+                label="Cita"
+                onClick={() => handleSave()}
+                loading={loading}
+            />
+        </div>
+    }
+        </PageRightComponent >
     )
 }

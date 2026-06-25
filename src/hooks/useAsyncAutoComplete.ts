@@ -85,7 +85,7 @@ export const useAsyncAutocomplete = <T,>({
   }, [page, search]);
 
   const onSearchChange = (val: string) => {
-    setOptions([]);
+    //setOptions([]);
     setPage(1);
     setSearch(val);
   };

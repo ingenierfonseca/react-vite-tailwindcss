@@ -3,6 +3,7 @@ export const ENDPOINTS = {
     APPOINTMENTSTATUS: "/appointment-status/",
     APPOINTMENTTYPE: "/appointmenttype/",
     CLINICALSESSION: "/clinical-session/",
+    CLINICALSESSIONIMPORT: "/clinical-session/bulk-import/",
     CLINICALFILE: "/clinical-file/",
     CLINICALNOTE: "/clinical-note/",
     CONSULTATIONTYPE: "/consultation-type/",

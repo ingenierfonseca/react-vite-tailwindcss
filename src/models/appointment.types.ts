@@ -30,7 +30,11 @@ export const AppointmentStatus = Object.freeze({
     RESCHEDULED: 7
 });
 
-export const InvoiceStatusLabels = {
+export type AppointmentStatusType =
+  (typeof AppointmentStatus)[keyof typeof AppointmentStatus];
+
+  
+export const AppointmentStatusLabels = {
     [AppointmentStatus.PENDING]: "Pendiente",
     [AppointmentStatus.CONFIRMED]: "Confirmada",
     [AppointmentStatus.IN_PROGRESS]: "En progreso",
