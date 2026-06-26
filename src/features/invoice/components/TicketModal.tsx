@@ -138,6 +138,7 @@ const TicketBaucher = ({ baucher }: { baucher: PaymentBaucherDto }) => {
         <p>Factura: {baucher.invoiceNumber}</p>
         <p>Fecha: {baucher.paymentDate}</p>
         <p>Cajero: Administrador</p>
+        <p>Concepto: {baucher.memo}</p>
       </div>
 
       {/* Tabla de Productos */}

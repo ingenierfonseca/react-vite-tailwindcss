@@ -38,6 +38,7 @@ export const useQuickPayment = () => {
             setError(null);
             var request: RequestPayment = {
                 amount: payment.amount,
+                memo: payment.memo,
                 currencyId: payment.currencyId,
                 customerId: payment.customerId,
                 invoiceId: payment.invoiceId,

@@ -4,6 +4,7 @@ export interface Payment {
     id: number
     currencyId: number
     amount: number
+    memo?: string
     invoiceId: number
     customerId: number
     paymentTypeId: number
@@ -21,6 +22,7 @@ export interface PaymentDTO {
 export interface RequestPayment {
     currencyId: number
     amount: number
+    memo?: string
     invoiceId: number
     customerId: number
     paymentTypeId: number
@@ -36,6 +38,7 @@ export interface PaymentBaucherDto {
     invoiceNumber: string;
     paymentDate: string;
     amountPaid: number;
+    memo?: string;
     paymentMethod: string;
     currencySymbol: string;
     isPartialPayment: boolean;

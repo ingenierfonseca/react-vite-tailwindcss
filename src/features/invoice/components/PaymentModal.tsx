@@ -15,7 +15,7 @@ import { InvoiceStatus, PaymentTypes } from "../state/state";
 import type { DropDownAppModel } from "@/models/dropdownapp.type";
 
 const transactionTypes: DropDownAppModel[] = [
-    { id: 1, value: "Abono" },
+    //{ id: 1, value: "Abono" },
     { id: 2, value: "Pago de factura" }
 ]
 
@@ -100,7 +100,7 @@ export default function PaymentModal({ id, customer, isModalOpen, setIsModalOpen
                 <p className="text-slate-500 dark:text-slate-400 text-sm">
                     Completa los datos del pago
                 </p>
-                <fieldset className="grid p-2 gap-2 border border-slate-200 dark:border-slate-700">
+                <fieldset className="grid p-2 gap-3">
                     <TextFieldApp label="Paciente" value={customer.fullName} className="md:flex-2 px-2 text-sm" disabled={true} onChange={() => { }} />
 
                     <DropDownApp
@@ -151,6 +151,9 @@ export default function PaymentModal({ id, customer, isModalOpen, setIsModalOpen
                         onChange={(val) => onUpdateField("amount", val)}
                         disabled={disabled}
                         shrink={true} />
+
+                    <TextFieldApp label="Concepto de pago" value={payment.memo} className="md:flex-2 px-2 text-sm" 
+                        onChange={(val) => onUpdateField("memo", val)} />
                 </fieldset>
             </div>
         </Modal>
