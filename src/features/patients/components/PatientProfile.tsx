@@ -83,7 +83,7 @@ export default function PatientProfile({ customer, setIsOpen, setIsOpenTransitio
             <div className="flex mt-2 gap-8">
                 {customer.avatar && !customer.avatar.includes('null') ? (
                     <img
-                        src={`${ASSETS_URLS.avatars}/${customer.avatar}`}
+                        src={`${ASSETS_URLS.avatars}${customer.avatar}`}
                         alt={`${customer.firstName} ${customer.lastName}`}
                         className="w-90 h-1/2 rounded-md object-cover"
                     />

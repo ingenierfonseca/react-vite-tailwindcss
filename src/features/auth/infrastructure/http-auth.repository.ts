@@ -17,14 +17,14 @@ export function createHttpAuthRepository(
 ): AuthRepository {
   return {
     async login(credentials: LoginCredentials) {
-      const { data } = await http.post<LoginApiResponse>(endpoints.LOGIN, credentials);
-      //let data = mockLoginApiResponse
+      //const { data } = await http.post<LoginApiResponse>(endpoints.LOGIN, credentials);
+      let data = mockLoginApiResponse
       return { accessToken: data.token, refreshToken: data.refreshToken };
     },
 
     async getCurrentUser(): Promise<UserProfile> {
-      const { data } = await http.get<UserProfileResponse>(endpoints.PROFILE);
-      //let data = mockUserProfileResponse
+      //const { data } = await http.get<UserProfileResponse>(endpoints.PROFILE);
+      let data = mockUserProfileResponse
       return {
         id: data.id,
         userName: data.username,

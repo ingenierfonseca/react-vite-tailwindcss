@@ -1,14 +1,12 @@
-export interface Customer {
-    id: number
+import type { Client } from "@/features/clients/domain/client";
+
+export interface Customer extends Client {
     dni: string
-    firstName: string
-    lastName: string
     phone: string
     email: string
     address: string
     birthDate: string
     gender: string
-    avatar?: string
 }
 
 export interface CustomerDashboard {
