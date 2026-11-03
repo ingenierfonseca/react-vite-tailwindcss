@@ -1,4 +1,4 @@
-import { useAuth } from "../provider/AuthProvider";
+import { useAuth } from "../features/auth/presentation/useAuth";
 import { Role } from "../models/auth.type";
 import type { PermissionAction, PermissionResource } from "../models/permission.enum";
 

@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router";
 import MainLayout from "../layouts/MainLayout";
-import LoginPage from "../features/auth/LoginPage";
+import LoginPage from "../pages/LoginPage";
 import NotFoundPage from "../features/not-found/NotFoundPage";
 import { ProtectedRoute } from "../components/commons/ProtectedRoute";
 import { routesConfig } from "./routesConfig";

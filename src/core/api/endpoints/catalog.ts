@@ -1,0 +1,18 @@
+export const CATALOG_ENDPOINTS = {
+  APPOINTMENTSTATUS: "/appointment-status/",
+  APPOINTMENTTYPE: "/appointmenttype/",
+  CONSULTATIONTYPE: "/consultation-type/",
+  CURRENCY: "/currency/",
+  DOCTOR: "/doctor/",
+  EXCHANGERATE: "/exchangerate/",
+  RESOURCE: "/resource/",
+  RESOURCETYPE: "/resource-type/",
+  SERVICE: "/service/",
+  SPECIALTY: "/specialty/",
+  USER: "/user/",
+  ROLEPERMISSION: "/role-permission/",
+  ROLE: "/role/",
+  PERMISSION: "/permission/",
+  STAFF: "/staff/",
+  USERROLE: "/user-role/",
+} as const;

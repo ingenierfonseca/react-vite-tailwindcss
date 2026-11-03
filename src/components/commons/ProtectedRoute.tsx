@@ -1,5 +1,5 @@
 import { Navigate, Outlet } from "react-router";
-import { useAuth } from "@/provider/AuthProvider";
+import { useAuth } from "@/features/auth/presentation/useAuth";
 import type { Role } from "@/models/auth.type";
 
 interface ProtectedRouteProps {

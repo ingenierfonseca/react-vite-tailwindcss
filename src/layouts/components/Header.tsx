@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { Menu, LogOut } from "lucide-react";
 import { useLocation, useNavigate } from "react-router";
 import { routesConfig } from "../../app/routesConfig";
-import { useAuth } from "../../provider/AuthProvider";
+import { useAuth } from "../../features/auth/presentation/useAuth";
 import { Avatar, AvatarFallback, AvatarImage } from "../../components/ui/avatar";
 import { ASSETS_URLS } from "@/config/constants";
 

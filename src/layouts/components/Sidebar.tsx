@@ -4,7 +4,7 @@ import SideBarItem from "./SideBarItem";
 import { getMenuData } from "../../models/menu.type";
 import { BriefcaseMedical } from "lucide-react";
 import { useLocation, useNavigate } from "react-router";
-import { useAuth } from "../../provider/AuthProvider";
+import { useAuth } from "../../features/auth/presentation/useAuth";
 import { usePermissions } from "../../hooks/usePermissions";
 import { PermissionAction } from "../../models/permission.enum";
 import { Avatar, AvatarFallback, AvatarImage } from "../../components/ui/avatar";
