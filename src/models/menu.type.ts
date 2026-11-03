@@ -1,4 +1,4 @@
-import { BarChart3, Calendar, LayoutDashboard, Receipt, Settings, Upload, Users, type LucideProps } from "lucide-react";
+import { BarChart3, Calendar, LayoutDashboard, Palette, Receipt, Settings, Upload, Users, type LucideProps } from "lucide-react";
 import { PermissionResource } from "./permission.enum";
 
 export interface SubMenuAppModel {
@@ -69,6 +69,13 @@ export function getMenuData() {
             label: "Odontograma",
             path: "/odontogram",
             resource: PermissionResource.Odontogram
+        },
+        {
+            id: "personalize",
+            icon: Palette,
+            label: "Personalizar",
+            path: "/settings/personalize",
+            resource: PermissionResource.CompanySettings,
         },
         {
             id: "superAdmin",

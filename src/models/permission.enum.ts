@@ -33,6 +33,7 @@ export const PermissionResource = {
   Uploads: "uploads",
   Odontogram: "odontogram",
   UserRoles: "userroles",
+  CompanySettings: "companysettings",
 } as const;
 
 export type PermissionResource = (typeof PermissionResource)[keyof typeof PermissionResource];

@@ -14,7 +14,11 @@ export default function AppThemeProvider({ children }: { children: React.ReactNo
         palette: {
             mode: mode,
             primary: {
-                main: settings?.primaryColor || '#1976d2',
+                main: settings.branding.primaryColor,
+                dark: settings.branding.primaryDarkColor,
+            },
+            secondary: {
+                main: settings.branding.secondaryColor,
             },
         },
         components: {
@@ -23,13 +27,13 @@ export default function AppThemeProvider({ children }: { children: React.ReactNo
                     root: {
                         '& .MuiOutlinedInput-root': {
                             '& fieldset': {
-                                borderColor: mode === 'dark' ? settings?.borderColor || '#444' : settings?.borderColor || '#ccc',
+                             borderColor: settings.branding.borderColor || (mode === 'dark' ? '#444' : '#ccc'),
                             },
                             '&:hover fieldset': {
-                                borderColor: settings?.borderHover || '#666',
+                             borderColor: settings.branding.borderHover || '#666',
                             },
                             '&.Mui-focused fieldset': {
-                                borderColor: settings?.primaryColor || '#90caf9',
+                             borderColor: settings.branding.primaryColor || '#90caf9',
                             },
                         },
                     },

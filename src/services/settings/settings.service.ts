@@ -1,14 +1,11 @@
-import api from "../../api/api";
-import { data, type Settings } from "./settigns.type";
+import { companySettingsModule } from "@/app/composition/company-settings";
+import type { CompanySettings } from "@/features/company-settings/domain/company-settings";
 
-const method = `/settings/`
+/** @deprecated Prefer the company-settings module from the app composition root. */
 export const SettingsService = {
-    getSettings: async ():Promise<Settings> => {
-        //const { data } = await api.get(`${method}${1}`);
-        return data();
-    },
-    updateSettings: async (payload: Settings | null) => {
-        const { data } = await api.put(`${method}`, payload);
-        return data;
-    }
+  getSettings: companySettingsModule.getSettings,
+  updateSettings: async (payload: CompanySettings | null) => {
+    if (!payload) throw new Error("La configuración de empresa es obligatoria.");
+    return companySettingsModule.saveSettings(payload);
+  },
 };

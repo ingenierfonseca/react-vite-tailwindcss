@@ -3,7 +3,7 @@ import Invoice from "../features/invoice/pages/InvoiceListPage";
 import Odontogram from "../features/odontogram/Odontogram";
 import DashboardPage from "../pages/DashboardPage";
 import PatientListPage from "../features/patients/page/PatientListPage";
-import SettingsPage from "../features/settings/SettingsPage";
+import CompanySettingsPage from "../features/company-settings/presentation/CompanySettingsPage";
 import AppointmentTypeListPage from "../features/administration/apointment-type/AppointmentTypeListPage";
 import PatientBulkUploadPage from "../features/upload-data/patient/PatientBulkUploadPage";
 import ClinicalHistoryBulkUploadPage from "../features/upload-data/clinical-history/ClinicalHistoryBulkUploadPage";
@@ -71,8 +71,13 @@ export const routesConfig = [
   },
   {
     path: "/settings",
-    title: "Configuración",
-    element: <SettingsPage />
+    title: "Personalizar",
+    element: <CompanySettingsPage />
+  },
+  {
+    path: "/settings/personalize",
+    title: "Personalizar",
+    element: <CompanySettingsPage />
   },
   {
     path: "/treatments",

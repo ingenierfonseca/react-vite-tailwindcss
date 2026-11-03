@@ -1,20 +1,22 @@
-import { createContext, useContext } from "react"
-import type { Settings } from "../services/settings/settigns.type"
+import { createContext, useContext } from "react";
+import type { CompanySettings } from "@/features/company-settings/domain/company-settings";
 
-interface SettingsContextType {
-    settings: Settings | null
-    setSettings: (settings: Settings) => void
-    loading: boolean
+export interface SettingsContextValue {
+  settings: CompanySettings;
+  persistedSettings: CompanySettings;
+  loading: boolean;
+  saving: boolean;
+  error: string | null;
+  previewSettings: (settings: CompanySettings) => void;
+  cancelPreview: () => void;
+  saveSettings: (settings: CompanySettings, logoFile?: File) => Promise<CompanySettings>;
+  reloadSettings: () => Promise<void>;
 }
 
-export const SettingsContext = createContext<SettingsContextType | undefined>(undefined)
+export const SettingsContext = createContext<SettingsContextValue | undefined>(undefined);
 
-export const useSettings = () => {
-    const context = useContext(SettingsContext)
-
-    if (!context) {
-        throw new Error('useSettings debe usarse dentro de SettingsProvider')
-    }
-
-    return context
+export function useSettings() {
+  const context = useContext(SettingsContext);
+  if (!context) throw new Error("useSettings debe usarse dentro de SettingsProvider");
+  return context;
 }

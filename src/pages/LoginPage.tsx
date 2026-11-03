@@ -3,9 +3,11 @@ import { useNavigate } from "react-router";
 import { BriefcaseMedical } from "lucide-react";
 import { useAuth } from "@/features/auth/presentation/useAuth";
 import { LoginForm } from "@/features/auth/presentation/LoginForm";
+import { useSettings } from "@/hooks/useSettings";
 
 export default function LoginPage() {
   const { login, isAuthenticated } = useAuth();
+  const { settings } = useSettings();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -32,11 +34,15 @@ export default function LoginPage() {
         <div className="rounded-b-2xl rounded-tr-2xl bg-white/90 dark:bg-slate-800/90 backdrop-blur-xl border border-slate-200/50 dark:border-slate-700/50 shadow-2xl shadow-primary/5 dark:shadow-primary/10 px-8 py-10 sm:px-10">
           {/* Logo */}
           <div className="flex flex-col items-center text-center mb-8">
-            <div className="mb-4 flex size-14 items-center justify-center rounded-2xl bg-linear-to-br from-primary to-primary/70 shadow-lg shadow-primary/20 dark:shadow-primary/10 ring-1 ring-primary/10">
-              <BriefcaseMedical className="size-7 text-white" />
+            <div className="mb-4 flex size-14 items-center justify-center rounded-2xl bg-company-logo-background shadow-lg shadow-primary/20 dark:shadow-primary/10 ring-1 ring-primary/10">
+              {settings.branding.logoUrl ? (
+                <img src={settings.branding.logoUrl} alt={settings.company.name} className="size-10 rounded-xl object-contain" />
+              ) : (
+                <BriefcaseMedical className="size-7 text-white" />
+              )}
             </div>
-            <h1 className="text-xl font-bold text-slate-800 dark:text-white">
-              Clinical<span className="text-primary">SuiteNova</span>
+            <h1 className="text-xl font-bold text-company-name dark:text-company-name-dark">
+              {settings.company.name}
             </h1>
             <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
               Inicia sesión para continuar
@@ -49,7 +55,7 @@ export default function LoginPage() {
 
         {/* Footer */}
         <p className="mt-6 text-center text-xs text-slate-400 dark:text-slate-600">
-          &copy; {new Date().getFullYear()} ClinicalSuiteNova. Todos los derechos reservados.
+          &copy; {new Date().getFullYear()} {settings.company.name}. Todos los derechos reservados.
         </p>
       </div>
     </div>

@@ -11,24 +11,34 @@
   /* bg-primary, text-primary, etc. */
   --color-primary: var(--color-primary-dynamic, #f97316);
   --color-primary-dark: var(--color-primary-dark-dynamic, #ef8c65);
+  --color-secondary: var(--color-secondary-dynamic, #fbbf24);
   --color-primary-foreground: var(--color-primary-fg-dynamic, #ffffff);
   --color-border: var(--color-border-dynamic, #f97316);
+  --color-border-hover: var(--color-border-hover-dynamic, #f97316);
   --color-sidebar: var(--color-sidebar-dynamic, #f97316);
   --color-sidebar-item: var(--color-sidebar-item-dynamic, #f97316);
   --color-sidebar-text: var(--color-sidebar-text-dynamic, #fff);
   --color-sidebar-text-active: var(--color-sidebar-text-active-dynamic, #fff);
+  --color-company-name: var(--color-company-name-dynamic, #1e293b);
+  --color-company-name-dark: var(--color-company-name-dark-dynamic, #ffffff);
+  --color-company-logo-background: var(--color-company-logo-background-dynamic, #556ade);
 }
 
 /* Variables que cambiarás con JS desde tu API de .NET */
 :root {
   --color-primary-dynamic: #f97316; /* Naranja por defecto */
   --color-primary-dark-dynamic: #ef8c65; /* Naranja oscuro por defecto */
+  --color-secondary-dynamic: #fbbf24;
   --color-primary-fg-dynamic: #ffffff;
   --color-border-dynamic: #f97316; /* Naranja por defecto */
+  --color-border-hover-dynamic: #f97316;
   --color-sidebar-dynamic: #f97316; /* Naranja por defecto */
   --color-sidebar-item-dynamic: #f97316;
   --color-sidebar-text-dynamic: #fff;
   --color-sidebar-text-active-dynamic: #fff;
+  --color-company-name-dynamic: #1e293b;
+  --color-company-name-dark-dynamic: #ffffff;
+  --color-company-logo-background-dynamic: #556ade;
   /*--background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);*/
   --card: oklch(1 0 0);

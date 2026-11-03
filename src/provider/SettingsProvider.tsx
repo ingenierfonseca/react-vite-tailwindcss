@@ -1,50 +1,118 @@
-import { useEffect, useState } from "react";
-import { SettingsService } from "../services/settings/settings.service";
-import { SettingsContext } from "../hooks/useSettings";
-import type { Settings } from "../services/settings/settigns.type";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { companySettingsModule } from "@/app/composition/company-settings";
+import { createDefaultCompanySettings, type CompanySettings } from "@/features/company-settings/domain/company-settings";
+import { SettingsContext } from "@/hooks/useSettings";
 
-interface SettingsProviderProps {  
-    children: React.ReactNode;
+interface SettingsProviderProps {
+  children: ReactNode;
+}
+
+function messageFromError(error: unknown) {
+  return error instanceof Error ? error.message : "Ocurrió un error al cargar la configuración.";
 }
 
 export function SettingsProvider({ children }: SettingsProviderProps) {
-  const [settings, setSettings] = useState<Settings | null>(null)
+  const [settings, setSettings] = useState<CompanySettings>(createDefaultCompanySettings);
+  const [persistedSettings, setPersistedSettings] = useState<CompanySettings>(createDefaultCompanySettings);
   const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const persistedSettingsRef = useRef(persistedSettings);
 
-  useEffect(() => {
-    const fetchSettings = async () => {
-      try {
-        const data = await SettingsService.getSettings();
-        setSettings(data);
-        
-        if (data.primaryColor) {
-          // Aplicamos el color a la variable de Tailwind v4
-          document.documentElement.style.setProperty('--color-primary-dynamic', data.primaryColor);
-          document.documentElement.style.setProperty('--color-primary-dark-dynamic', data.primaryDarkColor);
-          document.documentElement.style.setProperty('--color-border-dynamic', data.borderColor);
-          document.documentElement.style.setProperty('--color-sidebar-dynamic', data.bgSidebar);
-          document.documentElement.style.setProperty('--color-sidebar-item-dynamic', data.bgSidebarItem);
-          document.documentElement.style.setProperty('--color-sidebar-text-dynamic', data.sidebarItemText);
-          document.documentElement.style.setProperty('--color-sidebar-text-active-dynamic', data.sidebarItemTextActive);
-        }
-      } catch (error) {
-        console.error("Error cargando configuración", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchSettings();
+  const reloadSettings = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const loaded = await companySettingsModule.getSettings();
+      persistedSettingsRef.current = loaded;
+      setSettings(loaded);
+      setPersistedSettings(loaded);
+    } catch (loadError) {
+      const defaults = createDefaultCompanySettings();
+      persistedSettingsRef.current = defaults;
+      setSettings(defaults);
+      setPersistedSettings(defaults);
+      setError(messageFromError(loadError));
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
-  // Mientras carga el naranja real, puedes mostrar un spinner 
-  // o dejar que use el naranja por defecto que pusimos en el CSS
-  if (loading) return <div className="h-screen bg-[#1a2234]" />; 
+  useEffect(() => {
+    void reloadSettings();
+  }, [reloadSettings]);
 
-  //return <>{children}</>;
-  return (
-        <SettingsContext.Provider value={{ settings, setSettings, loading }}>
-            {children}
-        </SettingsContext.Provider>
-    )
+  useLayoutEffect(() => {
+    const { branding } = settings;
+    const root = document.documentElement;
+    const variables: Record<string, string> = {
+      "--color-primary-dynamic": branding.primaryColor,
+      "--color-primary-dark-dynamic": branding.primaryDarkColor,
+      "--color-secondary-dynamic": branding.secondaryColor,
+      "--color-border-dynamic": branding.borderColor,
+      "--color-border-hover-dynamic": branding.borderHover,
+      "--color-sidebar-dynamic": branding.sidebarBackground,
+      "--color-sidebar-item-dynamic": branding.sidebarItemBackground,
+      "--color-sidebar-text-dynamic": branding.sidebarText,
+      "--color-sidebar-text-active-dynamic": branding.sidebarActiveText,
+      "--color-company-name-dynamic": branding.companyNameColor,
+      "--color-company-name-dark-dynamic": branding.companyNameColorDark,
+      "--color-company-logo-background-dynamic": branding.logoBackgroundColor,
+    };
+    Object.entries(variables).forEach(([name, value]) => root.style.setProperty(name, value));
+
+    let favicon = document.querySelector<HTMLLinkElement>('link[rel~="icon"]');
+    if (branding.faviconUrl) {
+      if (!favicon) {
+        favicon = document.createElement("link");
+        favicon.rel = "icon";
+        document.head.appendChild(favicon);
+      }
+      favicon.href = branding.faviconUrl;
+    } else {
+      favicon?.remove();
+    }
+  }, [settings]);
+
+  const previewSettings = useCallback((nextSettings: CompanySettings) => {
+    setSettings(nextSettings);
+  }, []);
+
+  const cancelPreview = useCallback(() => {
+    setSettings(persistedSettingsRef.current);
+    setError(null);
+  }, []);
+
+  const saveSettings = useCallback(async (nextSettings: CompanySettings, logoFile?: File) => {
+    setSaving(true);
+    setError(null);
+    try {
+      const saved = await companySettingsModule.saveSettings(nextSettings, logoFile);
+      persistedSettingsRef.current = saved;
+      setSettings(saved);
+      setPersistedSettings(saved);
+      return saved;
+    } catch (saveError) {
+      setError(messageFromError(saveError));
+      throw saveError;
+    } finally {
+      setSaving(false);
+    }
+  }, []);
+
+  const value = useMemo(() => ({
+    settings,
+    persistedSettings,
+    loading,
+    saving,
+    error,
+    previewSettings,
+    cancelPreview,
+    saveSettings,
+    reloadSettings,
+  }), [settings, persistedSettings, loading, saving, error, previewSettings, cancelPreview, saveSettings, reloadSettings]);
+
+  if (loading) return <div className="h-screen bg-[#1a2234]" />;
+
+  return <SettingsContext.Provider value={value}>{children}</SettingsContext.Provider>;
 }
