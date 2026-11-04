@@ -103,7 +103,7 @@ function Sidebar({ collapsed, isMobileMenuOpen, isDesktop }: SidebarProps) {
                 </div>
             </div>
             {/**Navigation*/}
-            <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
+            <nav className="sidebar-scrollbar flex-1 space-y-2 overflow-y-auto p-4">
                 {filteredMenuItems.map((item) => {
                     return (
                         <div key={item!.id}>
@@ -112,12 +112,22 @@ function Sidebar({ collapsed, isMobileMenuOpen, isDesktop }: SidebarProps) {
                                 isDesktop={isDesktop}
                                 expandedItems={expandedItems}
                                 setExpandedItems={setExpandedItems} />
-                            {item!.submenu && expandedItems.has(item!.id) && (!collapsed || !isDesktop) && (
-                                <div className="flex flex-col mt-2 ml-8">
+                            {item!.submenu && expandedItems.has(item!.id) && (
+                                <div className={`flex flex-col`}>
                                     {item!.submenu.map((submenuItem) => {
-                                        return <button key={submenuItem.id} className={`text-left p-3 cursor-pointer hover:bg-sidebar-item/20 dark:hover:bg-slate-800/50
-                                            ${location.pathname.includes(submenuItem.path!) ? "text-sidebar-item font-bold border-l" : "text-slate-400 border-l border-slate-200"}`}
-                                            onClick={() => navigate(submenuItem.path || "/")}>{submenuItem.label}</button>
+                                        return <button key={submenuItem.id} className={`flex gap-2 ${(!collapsed || !isDesktop) ? 'px-3' : 'px-2.5'} cursor-pointer hover:bg-sidebar-item/20 dark:hover:bg-slate-800/50`}
+                                            onClick={() => navigate(submenuItem.path || "/")}>
+                                            <div className="flex flex-col justify-center items-center">
+                                                <div className="h-4 w-0.5 bg-sidebar-item"></div>
+                                                <div className={`h-4 w-4 rounded-full
+                                                    ${location.pathname.includes(submenuItem.path!) ? "bg-sidebar-item" : "border-2 border-sidebar-text"}`}>
+                                                </div>
+                                                <div className="h-4 w-0.5 bg-sidebar-item"></div>
+                                            </div>
+                                            {(!collapsed || !isDesktop) && (
+                                            <span className={`mt-3 ${location.pathname.includes(submenuItem.path!) ? "text-sidebar-item font-bold" : "text-slate-400"}`}
+                                            >{submenuItem.label}</span>)}
+                                        </button>
                                     })}
                                 </div>
                             )}

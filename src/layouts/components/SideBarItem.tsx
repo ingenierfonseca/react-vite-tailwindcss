@@ -54,7 +54,7 @@ export default function SideBarItem({ item, collapsed, isDesktop, expandedItems,
             onMouseLeave={() => setTooltipPosition(null)}
             onFocus={updateTooltipPosition}
             onBlur={() => setTooltipPosition(null)}
-            className={`flex h-12 w-full items-center justify-between overflow-hidden rounded-xl p-3
+            className={`flex h-11 w-full items-center justify-between overflow-hidden rounded-xl p-2
             cursor-pointer transition-colors duration-200 active:scale-95 ${isActive ?
             "bg-sidebar-item shadow-lg shadow-primary/25" :
             "hover:bg-primary/20 dark:hover:bg-slate-800/50"
