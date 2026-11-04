@@ -18,6 +18,7 @@ export default function PaginatedDataTable<T>({
     onPageChange,
     children
 }: DataTableProps<T>) {
+    {console.log("paginacion", pagination?.data)}
     return (
         <div className="w-full mt-4 overflow-hidden rounded-lg border border-slate-200 dark:border-slate-600">
             {/* Encabezados */}
@@ -38,7 +39,8 @@ export default function PaginatedDataTable<T>({
             {/* Paginación */}
             {pagination && (<div className="flex items-center justify-between px-4 py-3 bg-white dark:bg-slate-800 border-t border-slate-200 dark:border-slate-600">
                 <span className="text-sm text-slate-500 dark:text-slate-400">
-                    Mostrando <b>{Math.min(pagination.data?.length ?? 0, pagination.pageSize)}</b> de <b>{pagination.totalItems}</b>
+                    {/*Mostrando <b>{Math.min((pagination.data?.length) ?? 0, pagination.pageSize)}</b> de <b>{pagination.totalItems}</b>*/}
+                    Mostrando <b>{Math.min(((pagination.data?.length) ?? 0), Number(pagination.pageSize) || 0)}</b> de <b>{Number(pagination.totalItems) || 0}</b>
                 </span>
                 <div className="flex gap-2">
                     <PaginationButton
