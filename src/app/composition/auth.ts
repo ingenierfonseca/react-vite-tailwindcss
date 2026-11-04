@@ -3,7 +3,7 @@ import { createAuthModule } from "@/features/auth/create-auth-module";
 import { browserTokenStorage } from "@/features/auth/infrastructure/browser-token-storage";
 import { createHttpAuthRepository } from "@/features/auth/infrastructure/http-auth.repository";
 
-configureApiAuth({ tokenStorage: browserTokenStorage, endpoints: ENDPOINTS.AUTH });
+configureApiAuth({ tokenStorage: browserTokenStorage, endpoints: ENDPOINTS.AUTH, useHttpOnlyCookies: true });
 
 /** Application-specific wiring for the reusable auth feature. */
 export const authModule = createAuthModule(

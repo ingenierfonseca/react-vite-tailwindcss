@@ -1,11 +1,17 @@
 export interface LoginApiResponse {
   token: string;
   refreshToken: string;
+  csrfToken?: string;
   username: string;
+  email: string;
   roles: string[];
   permissions: string[];
   userId: number;
   staffId: number | null;
+  firstName: string;
+  lastName: string;
+  avatar?: string;
+  staffTypeName?: string;
 }
 
 export interface UserProfileResponse {
@@ -22,7 +28,7 @@ export interface UserProfileResponse {
   staffTypeName?: string;
 }
 
-export const mockLoginApiResponse: LoginApiResponse = {
+/*export const mockLoginApiResponse: LoginApiResponse = {
   token: "mock-access-token",
   refreshToken: "mock-refresh-token",
   username: "ana.garcia",
@@ -44,4 +50,4 @@ export const mockUserProfileResponse: UserProfileResponse = {
   lastName: "García",
   avatar: "ana-garcia.png",
   staffTypeName: "Odontóloga",
-};
+};*/

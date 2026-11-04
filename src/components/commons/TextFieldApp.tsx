@@ -5,16 +5,18 @@ interface TextEditAppProps {
     label: string
     value: string | undefined
     className: string
+    type?: string
     disabled?: boolean
     maxLength?: number,
     startIcon?: ReactElement
     onChange: (newValue: string) => void
 }
-export default function TextEditApp({ label, value, className, disabled = false, maxLength, startIcon, onChange }: TextEditAppProps) {
+export default function TextEditApp({ label, value, className, type = "text", disabled = false, maxLength, startIcon, onChange }: TextEditAppProps) {
     return (
         <TextField
             className={`${className}`}
             label={label}
+            type={type}
             variant="outlined"
             value={value}
             disabled={disabled}

@@ -2,6 +2,9 @@ export const PermissionAction = {
   View: "view",
   Create: "create",
   Update: "update",
+  Decide: "decide",
+  Disburse: "disburse",
+  Manage: "manage",
 } as const;
 
 export type PermissionAction = (typeof PermissionAction)[keyof typeof PermissionAction];
@@ -34,6 +37,11 @@ export const PermissionResource = {
   Odontogram: "odontogram",
   UserRoles: "userroles",
   CompanySettings: "companysettings",
+  CreditProducts: "credit.products",
+  CreditApplications: "credit.applications",
+  CreditLoans: "credit.loans",
+  CreditPayments: "credit.payments",
+  CreditCollections: "credit.collections",
 } as const;
 
 export type PermissionResource = (typeof PermissionResource)[keyof typeof PermissionResource];

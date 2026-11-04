@@ -50,21 +50,15 @@ function Sidebar({ collapsed, isMobileMenuOpen, isDesktop }: SidebarProps) {
         ? user.userName.split(" ").map((n) => n[0]).join("").toUpperCase().slice(0, 2)
         : "AD";
 
-    const { can, isSuperAdmin } = usePermissions();
+    const { can } = usePermissions();
 
     const filteredMenuItems = menuItems.map((item) => {
-        if (item.id === "superAdmin") {
-            if (!isSuperAdmin) {
-                const filteredSubmenu = item.submenu?.filter(
-                    (sub) => sub.resource && can(PermissionAction.View, sub.resource)
-                );
-                if (!filteredSubmenu || filteredSubmenu.length === 0) return null;
-                return { ...item, submenu: filteredSubmenu };
-            }
-            return item;
-        }
-        if (item.resource && !can(PermissionAction.View, item.resource)) return null;
-        return item;
+      if (item.resource && !can(PermissionAction.View, item.resource)) return null;
+      if (!item.submenu) return item;
+      const submenu = item.submenu.filter(
+        (sub) => !sub.resource || can(PermissionAction.View, sub.resource),
+      );
+      return submenu.length > 0 ? { ...item, submenu } : null;
     }).filter(Boolean);
 
     return (

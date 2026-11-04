@@ -20,4 +20,15 @@ export interface UserProfile {
 export interface AuthTokens {
   accessToken: string;
   refreshToken: string;
+  csrfToken?: string;
+  userId: number;
+  userName: string;
+  email?: string;
+  roles: string[];
+  permissions?: string[];
+  staffId?: number | null;
+  firstName: string;
+  lastName: string;
+  staffTypeName?: string;
+  avatar?: string;
 }

@@ -1,17 +1,16 @@
-import { API_TOKEN_KEYS, type ApiTokenStorage } from "../../../core/api/auth-token-storage";
+import type { ApiTokenStorage } from "../../../core/api/auth-token-storage";
 import type { AuthTokens } from "../domain/auth.types";
 import type { TokenStorage } from "../domain/token-storage";
 
+let csrfToken: string | null = null;
+
 export const browserTokenStorage: TokenStorage & ApiTokenStorage = {
-  getAccessToken: () => localStorage.getItem(API_TOKEN_KEYS.ACCESS),
-  getRefreshToken: () => localStorage.getItem(API_TOKEN_KEYS.REFRESH),
-  saveTokens: ({ accessToken, refreshToken }: AuthTokens) => {
-    localStorage.setItem(API_TOKEN_KEYS.ACCESS, accessToken);
-    localStorage.setItem(API_TOKEN_KEYS.REFRESH, refreshToken);
-  },
-  saveAccessToken: (token) => localStorage.setItem(API_TOKEN_KEYS.ACCESS, token),
-  clear: () => {
-    localStorage.removeItem(API_TOKEN_KEYS.ACCESS);
-    localStorage.removeItem(API_TOKEN_KEYS.REFRESH);
-  },
+  // The API stores access and refresh tokens in HttpOnly cookies; JS only keeps the CSRF token in memory.
+  getAccessToken: () => null,
+  getRefreshToken: () => null,
+  getCsrfToken: () => csrfToken,
+  saveTokens: (tokens: AuthTokens) => { if (tokens.csrfToken) csrfToken = tokens.csrfToken; },
+  saveAccessToken: () => undefined,
+  saveCsrfToken: (token) => { csrfToken = token; },
+  clear: () => { csrfToken = null; },
 };

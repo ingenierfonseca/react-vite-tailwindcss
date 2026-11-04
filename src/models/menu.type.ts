@@ -1,4 +1,4 @@
-import { BarChart3, Calendar, LayoutDashboard, Palette, Receipt, Settings, Upload, Users, type LucideProps } from "lucide-react";
+import { BarChart3, Calendar, LayoutDashboard, Palette, Receipt, Settings, Upload, Users, Wallet, type LucideProps } from "lucide-react";
 import { PermissionResource } from "./permission.enum";
 
 export interface SubMenuAppModel {
@@ -69,6 +69,17 @@ export function getMenuData() {
             label: "Odontograma",
             path: "/odontogram",
             resource: PermissionResource.Odontogram
+        },
+        {
+            id: "credit",
+            icon: Wallet,
+            label: "Crédito",
+            submenu: [
+                { id: "credit-products", label: "Productos de crédito", path: "/credit/products", resource: PermissionResource.CreditProducts },
+                { id: "credit-applications", label: "Solicitudes", path: "/credit/applications", resource: PermissionResource.CreditApplications },
+                { id: "credit-portfolio", label: "Cartera", path: "/credit/portfolio", resource: PermissionResource.CreditLoans },
+                { id: "credit-collections", label: "Cobranza", path: "/credit/collections", resource: PermissionResource.CreditCollections },
+            ],
         },
         {
             id: "personalize",

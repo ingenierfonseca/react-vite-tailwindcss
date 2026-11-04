@@ -4,6 +4,10 @@ import Odontogram from "../features/odontogram/Odontogram";
 import DashboardPage from "../pages/DashboardPage";
 import PatientListPage from "../features/patients/page/PatientListPage";
 import CompanySettingsPage from "../features/company-settings/presentation/CompanySettingsPage";
+import CreditProductsPage from "@/features/credit/presentation/CreditProductsPage";
+import CreditApplicationsPage from "@/features/credit/presentation/CreditApplicationsPage";
+import CreditPortfolioPage from "@/features/credit/presentation/CreditPortfolioPage";
+import CreditCollectionsPage from "@/features/credit/presentation/CreditCollectionsPage";
 import AppointmentTypeListPage from "../features/administration/apointment-type/AppointmentTypeListPage";
 import PatientBulkUploadPage from "../features/upload-data/patient/PatientBulkUploadPage";
 import ClinicalHistoryBulkUploadPage from "../features/upload-data/clinical-history/ClinicalHistoryBulkUploadPage";
@@ -73,6 +77,26 @@ export const routesConfig = [
     path: "/settings",
     title: "Personalizar",
     element: <CompanySettingsPage />
+  },
+  {
+    path: "/credit/products",
+    title: "Productos de crédito",
+    element: <CreditProductsPage />,
+  },
+  {
+    path: "/credit/applications",
+    title: "Solicitudes de crédito",
+    element: <CreditApplicationsPage />,
+  },
+  {
+    path: "/credit/portfolio",
+    title: "Cartera de préstamos",
+    element: <CreditPortfolioPage />,
+  },
+  {
+    path: "/credit/collections",
+    title: "Cobranza",
+    element: <CreditCollectionsPage />,
   },
   {
     path: "/settings/personalize",

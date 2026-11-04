@@ -8,21 +8,28 @@ export function createAuthUseCases(
 ) {
   return {
     async login(credentials: LoginCredentials) {
-      const tokens = await repository.login(credentials);
-      tokenStorage.saveTokens(tokens);
+      const data = await repository.login(credentials);
+      tokenStorage.saveTokens(data);
+      if (data.csrfToken) tokenStorage.saveCsrfToken(data.csrfToken);
 
-      try {
-        return await repository.getCurrentUser();
-      } catch (error) {
-        tokenStorage.clear();
-        throw error;
+      return  {
+        id: data.userId,
+        userName: data.userName,
+        email: data.email,
+        roles: data.roles,
+        permissions: data.permissions,
+        staffId: data.staffId,
+        firstName: data.firstName,
+        lastName: data.lastName,
+        staffTypeName: data.staffTypeName,
+        avatar: data.avatar
       }
     },
 
     async restoreSession() {
-      if (!tokenStorage.getAccessToken()) return null;
-
       try {
+        const csrfToken = await repository.getCsrfToken();
+        tokenStorage.saveCsrfToken(csrfToken);
         return await repository.getCurrentUser();
       } catch {
         tokenStorage.clear();

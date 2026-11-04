@@ -1,9 +1,5 @@
 import axios, { type AxiosError, type InternalAxiosRequestConfig } from "axios";
-import {
-  API_AUTH_EVENTS,
-  API_TOKEN_KEYS,
-  type ApiTokenStorage,
-} from "./auth-token-storage";
+import { API_AUTH_EVENTS, type ApiTokenStorage } from "./auth-token-storage";
 import { API_CONFIG } from "./config";
 import { AUTH_ENDPOINTS } from "./endpoints/auth";
 
@@ -12,11 +8,13 @@ export interface ApiAuthEndpoints {
   REFRESH: string;
   LOGOUT: string;
   PROFILE: string;
+  CSRF: string;
 }
 
 export interface ApiAuthConfig {
   tokenStorage: ApiTokenStorage;
   endpoints?: ApiAuthEndpoints;
+  useHttpOnlyCookies?: boolean;
 }
 
 interface RetryableRequestConfig extends InternalAxiosRequestConfig {
@@ -24,24 +22,30 @@ interface RetryableRequestConfig extends InternalAxiosRequestConfig {
 }
 
 const api = axios.create(API_CONFIG);
+let csrfToken: string | null = null;
 
 const browserTokenStorage: ApiTokenStorage = {
-  getAccessToken: () => localStorage.getItem(API_TOKEN_KEYS.ACCESS),
-  getRefreshToken: () => localStorage.getItem(API_TOKEN_KEYS.REFRESH),
-  saveAccessToken: (token) => localStorage.setItem(API_TOKEN_KEYS.ACCESS, token),
-  clear: () => {
-    localStorage.removeItem(API_TOKEN_KEYS.ACCESS);
-    localStorage.removeItem(API_TOKEN_KEYS.REFRESH);
-  },
+  getAccessToken: () => null,
+  getRefreshToken: () => null,
+  getCsrfToken: () => csrfToken,
+  saveAccessToken: () => undefined,
+  saveCsrfToken: (token) => { csrfToken = token; },
+  clear: () => { csrfToken = null; },
 };
 
 let tokenStorage: ApiTokenStorage = browserTokenStorage;
 let authEndpoints: ApiAuthEndpoints = AUTH_ENDPOINTS;
+let useHttpOnlyCookies = false;
 
 /** Configure the shared HTTP client's auth behavior at the app composition root. */
-export function configureApiAuth({ tokenStorage: storage, endpoints }: ApiAuthConfig) {
+export function configureApiAuth({
+  tokenStorage: storage,
+  endpoints,
+  useHttpOnlyCookies: cookieAuth = false,
+}: ApiAuthConfig) {
   tokenStorage = storage;
   authEndpoints = endpoints ?? AUTH_ENDPOINTS;
+  useHttpOnlyCookies = cookieAuth;
 }
 
 function notifySessionExpired() {
@@ -56,7 +60,14 @@ function isAuthEndpoint(url = "") {
   );
 }
 
+function isCredentialEndpoint(url = "") {
+  return [authEndpoints.LOGIN, authEndpoints.REFRESH, authEndpoints.CSRF].some(
+    (endpoint) => url.includes(endpoint),
+  );
+}
+
 let isRefreshing = false;
+let csrfRequest: Promise<string> | null = null;
 let failedQueue: Array<{
   resolve: (token: string) => void;
   reject: (error: unknown) => void;
@@ -64,21 +75,41 @@ let failedQueue: Array<{
 
 function processQueue(error: unknown, token: string | null) {
   failedQueue.forEach((request) => {
-    if (error || !token) {
-      request.reject(error);
-    } else {
-      request.resolve(token);
-    }
+    if (error) request.reject(error);
+    else request.resolve(token ?? "");
   });
   failedQueue = [];
 }
 
-api.interceptors.request.use((config) => {
-  if (config.url && [authEndpoints.LOGIN, authEndpoints.REFRESH].some((endpoint) => config.url?.includes(endpoint))) {
-    return config;
+async function ensureCsrfToken(): Promise<string> {
+  const existing = tokenStorage.getCsrfToken();
+  if (existing) return existing;
+  if (!csrfRequest) {
+    csrfRequest = axios.get<{ csrfToken: string }>(
+      `${API_CONFIG.baseURL.replace(/\/$/, "")}${authEndpoints.CSRF}`,
+      { timeout: API_CONFIG.timeout, withCredentials: true },
+    ).then(({ data }) => {
+      tokenStorage.saveCsrfToken(data.csrfToken);
+      return data.csrfToken;
+    }).finally(() => {
+      csrfRequest = null;
+    });
   }
-  const token = tokenStorage.getAccessToken();
-  if (token) config.headers.Authorization = `Bearer ${token}`;
+  return csrfRequest;
+}
+
+api.interceptors.request.use(async (config) => {
+  const credentialEndpoint = config.url && isCredentialEndpoint(config.url);
+  if (!useHttpOnlyCookies && !credentialEndpoint) {
+    const token = tokenStorage.getAccessToken();
+    if (token) config.headers.Authorization = `Bearer ${token}`;
+  }
+
+  const method = config.method?.toUpperCase();
+  if (useHttpOnlyCookies && method && !["GET", "HEAD", "OPTIONS"].includes(method)) {
+    const csrf = await ensureCsrfToken();
+    config.headers["X-CSRF-TOKEN"] = csrf;
+  }
   return config;
 });
 
@@ -96,7 +127,7 @@ api.interceptors.response.use(
     }
 
     const refreshToken = tokenStorage.getRefreshToken();
-    if (!refreshToken) {
+    if (!refreshToken && !useHttpOnlyCookies) {
       tokenStorage.clear();
       notifySessionExpired();
       return Promise.reject(error);
@@ -106,7 +137,7 @@ api.interceptors.response.use(
       return new Promise<string>((resolve, reject) => {
         failedQueue.push({ resolve, reject });
       }).then((token) => {
-        originalRequest.headers.Authorization = `Bearer ${token}`;
+        if (!useHttpOnlyCookies && token) originalRequest.headers.Authorization = `Bearer ${token}`;
         return api(originalRequest);
       });
     }
@@ -115,14 +146,23 @@ api.interceptors.response.use(
     isRefreshing = true;
 
     try {
-      const { data } = await axios.post<{ token: string }>(
+      const csrf = tokenStorage.getCsrfToken();
+      const { data } = await axios.post<{ token?: string; csrfToken?: string }>(
         `${API_CONFIG.baseURL.replace(/\/$/, "")}${authEndpoints.REFRESH}`,
-        { refreshToken },
-        { timeout: API_CONFIG.timeout, headers: API_CONFIG.headers },
+        refreshToken ? { refreshToken } : {},
+        {
+          timeout: API_CONFIG.timeout,
+          withCredentials: true,
+          headers: {
+            ...API_CONFIG.headers,
+            ...(csrf ? { "X-CSRF-TOKEN": csrf } : {}),
+          },
+        },
       );
-      tokenStorage.saveAccessToken(data.token);
-      processQueue(null, data.token);
-      originalRequest.headers.Authorization = `Bearer ${data.token}`;
+      if (data.csrfToken) tokenStorage.saveCsrfToken(data.csrfToken);
+      if (!useHttpOnlyCookies && data.token) tokenStorage.saveAccessToken(data.token);
+      processQueue(null, data.token ?? "");
+      if (!useHttpOnlyCookies && data.token) originalRequest.headers.Authorization = `Bearer ${data.token}`;
       return api(originalRequest);
     } catch (refreshError) {
       processQueue(refreshError, null);

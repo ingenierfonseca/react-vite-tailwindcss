@@ -18,7 +18,6 @@ export default function PaginatedDataTable<T>({
     onPageChange,
     children
 }: DataTableProps<T>) {
-    {console.log("paginacion", pagination?.data)}
     return (
         <div className="w-full mt-4 overflow-hidden rounded-lg border border-slate-200 dark:border-slate-600">
             {/* Encabezados */}

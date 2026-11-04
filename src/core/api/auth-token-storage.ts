@@ -2,7 +2,9 @@
 export interface ApiTokenStorage {
   getAccessToken: () => string | null;
   getRefreshToken: () => string | null;
+  getCsrfToken: () => string | null;
   saveAccessToken: (token: string) => void;
+  saveCsrfToken: (token: string) => void;
   clear: () => void;
 }
 

@@ -3,12 +3,14 @@ import { CATALOG_ENDPOINTS } from "./catalog";
 import { CLINICAL_ENDPOINTS } from "./clinical";
 import { OPERATIONS_ENDPOINTS } from "./operations";
 import { SETTINGS_ENDPOINTS } from "./settings";
+import { CREDIT_ENDPOINTS } from "./credit";
 
 export { AUTH_ENDPOINTS } from "./auth";
 export { CATALOG_ENDPOINTS } from "./catalog";
 export { CLINICAL_ENDPOINTS } from "./clinical";
 export { OPERATIONS_ENDPOINTS } from "./operations";
 export { SETTINGS_ENDPOINTS } from "./settings";
+export { CREDIT_ENDPOINTS } from "./credit";
 
 /** Central endpoint catalog. Flat keys remain for compatibility with services. */
 export const ENDPOINTS = {
@@ -18,4 +20,6 @@ export const ENDPOINTS = {
   ...CLINICAL_ENDPOINTS,
   ...OPERATIONS_ENDPOINTS,
   ...SETTINGS_ENDPOINTS,
+  ...CREDIT_ENDPOINTS,
+  CREDIT: CREDIT_ENDPOINTS,
 } as const;
