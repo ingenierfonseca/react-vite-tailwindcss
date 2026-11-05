@@ -42,6 +42,8 @@ export const PermissionResource = {
   CreditLoans: "credit.loans",
   CreditPayments: "credit.payments",
   CreditCollections: "credit.collections",
+  StaffLocations: "stafflocations",
+  Branches: "branches",
 } as const;
 
 export type PermissionResource = (typeof PermissionResource)[keyof typeof PermissionResource];

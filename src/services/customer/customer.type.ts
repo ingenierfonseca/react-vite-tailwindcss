@@ -7,6 +7,16 @@ export interface Customer extends Client {
     address: string
     birthDate: string
     gender: string
+    departmentId?: number | null
+    departmentName?: string | null
+    cityId?: number | null
+    cityName?: string | null
+    latitude?: number | null
+    longitude?: number | null
+    locationAccuracyMeters?: number | null
+    locationSource?: "ManualMap" | "BrowserGps" | null
+    locationUpdatedAtUtc?: string | null
+    locationDataProvided?: boolean
 }
 
 export interface CustomerDashboard {

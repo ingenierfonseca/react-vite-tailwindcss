@@ -1,8 +1,9 @@
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, FilePlus2 } from "lucide-react";
 import type { PaginatedResponse } from "../../models/paginatedResponse";
 import type React from "react";
 import PaginationButton from "./PaginationButton";
 import type { Header } from "../../models/header.type";
+import EmptyData from "../commons/EmptyData";
 
 interface DataTableProps<T> {
     columns: Header[]
@@ -19,52 +20,63 @@ export default function PaginatedDataTable<T>({
     children
 }: DataTableProps<T>) {
     return (
-        <div className="w-full mt-4 overflow-hidden rounded-lg border border-slate-200 dark:border-slate-600">
-            {/* Encabezados */}
-            <div className="flex bg-slate-100 dark:bg-slate-700/50 px-4 py-3 gap-2 border-b border-slate-200 dark:border-slate-600">
-                {columns.map((col) => (
-                    <div
-                        key={col.header}
-                        className={`${col.className} font-semibold text-slate-700 dark:text-slate-100`}
-                    >
-                        {col.header}
+        <>
+            {pagination?.totalItems === 0 ? (
+                <EmptyData
+                    icon={<FilePlus2 />}
+                    label="Recurso"
+                    gender="masculine"
+                    canCreate={false}
+                    click={() => {} } />
+            ) : (
+                <div className="w-full mt-4 overflow-hidden rounded-lg border border-slate-200 dark:border-slate-600">
+                    {/* Encabezados */}
+                    <div className="flex bg-slate-100 dark:bg-slate-700/50 px-4 py-3 gap-2 border-b border-slate-200 dark:border-slate-600">
+                        {columns.map((col) => (
+                            <div
+                                key={col.header}
+                                className={`${col.className} font-semibold text-slate-700 dark:text-slate-100`}
+                            >
+                                {col.header}
+                            </div>
+                        ))}
+                        <div className="flex-1 text-right">Acciones</div>
                     </div>
-                ))}
-                <div className="flex-1 text-right">Acciones</div>
-            </div>
 
-            {children}
+                    {children}
 
-            {/* Paginación */}
-            {pagination && (<div className="flex items-center justify-between px-4 py-3 bg-white dark:bg-slate-800 border-t border-slate-200 dark:border-slate-600">
-                <span className="text-sm text-slate-500 dark:text-slate-400">
-                    {/*Mostrando <b>{Math.min((pagination.data?.length) ?? 0, pagination.pageSize)}</b> de <b>{pagination.totalItems}</b>*/}
-                    Mostrando <b>{Math.min(((pagination.data?.length) ?? 0), Number(pagination.pageSize) || 0)}</b> de <b>{Number(pagination.totalItems) || 0}</b>
-                </span>
-                <div className="flex gap-2">
-                    <PaginationButton
-                        disabled={pagination.currentPage === 1}
-                        onClick={() => onPageChange(pagination.currentPage - 1)}
-                    >
-                        <ChevronLeft size={16} />
-                    </PaginationButton>
-                    {pages.map(page => (
-                        <PaginationButton
-                            key={page}
-                            onClick={() => onPageChange(page)}
-                            active={page === pagination.currentPage}
-                        >
-                            <span className="text-sm">{page}</span>
-                        </PaginationButton>
-                    ))}
-                    <PaginationButton
-                        disabled={pagination.currentPage === pagination.totalPages}
-                        onClick={() => onPageChange(pagination.currentPage + 1)}
-                    >
-                        <ChevronRight size={16} />
-                    </PaginationButton>
+                    {/* Paginación */}
+                    {pagination && (<div className="flex items-center justify-between px-4 py-3 bg-white dark:bg-slate-800 border-t border-slate-200 dark:border-slate-600">
+                        <span className="text-sm text-slate-500 dark:text-slate-400">
+                            {/*Mostrando <b>{Math.min((pagination.data?.length) ?? 0, pagination.pageSize)}</b> de <b>{pagination.totalItems}</b>*/}
+                            Mostrando <b>{Math.min(((pagination.data?.length) ?? 0), Number(pagination.pageSize) || 0)}</b> de <b>{Number(pagination.totalItems) || 0}</b>
+                        </span>
+                        <div className="flex gap-2">
+                            <PaginationButton
+                                disabled={pagination.currentPage === 1}
+                                onClick={() => onPageChange(pagination.currentPage - 1)}
+                            >
+                                <ChevronLeft size={16} />
+                            </PaginationButton>
+                            {pages.map(page => (
+                                <PaginationButton
+                                    key={page}
+                                    onClick={() => onPageChange(page)}
+                                    active={page === pagination.currentPage}
+                                >
+                                    <span className="text-sm">{page}</span>
+                                </PaginationButton>
+                            ))}
+                            <PaginationButton
+                                disabled={pagination.currentPage === pagination.totalPages}
+                                onClick={() => onPageChange(pagination.currentPage + 1)}
+                            >
+                                <ChevronRight size={16} />
+                            </PaginationButton>
+                        </div>
+                    </div>)}
                 </div>
-            </div>)}
-        </div>
+            )}
+        </>
     );
 };

@@ -1,0 +1,9 @@
+services:
+  osm-tiles:
+    image: maptiler/tileserver-gl:latest
+    command: ["--file", "/data/nicaragua.mbtiles"]
+    ports:
+      - "127.0.0.1:8080:8080"
+    volumes:
+      - ./map-data:/data:ro
+    restart: unless-stopped

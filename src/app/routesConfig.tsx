@@ -8,6 +8,8 @@ import CreditProductsPage from "@/features/credit/presentation/CreditProductsPag
 import CreditApplicationsPage from "@/features/credit/presentation/CreditApplicationsPage";
 import CreditPortfolioPage from "@/features/credit/presentation/CreditPortfolioPage";
 import CreditCollectionsPage from "@/features/credit/presentation/CreditCollectionsPage";
+import StaffLocationMonitorPage from "@/features/staff-location/presentation/StaffLocationMonitorPage";
+import BranchesPage from "@/features/staff-location/presentation/BranchesPage";
 import AppointmentTypeListPage from "../features/administration/apointment-type/AppointmentTypeListPage";
 import PatientBulkUploadPage from "../features/upload-data/patient/PatientBulkUploadPage";
 import ClinicalHistoryBulkUploadPage from "../features/upload-data/clinical-history/ClinicalHistoryBulkUploadPage";
@@ -97,6 +99,16 @@ export const routesConfig = [
     path: "/credit/collections",
     title: "Cobranza",
     element: <CreditCollectionsPage />,
+  },
+  {
+    path: "/staff-locations",
+    title: "Ubicación del personal",
+    element: <StaffLocationMonitorPage />,
+  },
+  {
+    path: "/branches",
+    title: "Sucursales",
+    element: <BranchesPage />,
   },
   {
     path: "/settings/personalize",

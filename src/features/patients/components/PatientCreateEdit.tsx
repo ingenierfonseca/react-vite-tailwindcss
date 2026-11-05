@@ -7,6 +7,9 @@ import DropDownApp from "@/components/commons/DropDownApp";
 import TextFieldApp from "@/components/commons/TextFieldApp";
 import type { ClientFormRenderProps } from "@/features/clients/presentation/ClientsPage";
 import type { Customer } from "@/services/customer/customer.type";
+import { GeographyService } from "@/services/geography/geography.service";
+import { AutocompleteBasic } from "@/components/pagination-data/Autocomplete";
+import LocationPickerMap from "./LocationPickerMap";
 
 const genders = [
   { id: 1, value: "Femenino" },
@@ -161,6 +164,42 @@ export default function PatientCreateEdit(props: ClientFormRenderProps<Customer>
               onChange({ gender: gender?.value ?? "" });
             }}
           />
+          <AutocompleteBasic
+            label="Departmamento"
+            value={client ? client.departmentId : undefined}
+            onChange={(value) => {
+              const departmentId = value;
+                onChange({
+                  departmentId,
+                  cityId: null,
+                  cityName: null,
+                  locationDataProvided: true,
+                });
+              }
+            }
+            disabled={false}
+            fetchData={GeographyService.getDepartments}
+            getValue={(item) => item.id}
+            getLabel={(item) => `${item.name}`}
+          />
+          <AutocompleteBasic
+            label="Ciudad"
+            value={client ? client.cityId : undefined}
+            onChange={(value) => {
+                onChange({
+                  cityId: value,
+                  locationDataProvided: true,
+                });
+              }
+            }
+            disabled={false}
+            fetchData={GeographyService.getCities}
+            getValue={(item) => item.id}
+            getLabel={(item) => `${item.name}`}
+          />
+
+        </div>
+        <div className="flex flex-col gap-2 pt-3 md:flex-row">
           <TextFieldApp
             className="flex-1"
             label="Dirección"
@@ -170,6 +209,20 @@ export default function PatientCreateEdit(props: ClientFormRenderProps<Customer>
             onChange={(address) => onChange({ address })}
           />
         </div>
+
+        
+        <LocationPickerMap
+          latitude={client.latitude}
+          longitude={client.longitude}
+          accuracyMeters={client.locationAccuracyMeters}
+          onChange={(location) => onChange({
+            latitude: location.latitude,
+            longitude: location.longitude,
+            locationAccuracyMeters: location.accuracyMeters,
+            locationSource: location.source,
+            locationDataProvided: true,
+          })}
+        />
 
         {error && <p role="alert" className="mt-4 rounded-md bg-red-50 p-3 text-sm text-red-700 dark:bg-red-950/40 dark:text-red-300">{error}</p>}
 

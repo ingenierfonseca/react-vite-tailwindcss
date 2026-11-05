@@ -1,0 +1,26 @@
+.customer-location-marker-host {
+  background: transparent;
+  border: 0;
+}
+
+.customer-location-marker {
+  display: grid;
+  width: 32px;
+  height: 32px;
+  place-items: center;
+  border: 3px solid #fff;
+  border-radius: 50% 50% 50% 5px;
+  background: #0f766e;
+  box-shadow: 0 2px 8px rgb(15 23 42 / 35%);
+  transform: rotate(-45deg);
+}
+
+.customer-location-marker > span {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #fff;
+  transform: rotate(45deg);
+}
+
+.leaflet-container { z-index: 0; font-family: inherit; }

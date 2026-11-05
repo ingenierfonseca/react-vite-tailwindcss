@@ -110,7 +110,9 @@ export function getMenuData() {
                 { id: "appointmentStatuses", label: "Estados de Cita", path: "appointment-statuses", resource: PermissionResource.AppointmentStatuses },
                 { id: "consultationTypes", label: "Tipos de Consulta", path: "consultation-types", resource: PermissionResource.ConsultationTypes },
                 { id: "specialties", label: "Especialidades", path: "specialties", resource: PermissionResource.Specialties },
-                { id: "staff", label: "Staff", path: "staff", resource: PermissionResource.Staff }
+                { id: "staff", label: "Staff", path: "staff", resource: PermissionResource.Staff },
+                { id: "staff-locations", label: "Ubicación del personal", path: "/staff-locations", resource: PermissionResource.StaffLocations },
+                { id: "branches", label: "Sucursales", path: "/branches", resource: PermissionResource.Branches }
             ]
         },
         {
