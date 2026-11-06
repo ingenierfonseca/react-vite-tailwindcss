@@ -1,21 +1,10 @@
 import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import type { Client, ClientPage } from "../domain/client";
 import type { ClientModule } from "../application/create-client-module";
-import { ClientForm, type ClientFormLabels } from "./ClientForm";
+import { ClientForm } from "./ClientForm";
+import { useClientLabels } from "@/shared/hooks/useClientLabels";
 
-export interface ClientsPageLabels extends Partial<ClientFormLabels> {
-  title: string;
-  description: string;
-  add: string;
-  search: string;
-  empty: string;
-  previous: string;
-  next: string;
-  profile: string;
-  edit: string;
-  emailColumn: string;
-  phoneColumn: string;
-}
+export type ClientsPageLabels = ReturnType<typeof useClientLabels>;
 
 export interface ClientProfileActions {
   onClose: () => void;

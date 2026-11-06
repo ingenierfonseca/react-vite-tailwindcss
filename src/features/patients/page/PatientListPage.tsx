@@ -4,9 +4,8 @@ import { toast } from "react-toastify";
 import { User } from "lucide-react";
 import { customerClientModule } from "@/app/composition/clients";
 import DashboardCard from "@/components/dashboard/DashboardCard";
-import DashboardCardII from "@/components/dashboard/DashboardCardII";
 import { ASSETS_URLS } from "@/config/constants";
-import { ClientsPage, type ClientsPageLabels } from "@/features/clients";
+import { ClientsPage } from "@/features/clients";
 import ClinicalAssessment from "@/features/session-plan/ClinicalAssessment";
 import { PermissionAction, PermissionResource } from "@/models/permission.enum";
 import type { Customer, CustomerDashboard } from "@/services/customer/customer.type";
@@ -17,36 +16,13 @@ import { calculateAgeFromString, validateBirthDate } from "@/utils/date.util";
 import { validateEmail } from "@/utils/email.util";
 import { validatePhoneNumber } from "@/utils/number.util";
 import PatientCreateEdit from "../components/PatientCreateEdit";
-
-const labels: ClientsPageLabels = {
-  title: "Administración de Pacientes",
-  description: "Administra la información de tus pacientes",
-  add: "Agregar nuevo paciente",
-  search: "Buscar pacientes",
-  empty: "No se encontraron pacientes.",
-  previous: "Anterior",
-  next: "Siguiente",
-  profile: "Paciente",
-  edit: "Editar",
-  emailColumn: "Correo",
-  phoneColumn: "Teléfono",
-  createTitle: "Nuevo paciente",
-  editTitle: "Editar paciente",
-  firstName: "Nombre del paciente",
-  lastName: "Apellido del paciente",
-  email: "Correo electrónico",
-  phone: "Teléfono",
-  address: "Dirección",
-  avatar: "Foto del paciente",
-  save: "Guardar paciente",
-  saving: "Guardando…",
-  cancel: "Cancelar",
-};
+import { useClientLabels } from "@/shared/hooks/useClientLabels";
 
 export default function PatientListPage() {
   const { can } = usePermissions();
   const [dashboardData, setDashboardData] = useState<CustomerDashboard[]>([]);
   const [assessmentCustomer, setAssessmentCustomer] = useState<Customer | null>(null);
+  const labels = useClientLabels();
 
   useEffect(() => {
     CustomerService.getDashboard()
@@ -68,22 +44,22 @@ export default function PatientListPage() {
         panelClassName="dark:bg-slate-800"
         canCreate={can(PermissionAction.Create, PermissionResource.Patients)}
         canEdit={can(PermissionAction.Update, PermissionResource.Patients)}
-        onSaved={(_customer, wasUpdate) => toast.success(wasUpdate ? "Paciente actualizado correctamente" : "Paciente creado correctamente")}
+        onSaved={(_customer, wasUpdate) => toast.success(wasUpdate ? labels.entity_updated_successfully : labels.entity_created_successfully)}
         onError={(message) => toast.error(message)}
         validateClient={(customer) => {
-          if (!customer.dni.trim()) return "La identificación del paciente es requerida.";
-          if (!customer.firstName.trim()) return "El nombre del paciente es requerido.";
-          if (!customer.lastName.trim()) return "El apellido del paciente es requerido.";
-          if (!customer.gender.trim()) return "El género del paciente es requerido.";
+          if (!customer.dni.trim()) return labels.entity_id_required;
+          if (!customer.firstName.trim()) return labels.entity_name_required;
+          if (!customer.lastName.trim()) return labels.entity_last_name_required;
+          if (!customer.gender.trim()) return labels.entity_gender_required;
           if (customer.birthDate.trim()) {
             const validation = validateBirthDate(new Date(customer.birthDate));
             if (!validation.isValid) return validation.message;
           }
           if (customer.phone.trim() && !validatePhoneNumber(customer.phone.trim())) {
-            return "El teléfono no es válido.";
+            return labels.invalid_phone;
           }
           if (customer.email.trim() && !validateEmail(customer.email.trim())) {
-            return "El correo electrónico no es válido.";
+            return labels.invalid_email;
           }
           return null;
         }}
@@ -118,12 +94,12 @@ export default function PatientListPage() {
                 }}
               />
             ))}
-            <DashboardCardII title="Pacientes activos" value={100} />
+            {/*<DashboardCardII title="Pacientes activos" value={100} />*/}
           </div>
         )}
         renderRowDetails={(customer) => (
           <span className="mt-1 block truncate text-xs text-slate-500">
-            ID: {customer.dni} · {calculateAgeFromString(customer.birthDate)} años
+            ID: {customer.dni} · {calculateAgeFromString(customer.birthDate)} {labels.age_other}
           </span>
         )}
         renderForm={(formProps) => <PatientCreateEdit {...formProps} />}

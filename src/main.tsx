@@ -9,6 +9,8 @@ import AppThemeProvider from './provider/AppThemeProvider.tsx'
 import { QueryClientProvider } from '@tanstack/react-query'
 import { queryClient } from './provider/QueryClientProvider.tsx'
 import { AuthProvider } from './provider/AuthProvider.tsx'
+import { TerminologyProvider } from './provider/TerminologyProvider.tsx'
+import "@/core/i18n"
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -16,9 +18,11 @@ createRoot(document.getElementById('root')!).render(
       <SettingsProvider>
         <AppThemeProvider>
           <QueryClientProvider client={queryClient}>
+            <TerminologyProvider>
             <AuthProvider>
               <AppRouter />
             </AuthProvider>
+            </TerminologyProvider>
           </QueryClientProvider>
         </AppThemeProvider>
       </SettingsProvider>

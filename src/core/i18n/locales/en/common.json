@@ -1,0 +1,13 @@
+{
+  "save": "Save",
+  "cancel": "Cancel",
+  "edit": "Edit",
+  "delete": "Delete",
+  "firstName": "First name",
+  "lastName": "Last name",
+  "search": "Search",
+  "loading": "Loading...",
+  "email": "Email",
+  "phone": "Phone",
+  "address": "Address"
+}

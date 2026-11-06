@@ -6,6 +6,7 @@ import { SETTINGS_ENDPOINTS } from "./settings";
 import { CREDIT_ENDPOINTS } from "./credit";
 import { STAFF_LOCATION_ENDPOINTS } from "./staff-location";
 import { GEOGRAPHY_ENDPOINTS } from "./geography";
+import { TERMINOLOGY_ENDPOINTS } from "./terminology";
 
 export { AUTH_ENDPOINTS } from "./auth";
 export { CATALOG_ENDPOINTS } from "./catalog";
@@ -30,4 +31,5 @@ export const ENDPOINTS = {
   CREDIT: CREDIT_ENDPOINTS,
   STAFF_LOCATION: STAFF_LOCATION_ENDPOINTS,
   GEOGRAPHY: GEOGRAPHY_ENDPOINTS,
+  TERMINOLOGY: TERMINOLOGY_ENDPOINTS
 } as const;

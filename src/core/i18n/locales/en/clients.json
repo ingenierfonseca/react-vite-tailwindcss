@@ -1,0 +1,10 @@
+{
+  "title": "{{entity}} Management",
+  "description": "Manage {{entity}} information",
+  "add": "Add new {{entity}}",
+  "search": "Search {{entity}}",
+  "empty": "No {{entity}} found",
+  "createTitle": "New {{entity}}",
+  "editTitle": "Edit {{entity}}",
+  "avatar": "{{entity}} photo"
+}

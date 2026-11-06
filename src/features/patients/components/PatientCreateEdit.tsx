@@ -18,7 +18,7 @@ const genders = [
 ];
 
 export default function PatientCreateEdit(props: ClientFormRenderProps<Customer>) {
-  const { client, saving, error, avatarUrl, onChange, onSubmit, onCancel } = props;
+  const { client, saving, error, avatarUrl, onChange, onSubmit, onCancel, labels } = props;
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const previewUrl = useMemo(
@@ -39,17 +39,16 @@ export default function PatientCreateEdit(props: ClientFormRenderProps<Customer>
           <User className="rounded-lg bg-primary/5 p-1 text-primary" size={30} />
           <div>
             <p className="font-semibold text-black dark:text-white">
-              {client.id ? "Editar Paciente" : "Nuevo Paciente"}
+              {client.id ? labels.edit_entity : labels.new_entity}
             </p>
             <p className="text-xs">
-              Complete la información para {client.id ? "actualizar al paciente." : "registrar un nuevo paciente."}
+              {labels.complete_info_to} {client.id ? labels.update_the_entity : labels.register_a_new_entity}
             </p>
           </div>
         </div>
         <button
           type="button"
           onClick={onCancel}
-          aria-label="Cerrar formulario de paciente"
           className="ml-auto text-2xl text-slate-500 hover:text-red-500"
         >
           &times;
@@ -77,10 +76,10 @@ export default function PatientCreateEdit(props: ClientFormRenderProps<Customer>
                   <Camera className="size-8 text-primary" />
                   <Plus className="absolute bottom-2 right-2 size-4 rounded-full border border-white bg-primary text-white" />
                 </span>
-                <span className="text-sm font-semibold text-black dark:text-white">Foto del paciente</span>
-                <span className="text-xs">PNG, JPG hasta 5MB</span>
+                <span className="text-sm font-semibold text-black dark:text-white">{labels.entity_avatar}</span>
+                <span className="text-xs">{labels.image_information}</span>
                 <span className="mb-4 mt-4 flex w-full justify-center gap-2 rounded-md border border-primary/20 px-3 py-2 text-xs text-primary">
-                  <Upload size={16} /> Subir Foto
+                  <Upload size={16} /> {labels.upload_photo}
                 </span>
               </button>
             )}
@@ -97,7 +96,7 @@ export default function PatientCreateEdit(props: ClientFormRenderProps<Customer>
             <div className="flex flex-col gap-3">
               <div className="flex gap-2">
                 <User className="text-primary" />
-                <p className="font-bold">Información personal</p>
+                <p className="font-bold">{labels.personal_information}</p>
               </div>
               <TextFieldApp
                 className="flex-1"
@@ -110,7 +109,7 @@ export default function PatientCreateEdit(props: ClientFormRenderProps<Customer>
               />
               <TextFieldApp
                 className="flex-1"
-                label="Nombre del Paciente"
+                label={labels.entity_name}
                 startIcon={<User />}
                 value={client.firstName}
                 maxLength={50}
@@ -118,7 +117,7 @@ export default function PatientCreateEdit(props: ClientFormRenderProps<Customer>
               />
               <TextFieldApp
                 className="flex-1"
-                label="Apellido del Paciente"
+                label={labels.entity_last_name}
                 startIcon={<User />}
                 value={client.lastName}
                 maxLength={50}
@@ -129,11 +128,11 @@ export default function PatientCreateEdit(props: ClientFormRenderProps<Customer>
         </div>
 
         <div className="my-4 h-0.5 w-full bg-slate-300" />
-        <p className="mb-4 font-semibold text-black dark:text-white">Datos de contacto adicionales</p>
+        <p className="mb-4 font-semibold text-black dark:text-white">{labels.additional_contact_information}</p>
         <div className="flex flex-col gap-2 pt-3 md:flex-row">
           <TextFieldApp
             className="flex-1"
-            label="Teléfono"
+            label={labels.phone}
             startIcon={<Phone />}
             value={client.phone}
             maxLength={15}
@@ -141,7 +140,7 @@ export default function PatientCreateEdit(props: ClientFormRenderProps<Customer>
           />
           <TextFieldApp
             className="flex-1"
-            label="Correo Electrónico"
+            label={labels.email_long}
             startIcon={<Mail />}
             value={client.email}
             maxLength={60}
@@ -149,14 +148,14 @@ export default function PatientCreateEdit(props: ClientFormRenderProps<Customer>
           />
           <DatePicker
             className="flex-1"
-            label="Fecha de nacimiento"
+            label={labels.birth_date}
             value={client.birthDate ? dayjs(client.birthDate) : null}
             onChange={(value) => onChange({ birthDate: value?.format("YYYY-MM-DD") ?? "" })}
           />
         </div>
         <div className="flex flex-col gap-2 pt-3 md:flex-row">
           <DropDownApp
-            title="Género"
+            title={labels.gender}
             data={genders}
             value={genders.find((gender) => gender.value === client.gender)?.id ?? ""}
             onChange={(value) => {
@@ -165,7 +164,7 @@ export default function PatientCreateEdit(props: ClientFormRenderProps<Customer>
             }}
           />
           <AutocompleteBasic
-            label="Departmamento"
+            label={labels.deparment}
             value={client ? client.departmentId : undefined}
             onChange={(value) => {
               const departmentId = value;
@@ -183,7 +182,7 @@ export default function PatientCreateEdit(props: ClientFormRenderProps<Customer>
             getLabel={(item) => `${item.name}`}
           />
           <AutocompleteBasic
-            label="Ciudad"
+            label={labels.city}
             value={client ? client.cityId : undefined}
             onChange={(value) => {
                 onChange({
@@ -202,7 +201,7 @@ export default function PatientCreateEdit(props: ClientFormRenderProps<Customer>
         <div className="flex flex-col gap-2 pt-3 md:flex-row">
           <TextFieldApp
             className="flex-1"
-            label="Dirección"
+            label={labels.address}
             startIcon={<LocationEdit />}
             maxLength={200}
             value={client.address}
@@ -233,11 +232,11 @@ export default function PatientCreateEdit(props: ClientFormRenderProps<Customer>
             onClick={onCancel}
             className="mt-3 h-10 flex-1 cursor-pointer rounded-lg border border-slate-300 bg-slate-50 px-4 py-2 hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-800"
           >
-            Cancelar
+            {labels.cancel}
           </button>
           <ButtonSaveApp
             className="mt-3 flex-6"
-            label="Paciente"
+            label={labels.entity}
             onClick={() => { void onSubmit(selectedImage); }}
             loading={saving}
           />

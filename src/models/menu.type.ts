@@ -1,4 +1,4 @@
-import { BarChart3, Calendar, LayoutDashboard, Palette, Receipt, Settings, Upload, Users, Wallet, type LucideProps } from "lucide-react";
+import { BarChart3, Calendar, LayoutDashboard, MapPinnedIcon, Palette, Receipt, Settings, Upload, Users, Wallet, type LucideProps } from "lucide-react";
 import { PermissionResource } from "./permission.enum";
 
 export interface SubMenuAppModel {
@@ -43,6 +43,13 @@ export function getMenuData() {
             count: "2.4k",
             path: "/patients",
             resource: PermissionResource.Patients
+        },
+        {
+            id: "staff-locations",
+            icon: MapPinnedIcon,
+            label: "Monitoreo en vivo", 
+            path: "/staff-locations", 
+            resource: PermissionResource.StaffLocations
         },
         {
             id: "treatments",
@@ -111,7 +118,6 @@ export function getMenuData() {
                 { id: "consultationTypes", label: "Tipos de Consulta", path: "consultation-types", resource: PermissionResource.ConsultationTypes },
                 { id: "specialties", label: "Especialidades", path: "specialties", resource: PermissionResource.Specialties },
                 { id: "staff", label: "Staff", path: "staff", resource: PermissionResource.Staff },
-                { id: "staff-locations", label: "Ubicación del personal", path: "/staff-locations", resource: PermissionResource.StaffLocations },
                 { id: "branches", label: "Sucursales", path: "/branches", resource: PermissionResource.Branches }
             ]
         },

@@ -6,18 +6,18 @@ import "./customer-location-picker-map.css";
 
 const NICARAGUA_CENTER: L.LatLngExpression = [12.8654, -85.2072];
 
-export interface CustomerLocationSelection {
+export interface LocationSelection {
   latitude: number | null;
   longitude: number | null;
   accuracyMeters: number | null;
   source: "ManualMap" | "BrowserGps" | null;
 }
 
-interface CustomerLocationPickerMapProps {
+interface LocationPickerMapProps {
   latitude?: number | null;
   longitude?: number | null;
   accuracyMeters?: number | null;
-  onChange: (location: CustomerLocationSelection) => void;
+  onChange: (location: LocationSelection) => void;
 }
 
 export default function LocationPickerMap({
@@ -25,12 +25,12 @@ export default function LocationPickerMap({
   longitude,
   accuracyMeters,
   onChange,
-}: CustomerLocationPickerMapProps) {
+}: LocationPickerMapProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<L.Map | null>(null);
   const markerRef = useRef<L.Marker | null>(null);
   const onChangeRef = useRef(onChange);
-  const selectPointRef = useRef<(point: L.LatLng, accuracy: number | null, source: CustomerLocationSelection["source"]) => void>(() => undefined);
+  const selectPointRef = useRef<(point: L.LatLng, accuracy: number | null, source: LocationSelection["source"]) => void>(() => undefined);
   const [locating, setLocating] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [tileError, setTileError] = useState(false);
@@ -38,7 +38,7 @@ export default function LocationPickerMap({
 
   useEffect(() => { onChangeRef.current = onChange; }, [onChange]);
 
-  const selectPoint = useCallback((point: L.LatLng, accuracy: number | null, source: CustomerLocationSelection["source"]) => {
+  const selectPoint = useCallback((point: L.LatLng, accuracy: number | null, source: LocationSelection["source"]) => {
     const map = mapRef.current;
     if (!map) return;
 
