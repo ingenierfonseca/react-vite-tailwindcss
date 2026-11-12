@@ -16,9 +16,8 @@ export default function ButtonSaveApp({ label, children, onClick, loading, class
             disabled={disabled}
             className={`${className} 
                 flex items-center justify-center gap-2 disabled:opacity-50
-                mt-4 bg-primary px-4 py-2 text-white rounded-sm 
-                self-end transition-all
-                ${loading ? 'opacity-70 cursor-not-allowed' : 'hover:bg-primary/70 hover:text-white/70 cursor-pointer'}
+                bg-secondary p-2 text-white font-normal rounded-2xl
+                ${loading ? 'opacity-70 cursor-not-allowed' : 'hover:bg-secondary/90 hover:text-white/70 cursor-pointer'}
             `}
         >
             {children && children}
@@ -30,7 +29,7 @@ export default function ButtonSaveApp({ label, children, onClick, loading, class
             ) : (
                 <>
                     <Save size={20} />
-                    <span className="text-sm font-semibold">{`Guardar ${label}`}</span>
+                    <span>{`Guardar ${label}`}</span>
                 </>
             )}
         </button>

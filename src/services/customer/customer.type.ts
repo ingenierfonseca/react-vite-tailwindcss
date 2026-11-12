@@ -1,6 +1,7 @@
 import type { Client } from "@/features/clients/domain/client";
 
 export interface Customer extends Client {
+    idType: number
     dni: string
     phone: string
     email: string

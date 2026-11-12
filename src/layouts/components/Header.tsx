@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { Menu, LogOut } from "lucide-react";
+import { Menu, LogOut, Bell, ChevronLeft, ChevronRight } from "lucide-react";
 import { useLocation, useNavigate } from "react-router";
 import { routesConfig } from "../../app/routesConfig";
 import { useAuth } from "../../features/auth/presentation/useAuth";
@@ -8,9 +8,10 @@ import { ASSETS_URLS } from "@/config/constants";
 
 interface HeaderProps {
     onToggle: () => void;
+    collapsed: boolean
 }
 
-function Header({onToggle}: HeaderProps) {
+function Header({onToggle, collapsed}: HeaderProps) {
     const location = useLocation();
     const navigate = useNavigate();
     const { user, logout } = useAuth();
@@ -42,20 +43,30 @@ function Header({onToggle}: HeaderProps) {
         : "AD";
 
     return(
-        <div className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-b
-            border-slate-200/50 dark:border-slate-700/50 px-6 py-4">
+        <div className="dark:bg-slate-900/80 backdrop-blur-xl border-b
+            border-slate-200/50 dark:border-slate-700/50 px-3 py-2">
             <div className="flex items-center justify-between">
                 <div className={`flex items-center space-x-4`}>
-                    <button className="p-2 rounded-lg text-slate-600 dark:text-slate-300
-                        hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                    <button className="p-2 rounded-lg
+                        bg-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
                         onClick={onToggle}>
                         <Menu className="w-5 h-5" />
                     </button>
-                    <h1>{currentRoute?.title}</h1>
+                    <div>
+                        <p className="text-xl text-primary font-medium">Administración de {currentRoute?.title}</p>
+                        <p className="text-sm text-slate-500 dark:text-slate-400">description</p>
+                    </div>
                 </div>
 
                 {/* User dropdown */}
-                <div className="relative" ref={dropdownRef}>
+                <div className="relative flex gap-2" ref={dropdownRef}>
+                    <div className={`flex items-center space-x-4`}>
+                        <button className="p-2 rounded-full text-primary dark:text-slate-300
+                            bg-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                            onClick={onToggle}>
+                            <Bell className="w-5 h-5" />
+                        </button>
+                    </div>
                     <button
                         onClick={() => setDropdownOpen((prev) => !prev)}
                         className="flex items-center gap-2 p-1.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
@@ -72,7 +83,7 @@ function Header({onToggle}: HeaderProps) {
                     </button>
 
                     {dropdownOpen && (
-                        <div className="absolute right-0 mt-2 w-48 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-xl py-1 z-50">
+                        <div className="absolute right-0 mt-2 w-48 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-xl py-1 z-1000">
                             <div className="px-3 py-2 border-b border-slate-100 dark:border-slate-700">
                                 <p className="text-sm font-medium text-slate-800 dark:text-white truncate">
                                     {user?.userName || "Usuario"}

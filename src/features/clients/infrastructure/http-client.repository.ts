@@ -51,7 +51,11 @@ export function createHttpClientRepository<TClient extends Client>(
     repository.uploadAvatar = async (id, file) => {
       const formData = new FormData();
       formData.append("file", file);
-      const { data } = await http.post(avatarEndpoint(id), formData);
+      const { data } = await http.post(avatarEndpoint(id), formData, {
+            headers: {
+                "Content-Type": undefined
+            }
+        });
       return data;
     };
   }

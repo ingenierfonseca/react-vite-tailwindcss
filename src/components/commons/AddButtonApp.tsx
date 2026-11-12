@@ -2,7 +2,7 @@ import { ArrowLeft, ArrowRight, Plus, Save } from "lucide-react";
 import { CircularProgress } from "@mui/material";
 
 const classNameBnt = `
-    flex gap-2 min-w-0 p-3 bg-primary rounded-md 
+    flex gap-2 min-w-0 p-2 bg-primary rounded-md 
     items-center text-white text-sm font-semibold shadow-md 
     hover:scale-[1.02] active:scale-[0.98] transition
     disabled:opacity-50`;

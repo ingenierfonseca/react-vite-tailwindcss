@@ -53,6 +53,7 @@ export function AutocompleteBasic<T>({
   return (
     <Autocomplete
       className="flex-1"
+      size="small"
       options={options}
       value={selected}
       loading={loading}

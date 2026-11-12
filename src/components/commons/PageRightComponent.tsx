@@ -1,17 +1,18 @@
-import { X } from "lucide-react"
-import type { ReactElement } from "react"
+import PageRightHeader from "./PageRightHeader"
 
 interface PageRightComponentProps {
     title: string,
-    icon?: ReactElement
-    onClick: () => void
+    onClose: () => void
     children: React.ReactNode
 }
 
-export default function PageRightComponent({ title, icon, onClick, children }: PageRightComponentProps) {
+export default function PageRightComponent({ title, onClose, children }: PageRightComponentProps) {
     return (
-        <div className="w-full/2 h-screen pt-5 pb-18 px-4 overflow-y-auto overflow-x-hidden [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
-            <div className="flex">
+        <div className="w-full/2 h-screen pt-5 pb-18 px-6 overflow-y-auto overflow-x-hidden [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+            <PageRightHeader
+                title={title}
+                onClose={onClose} />
+            {/*<div className="flex">
                 <div className="flex gap-3">
                     {icon}
                     <p className="text-xl md:text-2xl font-semibold text-black dark:text-white">{title}</p>
@@ -22,7 +23,7 @@ export default function PageRightComponent({ title, icon, onClick, children }: P
                     >
                     <X />
                 </button>
-            </div>
+            </div>*/}
             {children}
         </div>
     )

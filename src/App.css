@@ -162,6 +162,9 @@
   }
 }*/
 
+.main-layout {
+  background-color: #f1f1f2;/*#f1f1f2-CFEBE1*/
+}
 .sidebar-scrollbar {
   scrollbar-width: thin;
   scrollbar-color: transparent transparent;

@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { LocateFixed, MapPin, RotateCcw } from "lucide-react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import "./customer-location-picker-map.css";
+import "./css/customer-location-picker-map.css";
 
 const NICARAGUA_CENTER: L.LatLngExpression = [12.8654, -85.2072];
 
@@ -172,7 +172,7 @@ export default function LocationPickerMap({
         </div>
       </div>
 
-      <div className="relative h-64 overflow-hidden rounded-xl border border-slate-200 bg-slate-100 dark:border-slate-700 dark:bg-slate-800 sm:h-72">
+      <div className="relative h-90 overflow-hidden rounded-xl border border-slate-200 bg-slate-100 dark:border-slate-700 dark:bg-slate-800">
         <div ref={containerRef} className="h-full w-full" aria-label="Seleccionar la ubicación del paciente" />
         <span className="pointer-events-none absolute left-12 top-3 z-500 inline-flex items-center gap-1 rounded-md bg-white/95 px-2 py-1 text-[10px] text-slate-600 shadow dark:bg-slate-900/95 dark:text-slate-300"><MapPin className="size-3" />{latitude != null && longitude != null ? `${latitude.toFixed(6)}, ${longitude.toFixed(6)}` : "Sin punto seleccionado"}</span>
         {tileError && <span className="absolute bottom-2 left-2 right-2 z-500 rounded-md bg-amber-50/95 px-2 py-1 text-center text-[10px] text-amber-900 shadow">Mosaicos no disponibles. Configura el servidor local /tiles.</span>}

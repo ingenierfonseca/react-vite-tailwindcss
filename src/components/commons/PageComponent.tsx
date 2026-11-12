@@ -14,10 +14,10 @@ export default function PageComponent({ title, description, textButton, onclick,
     return (
         <div className="relative min-h-screen px-4 pt-4 pb-18 z-20 bg-white dark:bg-slate-900">
             <div className="flex mb-2">
-                <div>
+                {/*<div>
                     <p className="m-0 leading-none text-2xl font-bold text-slate-800 dark:text-white">{title}</p>
                     <p className="m-0 leading-none text-sm text-slate-500 dark:text-slate-400 mt-1">{description}</p>
-                </div>
+                </div>*/}
                 <div className="hidden md:flex gap-2 ml-auto">
                     {secondaryButton}
                     {showButton && <AddButtonApp onclick={onclick} label={textButton} />}

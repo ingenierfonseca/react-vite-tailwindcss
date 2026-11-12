@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { LogOut } from "lucide-react";
+import { ChevronLeft, ChevronRight, LogOut } from "lucide-react";
 import SideBarItem from "./SideBarItem";
 import { getMenuData } from "../../models/menu.type";
 import { BriefcaseMedical } from "lucide-react";
@@ -68,18 +68,24 @@ function Sidebar({ collapsed, isMobileMenuOpen, isDesktop }: SidebarProps) {
             motion-reduce:transition-none
             ${isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"}
             md:relative md:translate-x-0
-            ${collapsed ? "md:w-20" : "md:w-72"}
+            ${collapsed ? "md:w-20" : "md:w-63"}
             bg-sidebar dark:bg-slate-900/80
             backdrop-blur-xl border-r border-slate-200/50 dark:border-slate-700/50
             `}
         >
+            {/*<button className="absolute top-6 -right-3.5 p-1 rounded-full z-1000 text-sidebar-text
+              bg-sidebar-item cursor-pointer transition-colors"
+                onClick={()=>{}}>
+                    {collapsed && <ChevronRight className="w-5 h-5" strokeWidth={4} />}
+                    {!collapsed && <ChevronLeft className="w-5 h-5" strokeWidth={4} />}
+            </button>*/}
             <div className="border-b border-slate-200/50 px-4 py-6 dark:border-slate-700/50">
                 <div className={`flex h-10 items-center ${collapsed && isDesktop ? "justify-center" : "gap-3"}`}>
-                    <div className={`${collapsed && isDesktop ? "w-10" : "w-15"} flex h-10 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-company-logo-background shadow-lg`}>
+                    <div className={`${collapsed && isDesktop ? "w-10" : "w-15"} flex h-10 shrink-0 items-center justify-center overflow-hidden bg-company-logo-background rounded-lg shadow-lg`}>
                         {settings.branding.logoUrl ? (
                             <img src={settings.branding.logoUrl} alt={settings.company.name} className="h-10 w-full rounded-xl object-contain" />
                         ) : (
-                            <BriefcaseMedical className="w-7 h-7 text-white" />
+                            <BriefcaseMedical className="w-10 h-10 text-primary" />
                         )}
                     </div>
 

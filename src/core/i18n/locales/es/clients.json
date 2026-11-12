@@ -4,9 +4,8 @@
   "add": "Agregar nuevo {{entity}}",
   "search": "Buscar {{entity}}",
   "empty": "No se encontraron {{entity}}",
-  "complete_info_to": "Complete la información para",
-  "update_the_entity": "actualizar al {{entity}}.",
-  "register_a_new_entity": "registrar un nuevo {{entity}}.",
   "entity_name": "Nombre del {{entity}}",
-  "entity_last_name": "Apellido del {{entity}}"
+  "entity_last_name": "Apellido del {{entity}}",
+  "entity_profile": "Perfil del {{entity}}",
+  "entity_id": "ID del {{entity}}"
 }

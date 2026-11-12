@@ -33,6 +33,7 @@ import ServiceListPage from "@/features/administration/service/ServicesListPage"
 import ConsultationTypeListPage from "@/features/administration/consultation-type/ConsultationTypeListPage";
 import StaffListPage from "@/features/administration/staff/StaffListPage";
 import UserRoleListPage from "@/features/administration/user-roles/UserRoleListPage";
+import { ClientsPage } from "@/features/clients";
 
 export const routesConfig = [
   {
@@ -44,6 +45,11 @@ export const routesConfig = [
     path: "/appointments",
     title: "Citas",
     element: <AppointmentList />,
+  },
+  {
+    path: "/clients",
+    title: "Clientes",
+    element: <ClientsPage />
   },
   {
     path: "/patients",

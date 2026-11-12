@@ -47,8 +47,8 @@ export default function MainLayout() {
           isMobileMenuOpen={isMobileMenuOpen}
           isDesktop={isDesktop}
         />
-        <div className='flex-1 flex flex-col overflow-hidden'>
-          <Header onToggle={handleSidebarToggle}/>
+        <div className='main-layout flex-1 flex flex-col overflow-hidden'>
+          <Header onToggle={handleSidebarToggle} collapsed={sidebarCollapsed}/>
           <main className='flex-1 overflow-y-auto bg-transparent md:px-3 lg:px-6 md:py-2 lg:py-4'>
             <Outlet />
           </main>

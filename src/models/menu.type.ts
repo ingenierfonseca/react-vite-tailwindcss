@@ -37,6 +37,14 @@ export function getMenuData() {
             resource: PermissionResource.Appointments
         },
         {
+            id: "clients",
+            icon: Users,
+            label: "Clientes",   //"Clientes",
+            count: "2.4k",
+            path: "/clients",
+            resource: PermissionResource.Patients
+        },
+        {
             id: "patients",
             icon: Users,
             label: "Pacientes",   //"Patients",

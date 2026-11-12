@@ -20,6 +20,10 @@ export function useClientLabels() {
     profile: entity,
     
     //Forms
+    id: t("common:id"),
+    type_id: t("common:type_id"),
+    age: t("common:age"),
+    age_one: t("common:age_one"),
     age_other: t("common:age_other"),
     emailColumn: t("common:email"),
     phoneColumn: t("common:phone"),
@@ -31,9 +35,11 @@ export function useClientLabels() {
     city: t("common:city"),
     birth_date: t("common:birth_date"),
     gender: t("common:gender"),
-    entity_avatar: t("common:entity_avatar", {entity: entity}),
+    drop_your_image_here: t("common:drop_your_image_here", {entity: entity}),
     entity_name: t("entity_name", {entity: entity}),
     entity_last_name: t("entity_last_name", {entity: entity}),
+    entity_profile: t("entity_profile", {entity: entity}),
+    entity_id: t("entity_id", {entity: entity}),
 
     //Actions
     edit: t("common:edit"),
@@ -48,15 +54,13 @@ export function useClientLabels() {
     entity_name_required: t("common:entity_name_required", {entity: entity}),
     entity_last_name_required: t("common:entity_last_name_required", {entity: entity}),
     entity_gender_required: t("common:entity_gender_required", {entity: entity}),
-    invalid_phone: t("common.invalid_phone"),
-    invalid_email: t("common.invalid_email"),
+    entity_birth_date_required: t("common:entity_birth_date_required"),
+    invalid_phone: t("common:invalid_phone"),
+    invalid_email: t("common:invalid_email"),
 
     //Messages
     entity_updated_successfully: t("common:entity_updated_successfully", {entity: entity}),
     entity_created_successfully: t("common:entity_updated_successfully", {entity: entity}),
-    complete_info_to: t("complete_info_to"),
-    update_the_entity: t("update_the_entity", {entity: entity}),
-    register_a_new_entity: t("register_a_new_entity", {entity: entity}),
     additional_contact_information: t("common:additional_contact_information"),
     personal_information: t("common:personal_information"),
     upload_photo: t("common:upload_photo"),

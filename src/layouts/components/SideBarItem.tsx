@@ -103,7 +103,7 @@ export default function SideBarItem({ item, collapsed, isDesktop, expandedItems,
             <div
                 id={tooltipId}
                 role="tooltip"
-                className="pointer-events-none fixed z-100 max-w-56 -translate-y-1/2 rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm font-medium text-white shadow-xl"
+                className="pointer-events-none fixed z-51 max-w-56 -translate-y-1/2 rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm font-medium text-white shadow-xl"
                 style={{ left: tooltipPosition.left, top: tooltipPosition.top }}
             >
                 <span aria-hidden="true" className="absolute -left-1 top-1/2 size-2 -translate-y-1/2 rotate-45 bg-slate-900" />

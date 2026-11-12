@@ -1,5 +1,5 @@
 import type { DropDownAppModel } from "../../models/dropdownapp.type";
-import { FormControl, InputLabel, MenuItem, Select, type SelectChangeEvent } from "@mui/material";
+import { FormControl, MenuItem, Select, type SelectChangeEvent } from "@mui/material";
 
 interface DropDownAppProps {
     title: string
@@ -17,22 +17,21 @@ export default function DropDownApp({title, data, value, onChange, disabled = fa
     };
 
     return (
-        <FormControl disabled={disabled} className="flex-1">
-            <InputLabel id="demo-simple-select-label">{title}</InputLabel>
+        <FormControl variant="outlined" disabled={disabled} className="flex-1" size="small">
             <Select
-                labelId="demo-simple-select-label"
                 id="demo-simple-select"
                 value={value}
                 label={title}
                 onChange={handleChange}
+                notched={false}
             >
                 {data.map((item) => {
-                        return (
-                            <MenuItem key={item.id} value={item.id}>
-                                {item.value}
-                            </MenuItem>
-                        )
-                    })}
+                    return (
+                        <MenuItem key={item.id} value={item.id}>
+                            {item.value}
+                        </MenuItem>
+                    )
+                })}
             </Select>
         </FormControl>
     )
