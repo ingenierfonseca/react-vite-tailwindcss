@@ -4,16 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Mail, Lock, Eye, EyeOff, Loader2, AlertCircle } from "lucide-react";
 
-const loginSchema = z.object({
-  userName: z
-    .string()
-    .min(1, "El nombre de usuario es requerido"),
-  password: z
-    .string()
-    .min(1, "La contraseña es requerida"),
-});
-
-type LoginFormValues = z.infer<typeof loginSchema>;
+type LoginFormValues = { userName: string; password: string };
 
 interface LoginFormProps {
   onSubmit: (values: LoginFormValues) => Promise<void>;
@@ -29,6 +20,11 @@ export interface LoginFormLabels {
   submit: string;
   submitting: string;
   forgotPassword: string;
+  usernameRequired: string;
+  passwordRequired: string;
+  loginError: string;
+  showPassword: string;
+  hidePassword: string;
 }
 
 const defaultLabels: LoginFormLabels = {
@@ -39,10 +35,19 @@ const defaultLabels: LoginFormLabels = {
   submit: "Iniciar sesión",
   submitting: "Iniciando sesión...",
   forgotPassword: "¿Olvidaste tu contraseña?",
+  usernameRequired: "El nombre de usuario es requerido",
+  passwordRequired: "La contraseña es requerida",
+  loginError: "Error al iniciar sesión. Verifica tus credenciales.",
+  showPassword: "Mostrar contraseña",
+  hidePassword: "Ocultar contraseña",
 };
 
 export function LoginForm({ onSubmit, labels, onForgotPassword }: LoginFormProps) {
   const copy = { ...defaultLabels, ...labels };
+  const loginSchema = z.object({
+    userName: z.string().min(1, copy.usernameRequired),
+    password: z.string().min(1, copy.passwordRequired),
+  });
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
@@ -68,7 +73,7 @@ export function LoginForm({ onSubmit, labels, onForgotPassword }: LoginFormProps
       const message =
         err instanceof Error
           ? err.message
-          : "Error al iniciar sesión. Verifica tus credenciales.";
+          : copy.loginError;
       setServerError(message);
     } finally {
       setIsLoading(false);
@@ -125,7 +130,7 @@ export function LoginForm({ onSubmit, labels, onForgotPassword }: LoginFormProps
           <button
             type="button"
             onClick={() => setShowPassword((prev) => !prev)}
-            aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+            aria-label={showPassword ? copy.hidePassword : copy.showPassword}
             aria-pressed={showPassword}
             className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors"
           >

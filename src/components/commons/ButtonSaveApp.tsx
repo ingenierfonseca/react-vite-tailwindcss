@@ -8,12 +8,14 @@ interface ButtonSaveAppProps {
     className?: string
     disabled?: boolean
     children?: React.ReactNode
+    saveText?: string
+    loadingText?: string
 }
-export default function ButtonSaveApp({ label, children, onClick, loading, className, disabled = false}: ButtonSaveAppProps) {
+export default function ButtonSaveApp({ label, children, onClick, loading, className, disabled = false, saveText, loadingText}: ButtonSaveAppProps) {
     return (
         <button
             onClick={disabled || loading ? undefined : onClick}
-            disabled={disabled}
+            disabled={disabled || loading}
             className={`${className} 
                 flex items-center justify-center gap-2 disabled:opacity-50
                 bg-secondary p-2 text-white font-normal rounded-2xl
@@ -24,12 +26,12 @@ export default function ButtonSaveApp({ label, children, onClick, loading, class
             {loading ? (
                 <>
                     <CircularProgress size={20} color="inherit" />
-                    <span>Guardando...</span>
+                    <span>{loadingText ?? "Guardando..."}</span>
                 </>
             ) : (
                 <>
                     <Save size={20} />
-                    <span>{`Guardar ${label}`}</span>
+                    <span>{saveText ?? `Guardar ${label}`}</span>
                 </>
             )}
         </button>

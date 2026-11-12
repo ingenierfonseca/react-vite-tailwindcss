@@ -197,6 +197,48 @@
   background-color: color-mix(in srgb, var(--color-sidebar-text-dynamic, #94a3b8) 55%, transparent);
 }
 
+.client-profile-container {
+  container-type: inline-size;
+  width: 100%;
+}
+
+.client-profile-header {
+  display: flex;
+  gap: 2rem;
+  margin-top: 0.5rem;
+}
+
+.client-profile-avatar {
+  flex: 0 0 22.5rem;
+  width: 22.5rem;
+  max-width: 100%;
+  min-width: 0;
+}
+
+.client-profile-details {
+  flex: 1 1 0%;
+  min-width: 0;
+}
+
+@container (max-width: 600px) {
+  .client-profile-header {
+    flex-direction: column;
+  }
+
+  .client-profile-avatar {
+    flex-basis: auto;
+    align-self: center;
+  }
+
+  .client-profile-details {
+    width: 100%;
+  }
+
+  .customer-info-icon {
+    display: none;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .sidebar-scrollbar::-webkit-scrollbar-thumb {
     transition: none;

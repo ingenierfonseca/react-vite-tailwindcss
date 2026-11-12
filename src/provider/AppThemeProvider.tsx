@@ -1,6 +1,7 @@
 import { createTheme, ThemeProvider } from '@mui/material/styles'
 import { useSettings } from '../hooks/useSettings'
 import { useMediaQuery } from '@mui/system';
+import type {} from '@mui/x-date-pickers/themeAugmentation';
 
 
 export default function AppThemeProvider({ children }: { children: React.ReactNode }) {
@@ -9,6 +10,11 @@ export default function AppThemeProvider({ children }: { children: React.ReactNo
     const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
 
     const mode = prefersDarkMode ? 'dark' : 'light';
+    const inputBackground = mode === 'dark' ? '#1e293b' : '#f8fafc';
+    const disabledInputBackground = mode === 'dark' ? '#252f3f' : '#f1f5f9';
+    const borderColor = settings.branding.borderColor || (mode === 'dark' ? '#444' : '#ccc');
+    const borderHoverColor = settings.branding.borderHover || '#666';
+    const primaryColor = settings.branding.primaryColor || '#90caf9';
 
     const theme = createTheme({
         palette: {
@@ -26,15 +32,15 @@ export default function AppThemeProvider({ children }: { children: React.ReactNo
                 styleOverrides: {
                     root: {
                         '& .MuiOutlinedInput-root': {
-                            backgroundColor: '#f8fafc',
+                            backgroundColor: inputBackground,
                             '& fieldset': {
-                             borderColor: settings.branding.borderColor || (mode === 'dark' ? '#444' : '#ccc'),
+                             borderColor,
                             },
                             '&:hover fieldset': {
-                             borderColor: settings.branding.borderHover || '#666',
+                             borderColor: borderHoverColor,
                             },
                             '&.Mui-focused fieldset': {
-                             borderColor: settings.branding.primaryColor || '#90caf9',
+                             borderColor: primaryColor,
                             },
                         },
                     },
@@ -43,23 +49,52 @@ export default function AppThemeProvider({ children }: { children: React.ReactNo
             MuiOutlinedInput: {
                 styleOverrides: {
                     root: {
-                        backgroundColor: mode === 'dark' ? '#1e293b' : '#f8fafc',
+                        backgroundColor: inputBackground,
 
                         '& .MuiOutlinedInput-notchedOutline': {
-                            borderColor: settings.branding.borderColor || (mode === 'dark' ? '#444' : '#ccc'),
+                            borderColor,
                         },
 
                         '&:hover .MuiOutlinedInput-notchedOutline': {
-                            borderColor: settings.branding.borderHover || '#666',
+                            borderColor: borderHoverColor,
                         },
 
                         '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                            borderColor: settings.branding.primaryColor || '#90caf9',
+                            borderColor: primaryColor,
                         },
 
                         '&.Mui-disabled': {
-                            backgroundColor: mode === 'dark' ? '#252f3f' : '#f1f5f9',
+                            backgroundColor: disabledInputBackground,
                         },
+                    },
+                },
+            },
+            MuiPickersTextField: {
+                styleOverrides: {
+                    root: {
+                        width: '100%',
+                    },
+                },
+            },
+            MuiPickersOutlinedInput: {
+                styleOverrides: {
+                    root: {
+                        backgroundColor: inputBackground,
+                        '&:hover .MuiPickersOutlinedInput-notchedOutline': {
+                            borderColor: borderHoverColor,
+                        },
+                        '&.MuiPickersInputBase-focused:not(.MuiPickersInputBase-error) .MuiPickersOutlinedInput-notchedOutline': {
+                            borderColor: primaryColor,
+                        },
+                        '&.MuiPickersInputBase-disabled': {
+                            backgroundColor: disabledInputBackground,
+                        },
+                        '&.MuiPickersInputBase-disabled .MuiPickersOutlinedInput-notchedOutline': {
+                            borderColor,
+                        },
+                    },
+                    notchedOutline: {
+                        borderColor,
                     },
                 },
             },

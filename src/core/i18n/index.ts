@@ -6,6 +6,8 @@ import esClients from "./locales/es/clients.json";
 
 import enCommon from "./locales/en/common.json";
 import enClients from "./locales/en/clients.json";
+import esAuth from "./locales/es/auth.json";
+import enAuth from "./locales/en/auth.json";
 
 i18n
   .use(initReactI18next)
@@ -14,10 +16,12 @@ i18n
       es: {
         common: esCommon,
         clients: esClients,
+        auth: esAuth,
       },
       en: {
         common: enCommon,
         clients: enClients,
+        auth: enAuth,
       },
     },
 

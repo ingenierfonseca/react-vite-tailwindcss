@@ -1,5 +1,3 @@
-import type { useClientLabels } from "@/shared/hooks/useClientLabels";
-
 export interface Client {
   id: number;
   idType: number
@@ -37,5 +35,3 @@ export interface ClientPage<TClient> {
   pageSize: number;
   totalItems: number;
 }
-
-export type ClientLabels = ReturnType<typeof useClientLabels>;

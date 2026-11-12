@@ -1,9 +1,10 @@
 import ButtonSaveApp from "@/components/commons/ButtonSaveApp";
-import type { ClientLabels } from "@/features/clients/domain/client";
+import type { ClientLabels } from "@/features/clients/presentation/types";
 import { X } from "lucide-react";
 
 interface Props {
     saving: boolean;
+    canSave: boolean;
     labels: ClientLabels;
     onCancel: () => void;
     onSubmit: () => void;
@@ -11,6 +12,7 @@ interface Props {
 
 export const ClientCreateActions = ({
     saving,
+    canSave,
     labels,
     onCancel,
     onSubmit
@@ -33,6 +35,9 @@ export const ClientCreateActions = ({
                 label={labels.entity}
                 onClick={onSubmit}
                 loading={saving}
+                disabled={!canSave || saving}
+                saveText={labels.save_entity}
+                loadingText={labels.saving_entity}
             />
 
         </div>

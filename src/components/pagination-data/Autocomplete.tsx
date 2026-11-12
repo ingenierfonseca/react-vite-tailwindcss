@@ -1,114 +1,87 @@
 import {
   Autocomplete,
-  TextField,
   CircularProgress,
   InputAdornment,
+  TextField,
 } from "@mui/material";
-import { useEffect, useState } from "react";
 import { SearchIcon } from "lucide-react";
-import { useAsyncAutocompleteBasic } from "@/hooks/useAsyncAutoCompleteBasic";
 
 type Props<T> = {
-  label: string;
+  label?: string;
+  ariaLabelledBy?: string;
+  options: T[];
   value?: string | number | null;
   disabled?: boolean;
-  onChange?: (value: any, item: T | null) => void;
-  fetchData: (value: any | null) => Promise<T[]>;
+  loading?: boolean;
+  required?: boolean;
+  onChange?: (value: string | number | null, item: T | null) => void;
   getValue: (item: T) => string | number;
   getLabel: (item: T) => string;
 };
 
 export function AutocompleteBasic<T>({
   label,
+  ariaLabelledBy,
+  options,
   value,
-  disabled,
+  disabled = false,
+  loading = false,
+  required = false,
   onChange,
-  fetchData,
   getValue,
   getLabel,
 }: Props<T>) {
-  const {
-    options,
-    debouncedSetSearch,
-    loading,
-  } = useAsyncAutocompleteBasic({
-    fetchData,
-    getValue,
-    getLabel,
-  });
-
-  const [selected, setSelected] = useState<any>(null);
-
-  // 🔥 Manejo PRO de valores externos
-  useEffect(() => {
-    if (!value) {
-      setSelected(null);
-      return;
-    }
-
-    const found = options.find(o => o.value === value);
-    if (found) setSelected(found);
-  }, [value, options]);
+  const selected = value == null
+    ? null
+    : options.find((option) => getValue(option) === value) ?? null;
 
   return (
-    <Autocomplete
-      className="flex-1"
+    <Autocomplete<T>
+      className="w-full min-w-0"
       size="small"
       options={options}
       value={selected}
       loading={loading}
       disabled={disabled}
-
-      onChange={(_, newValue) => {
-        setSelected(newValue);
-        onChange?.(newValue?.value, newValue?.raw || null);
-      }}
-
-      onInputChange={(_, val, reason) => {
-        if (reason === 'input') {
-          debouncedSetSearch(val);
-        }
-
-        if (reason === 'clear') {
-          debouncedSetSearch("");
-        }
-      }}
-
-      getOptionLabel={(option) => option.label}
-
-      isOptionEqualToValue={(option, val) =>
-        option.value === val.value
-      }
-
+      onChange={(_, item) => onChange?.(item ? getValue(item) : null, item)}
+      getOptionLabel={getLabel}
+      isOptionEqualToValue={(option, selectedOption) => (
+        getValue(option) === getValue(selectedOption)
+      )}
       slotProps={{
-        listbox: {
-          style: { maxHeight: 300, overflow: 'auto' },
-        },
-        paper: {
-          style: { maxHeight: 300 },
-        },
+        listbox: { style: { maxHeight: 300, overflow: "auto" } },
+        paper: { style: { maxHeight: 300 } },
       }}
-
-      renderInput={(params) => <TextField 
-        {...params} 
-        label={label}
-        slotProps={{
-        input: {
-          ...params.InputProps,
-          startAdornment: (
-            <InputAdornment position="start">
-              <SearchIcon />
-            </InputAdornment>
-          ),
-          endAdornment: (
-            <>
-              {loading ? <CircularProgress color="inherit" size={18} /> : null}
-              {params.InputProps.endAdornment}
-            </>
-          ),
-        }
-      }}
-      />}
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          label={label}
+          required={required}
+          slotProps={{
+            input: {
+              ...params.InputProps,
+              startAdornment: (
+                <>
+                  <InputAdornment position="start">
+                    <SearchIcon />
+                  </InputAdornment>
+                  {params.InputProps.startAdornment}
+                </>
+              ),
+              endAdornment: (
+                <>
+                  {loading ? <CircularProgress color="inherit" size={18} /> : null}
+                  {params.InputProps.endAdornment}
+                </>
+              ),
+            },
+            htmlInput: {
+              ...params.inputProps,
+              "aria-labelledby": ariaLabelledBy,
+            },
+          }}
+        />
+      )}
     />
   );
 }

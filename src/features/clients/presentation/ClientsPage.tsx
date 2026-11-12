@@ -1,101 +1,86 @@
 import { useEffect, type ReactNode } from "react";
-import type { Client, ClientLabels } from "../domain/client";
+import type { Client } from "../domain/client";
 import { useCreateClient } from "./hooks/useCreateClient";
-import { customerClientModule as module } from "@/app/composition/clients";
 import PageComponent from "@/components/commons/PageComponent";
 import DashboardCard from "@/components/dashboard/DashboardCard";
 import { User } from "lucide-react";
-import type { CustomerDashboard } from "@/services/customer/customer.type";
-import { CustomerService } from "@/services/customer/customer.service";
 import { useClients } from "./hooks/useClients";
 import ClientCreate from "./components/create-client/ClientCreate";
 import { calculateAgeFromString } from "@/utils/date.util";
 import ClientProfile from "./components/ClientProfile";
-
-export interface ClientProfileActions {
-  onClose: () => void;
-  onEdit: () => void;
-}
-
-export interface ClientFormRenderProps<TClient extends Client> {
-  client: Client;
-  labels: ClientLabels;
-  saving: boolean;
-  error: string | null;
-  onChange: (patch: Partial<TClient>) => void;
-  onSubmit: (avatar: File | null) => Promise<void>;
-  onCancel: () => void;
-}
+import type { ClientQueries } from "./types";
+import type { ClientModule } from "../application/create-client-module";
 
 export interface ClientsPageProps {
-  renderClientMetrics?: ReactNode;
+  module: ClientModule<Client>;
+  queries: ClientQueries;
+  renderMetrics?: ReactNode;
+  renderAdittionalInfo?: (
+    client: Client,
+    getProfile: ClientQueries["getProfile"],
+  ) => ReactNode;
+  onStartAssessment?: (client: Client) => void;
 }
 export function ClientsPage({
-  renderClientMetrics
+  module,
+  queries,
+  renderMetrics,
+  renderAdittionalInfo,
 }: ClientsPageProps) {
-  const clients = useClients();
+  const clients = useClients(module, queries, !renderMetrics);
   const { state, actions, permissions, labels, avatarUrl, pagination } = clients;
-  const {saving, saveDraft} = useCreateClient(
-    module,labels, state.draft, actions.setDraft, 
-    actions.setFormError, actions.errorMessage, actions.reload,
-    actions.onError, actions.onSaved
-  )
+  const { closeTimer, animationFrame } = state;
+  const { saving, detailsChanged, saveDraft } = useCreateClient(
+    module,
+    labels,
+    state.draft,
+    state.originalDraft,
+    actions.setDraft,
+    actions.setOriginalDraft,
+    actions.setFormError,
+    actions.errorMessage,
+    actions.reload,
+    actions.onError,
+    actions.onSaved,
+    actions.closePanel,
+  );
 
   useEffect(() => () => {
-    if (state.closeTimer.current !== null) window.clearTimeout(state.closeTimer.current);
-    if (state.animationFrame.current !== null) window.cancelAnimationFrame(state.animationFrame.current);
-  }, []);
-
-  useEffect(() => {
-      CustomerService.getDashboard()
-        .then((data: CustomerDashboard[]) => actions.setDashboardData(data))
-        .catch(() => actions.setDashboardData([]));
-    }, []);
-
-  useEffect(() => {
-    let active = true;
-    module.list({ page: state.page, search: state.search })
-      .then((response) => {
-        if (active) {
-          actions.setResult(response);
-          actions.setLoadError(null);
-        }
-      })
-      .catch((error: unknown) => {
-        if (active) actions.setLoadError(actions.errorMessage(error));
-      })
-      .finally(() => {
-        if (active) actions.setLoading(false);
-      });
-
-    return () => { active = false; };
-  }, [module, state.page, state.reloadKey, state.search]);
+    if (closeTimer.current !== null) window.clearTimeout(closeTimer.current);
+    if (animationFrame.current !== null) window.cancelAnimationFrame(animationFrame.current);
+  }, [animationFrame, closeTimer]);
 
   return (
     <PageComponent
-      title="Dashboard de Facturación"
-      description="Visión general de las cuentas de pacientes y transacciones"
+      title={labels.title}
+      description={labels.description}
       showButton={false}
-      textButton="Agregar Nueva Factura"
-      onclick={() => {}}>
-      <div className="flex gap-2 md:gap-8">
-        {state.dashboardData && state.dashboardData.map((dashboard, index) => (
-          <DashboardCard
-            key={`${dashboard.title}-${index}`}
-            iconClassName={state.dashboardData.length > 1 ? "hidden md:block" : ""}
-            stat={{
-              title: dashboard.title,
-              value: dashboard.value,
-              change: dashboard.change,
-              trend: dashboard.trend,
-              bgColor: "bg-primary/20",
-              iconColor: "text-primary",
-              textColor: "text-blue-500",
-              color: "from-blue-400 to-blue-600",
-              icon: User
-            }} />
-        ))}
-      </div>
+      textButton={labels.add}
+      onclick={actions.openCreate}>
+      
+        {renderMetrics ? (
+            renderMetrics
+          ) : (
+            state.dashboardData && state.dashboardData.map((dashboard, index) => (
+              <div className="flex gap-2 md:gap-8">
+                <DashboardCard
+                key={`${dashboard.title}-${index}`}
+                iconClassName={state.dashboardData.length > 1 ? "hidden md:block" : ""}
+                stat={{
+                  title: dashboard.title,
+                  value: dashboard.value,
+                  change: dashboard.change,
+                  trend: dashboard.trend,
+                  bgColor: "bg-primary/20",
+                  iconColor: "text-primary",
+                  textColor: "text-blue-500",
+                  color: "from-blue-400 to-blue-600",
+                  icon: User
+                }} />
+              </div>
+            )
+          )
+        )}
 
       <div className="flex my-4">
         <div className="flex-1">
@@ -121,11 +106,11 @@ export function ClientsPage({
       </div>
 
       <section aria-busy={state.loading} className="overflow-hidden rounded-xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
-        {state.loading && <div className="px-4 py-3 text-sm text-slate-500">Cargando…</div>}
-        {/*loadError && <div role="alert" className="p-4 text-sm text-red-600">{loadError}</div>*/}
-        {/*!loading && !loadError && result?.data.length === 0 && (
+        {state.loading && <div className="px-4 py-3 text-sm text-slate-500">{labels.loading}</div>}
+        {state.loadError && <div role="alert" className="p-4 text-sm text-red-600">{state.loadError}</div>}
+        {!state.loading && !state.loadError && !state.result?.data.length && (
           <p className="p-5 text-sm text-slate-500">{labels.empty}</p>
-        )*/}
+        )}
         {!!state.result?.data.length && (
           <>
             <div className="hidden grid-cols-[minmax(0,2fr)_minmax(0,1fr)_minmax(0,1fr)_auto] gap-4 border-b border-slate-200 bg-slate-50 px-4 py-3 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:border-slate-800 dark:bg-slate-950 md:grid">
@@ -146,7 +131,7 @@ export function ClientsPage({
                       <span className="min-w-0">
                         <span className="block truncate font-medium">{client.firstName} {client.lastName}</span>
                         <span className="mt-1 block truncate text-xs text-slate-500">
-                          ID: {client.dni} · {calculateAgeFromString(client.birthDate)} {labels.age_other}
+                          {labels.id_short}: {client.dni} · {calculateAgeFromString(client.birthDate)} {Number(calculateAgeFromString(client.birthDate)) === 1 ? labels.age_one : labels.age_other}
                         </span>
                       </span>
                     </span>
@@ -170,7 +155,7 @@ export function ClientsPage({
             <button type="button" disabled={state.page <= 1 || state.loading} onClick={() => { actions.setLoading(true); actions.setPage((value) => value - 1); }} className="rounded-md border px-3 py-1.5 text-sm disabled:opacity-40">
               {labels.previous}
             </button>
-            <span className="text-sm text-slate-500">state.{state.page} / {pagination.totalPages}</span>
+            <span className="text-sm text-slate-500">{state.page} / {pagination.totalPages}</span>
             <button type="button" disabled={state.page >= pagination.totalPages || state.loading} onClick={() => { actions.setLoading(true); actions.setPage((value) => value + 1); }} className="rounded-md border px-3 py-1.5 text-sm disabled:opacity-40">
               {labels.next}
             </button>
@@ -192,13 +177,18 @@ export function ClientsPage({
           >
             {state.panel.type === "form" && state.draft && (
               <ClientCreate
-                client = {state.draft!}
+                client={state.draft}
                 labels={labels}
-                saving = {saving}
-                error = {state.formError}
-                onChange = {actions.patchDraft}
-                onSubmit = {saveDraft}
-                onCancel = {actions.closePanel}
+                saving={saving}
+                canSave={state.draft.id <= 0 || detailsChanged}
+                error={state.formError}
+                onChange={actions.patchDraft}
+                onSubmit={saveDraft}
+                onCancel={actions.closePanel}
+                geography={{
+                  getDepartments: queries.getDepartments,
+                  getCities: queries.getCities,
+                }}
               />
             )} 
             {state.panel.type === "profile" && (
@@ -206,8 +196,7 @@ export function ClientsPage({
                 client={state.panel.client}
                 onCancel={actions.closePanel}
                 labels={labels}
-                renderClientMetrics={renderClientMetrics}
-                setIsOpenTransition={(isOpen) => { if (isOpen) actions.setAssessmentCustomer(state.panel!.client); }}
+                renderAdittionalInfo={renderAdittionalInfo?.(state.panel.client, queries.getProfile)}
                 onEdit={(isEditing) => { if (isEditing) actions.openEdit(state.panel!.client); }}
               />
             )}
@@ -216,8 +205,7 @@ export function ClientsPage({
                 client={state.panel.client}
                 onCancel={actions.closePanel}
                 labels={labels}
-                renderClientMetrics={renderClientMetrics}
-                setIsOpenTransition={(isOpen) => { if (isOpen) actions.setAssessmentCustomer(state.panel!.client); }}
+                renderAdittionalInfo={renderAdittionalInfo?.(state.panel.client, queries.getProfile)}
                 onEdit={(isEditing) => { if (isEditing) actions.openEdit(state.panel!.client); }}
               />
             )}
@@ -225,20 +213,6 @@ export function ClientsPage({
         </div>
       )}
 
-      {/*<div
-        className={`fixed top-0 right-0 h-full w-full md:w-7/12 bg-white dark:bg-slate-800 shadow-2xl z-50        
-                    transform transition-transform duration-500 ease-in-out 
-                    ${isOpenTransitionRight ? 'translate-x-0' : 'translate-x-full'
-          }`}
-      >
-        {isOpenProfileBillInfo && <PatientBillInfo
-          customer={customer}
-          setIsOpen={openProfileBillInfo}
-          reload={loadDataPage}
-          openInvoiceDetail={openInvoiceDetail} />}
-
-        {isOpenMakeInvoice && <InvoiceDetail idParam={invoiceId} setIsOpen={openMakeInvoice} reload={loadDataPage} />}
-      </div>*/}
     </PageComponent>
   )
 }

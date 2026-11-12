@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
 import { Navigate } from "react-router";
-import { toast } from "react-toastify";
 import { User } from "lucide-react";
 import DashboardCard from "@/components/dashboard/DashboardCard";
-import { ClientsPage } from "@/features/clients";
+import { CustomerClientsPage } from "@/app/composition/CustomerClientsPage";
 import ClinicalAssessment from "@/features/session-plan/ClinicalAssessment";
 import { PermissionAction, PermissionResource } from "@/models/permission.enum";
 import type { Customer, CustomerDashboard } from "@/services/customer/customer.type";
 import { CustomerService } from "@/services/customer/customer.service";
 import { usePermissions } from "@/hooks/usePermissions";
+import PatientInfo from "../components/PatientInfo";
 import DashboardCardII from "@/components/dashboard/DashboardCardII";
 
 export default function PatientListPage() {
@@ -28,8 +28,14 @@ export default function PatientListPage() {
 
   return (
     <>
-      <ClientsPage
-        renderClientMetrics={(
+      <CustomerClientsPage
+        onStartAssessment={(client) => setAssessmentCustomer({
+          ...client,
+          phone: client.phone ?? "",
+          email: client.email ?? "",
+          address: client.address ?? "",
+        })}
+        renderMetrics={(
           <div className="grid grid-cols-[repeat(auto-fit,minmax(80px,1fr))] gap-4">
             {Array.isArray(dashboardData) && dashboardData.map((dashboard, index) => (
               <DashboardCard
@@ -48,8 +54,11 @@ export default function PatientListPage() {
                 }}
               />
             ))}
-            {<DashboardCardII title="Clientes activos" value={100} />}
+            {<DashboardCardII title="Pacientes activos" value={100} />}
           </div>
+        )}
+        renderAdittionalInfo={(client, getProfile) => (
+          <PatientInfo patientId={client.id} getProfile={getProfile} />
         )}
       />
 

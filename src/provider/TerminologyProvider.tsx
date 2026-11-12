@@ -25,10 +25,11 @@ export function TerminologyProvider({ children, languageCode = "es-NI" }: Props)
     });
 
     // Transformamos el array terminologyLabels en un Record/Diccionario para búsqueda O(1)
+    const terminologyLabels = data?.terminologyLabels;
     const terminology = useMemo(() => {
-        if (!data?.terminologyLabels) return EMPTY_TERMINOLOGY;
+        if (!terminologyLabels) return EMPTY_TERMINOLOGY;
 
-        return data.terminologyLabels.reduce((acc, item) => {
+        return terminologyLabels.reduce((acc, item) => {
             acc[item.key] = {
                 key:item.key,
                 singular: item.singular,
@@ -38,7 +39,7 @@ export function TerminologyProvider({ children, languageCode = "es-NI" }: Props)
             };
             return acc;
         }, {} as Record<string, TerminologyLabel>);
-    }, [data?.terminologyLabels]);
+    }, [terminologyLabels]);
 
     const getLabel = useCallback(
         (key: string, plural = false): string => {
@@ -65,13 +66,13 @@ export function TerminologyProvider({ children, languageCode = "es-NI" }: Props)
     const contextValue = useMemo(
         () => ({
             terminology,
-            locale: data?.locale ?? "es-NI",
+            locale: data?.locale ?? languageCode,
             isLoading,
             getLabel,
             getGender,
             refresh
         }),
-        [terminology, data?.locale, isLoading, getLabel, getGender, refresh]
+        [terminology, data?.locale, languageCode, isLoading, getLabel, getGender, refresh]
     );
 
     return (

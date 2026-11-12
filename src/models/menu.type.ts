@@ -56,16 +56,16 @@ export function getMenuData() {
             id: "staff-locations",
             icon: MapPinnedIcon,
             label: "Monitoreo en vivo", 
-            path: "/staff-locations", 
+            path: "/live-tracking",
             resource: PermissionResource.StaffLocations
         },
-        {
+        /*{
             id: "treatments",
             icon: BarChart3,
             label: "Tratamientos y expedientes",   //"Treatments and Records",
-            path: "treatments",
+            path: "clinical-record",
             resource: PermissionResource.Treatments
-        },
+        },*/
         {
             id: "invoice",
             icon: Receipt,

@@ -33,7 +33,7 @@ import ServiceListPage from "@/features/administration/service/ServicesListPage"
 import ConsultationTypeListPage from "@/features/administration/consultation-type/ConsultationTypeListPage";
 import StaffListPage from "@/features/administration/staff/StaffListPage";
 import UserRoleListPage from "@/features/administration/user-roles/UserRoleListPage";
-import { ClientsPage } from "@/features/clients";
+import { CustomerClientsPage } from "@/app/composition/CustomerClientsPage";
 
 export const routesConfig = [
   {
@@ -49,7 +49,7 @@ export const routesConfig = [
   {
     path: "/clients",
     title: "Clientes",
-    element: <ClientsPage />
+    element: <CustomerClientsPage />
   },
   {
     path: "/patients",
@@ -107,7 +107,7 @@ export const routesConfig = [
     element: <CreditCollectionsPage />,
   },
   {
-    path: "/staff-locations",
+    path: "/live-tracking",
     title: "Ubicación del personal",
     element: <StaffLocationMonitorPage />,
   },

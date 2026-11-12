@@ -1,17 +1,20 @@
+import type { ClientLabels } from "@/features/clients/presentation/types";
+
 interface Props {
     step: number;
     onChange: (step: number) => void;
+    labels: ClientLabels;
 }
 
 export const ClientCreateStepper = ({
     step,
-    onChange
+    onChange,
+    labels,
 }: Props) => {
 
     const steps = [
-        { id: 1, label: "Información personal" },
-        { id: 2, label: "Ubicación" },
-        //{ id: 3, label: "Información adicional" }
+        { id: 1, label: labels.step_personal_information },
+        { id: 2, label: labels.step_location },
     ];
 
     return (

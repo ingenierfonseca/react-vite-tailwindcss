@@ -1,25 +1,26 @@
 import { useState } from "react";
-import type { ClientFormRenderProps } from "@/features/clients/presentation/ClientsPage";
-import type { Customer } from "@/services/customer/customer.type";
+import type { ClientFormRenderProps } from "../../types";
+import type { Client } from "@/features/clients/domain/client";
 import { ClientCreateActions } from "./components/ClientCreateActions";
 import { ClientPersonalInformation } from "./components/ClientPersonalInformation";
 import { ClientCreateStepper } from "./components/ClientCreateStepper";
 import ClientLocationInformation from "./components/ClientLocationInformation";
 import { Info } from "lucide-react";
-import PageRightHeader from "../../../../../components/commons/PageRightHeader";
 import PageRightComponent from "@/components/commons/PageRightComponent";
 
 export default function ClientCreate(
-  props: ClientFormRenderProps<Customer>
+  props: ClientFormRenderProps<Client>
 ) {
   const {
     client,
     saving,
+    canSave,
     error,
     onChange,
     onSubmit,
     onCancel,
-    labels
+    labels,
+    geography,
   } = props;
 
   const [step, setStep] = useState(1);
@@ -39,28 +40,34 @@ export default function ClientCreate(
       onClose={onCancel}
     >
 
-      <ClientCreateStepper
-        step={step}
-        onChange={setStep}
-      />
-
-      <div hidden={step !== 1}>
-        <ClientPersonalInformation
-          client={client}
-          saving={saving}
+      <fieldset disabled={saving}>
+        <ClientCreateStepper
+          step={step}
+          onChange={setStep}
           labels={labels}
-          selectedImage={selectedImage}
-          onChange={onChange}
-          onImageChange={setSelectedImage}
         />
-      </div>
 
-      {step === 2 && (
-        <ClientLocationInformation
-          client={client}
-          onChange={onChange}
-        />
-      )}
+        <div hidden={step !== 1}>
+          <ClientPersonalInformation
+            client={client}
+            saving={saving}
+            labels={labels}
+            selectedImage={selectedImage}
+            onChange={onChange}
+            onImageChange={setSelectedImage}
+            geography={geography}
+          />
+        </div>
+
+        {step === 2 && (
+          <ClientLocationInformation
+            client={client}
+            mode="edit"
+            onChange={onChange}
+            labels={labels}
+          />
+        )}
+      </fieldset>
 
       {error && (
         <div className="flex gap-2 mt-4 bg-red-100 py-2 px-6 rounded-lg text-red-600">
@@ -73,6 +80,7 @@ export default function ClientCreate(
 
       <ClientCreateActions
         saving={saving}
+        canSave={canSave || selectedImage !== null}
         labels={labels}
         onCancel={onCancel}
         onSubmit={handleSubmit}

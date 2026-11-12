@@ -1,4 +1,5 @@
-import type { Client, ClientLabels } from "@/features/clients/domain/client";
+import type { Client } from "@/features/clients/domain/client";
+import type { ClientLabels } from "@/features/clients/presentation/types";
 import { useRef } from "react";
 
 interface Props {

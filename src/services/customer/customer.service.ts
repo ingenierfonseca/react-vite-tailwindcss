@@ -1,13 +1,9 @@
 import type { AppointmentInfoDto } from "@/models/appointment.types";
 import { api, ENDPOINTS } from "@/core/api";
-import { createHttpClientRepository } from "@/features/clients/infrastructure/http-client.repository";
-import type { Customer, CustomerImportDto, CustomerRiskDashboard, ResponseImportResult } from "./customer.type";
+import { customerRepository } from "./customer.repository";
+import type { CustomerImportDto, CustomerRiskDashboard, ResponseImportResult } from "./customer.type";
 
-const method = ENDPOINTS.CUSTOMERS
-export const customerRepository = createHttpClientRepository<Customer>(api, {
-    endpoint: method,
-    avatarEndpoint: ENDPOINTS.CUSTOMER_AVATAR,
-});
+export { customerRepository };
 
 export const CustomerService = {
     get: customerRepository.list,
