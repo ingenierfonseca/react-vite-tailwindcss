@@ -1,6 +1,7 @@
 export interface CustomerInvoiceDTO {
     id: number;
-    fullName: string;
+    firstName: string;
+    lastName: string;
     avatar: string;
     age: number;
     currencyId: number;

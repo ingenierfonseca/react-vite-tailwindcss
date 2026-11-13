@@ -11,7 +11,7 @@ interface HeaderProps {
     collapsed: boolean
 }
 
-function Header({onToggle, collapsed}: HeaderProps) {
+function Header({onToggle}: HeaderProps) {
     const location = useLocation();
     const navigate = useNavigate();
     const { user, logout } = useAuth();
@@ -44,17 +44,17 @@ function Header({onToggle, collapsed}: HeaderProps) {
 
     return(
         <div className="dark:bg-slate-900/80 backdrop-blur-xl border-b
-            border-slate-200/50 dark:border-slate-700/50 px-3 py-2">
+            border-slate-200/50 dark:border-slate-700/50 px-3 py-1">
             <div className="flex items-center justify-between">
                 <div className={`flex items-center space-x-4`}>
-                    <button className="p-2 rounded-lg
+                    <button className="hamburger-menu p-2 rounded-lg
                         bg-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
                         onClick={onToggle}>
                         <Menu className="w-5 h-5" />
                     </button>
-                    <div>
-                        <p className="text-xl text-primary font-medium">Administración de {currentRoute?.title}</p>
-                        <p className="text-sm text-slate-500 dark:text-slate-400">description</p>
+                    <div className="px-0 sm:px-4">
+                        <p className="text-xl text-primary font-medium">{currentRoute?.title}</p>
+                        <p className="text-sm text-slate-500 dark:text-slate-400">{currentRoute?.description}</p>
                     </div>
                 </div>
 
@@ -83,7 +83,7 @@ function Header({onToggle, collapsed}: HeaderProps) {
                     </button>
 
                     {dropdownOpen && (
-                        <div className="absolute right-0 mt-2 w-48 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-xl py-1 z-1000">
+                        <div className="absolute right-0 mt-2 w-48 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-xl py-1 z-10000">
                             <div className="px-3 py-2 border-b border-slate-100 dark:border-slate-700">
                                 <p className="text-sm font-medium text-slate-800 dark:text-white truncate">
                                     {user?.userName || "Usuario"}

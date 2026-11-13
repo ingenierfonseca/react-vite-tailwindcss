@@ -26,15 +26,15 @@ export default function CurrencyForm({ itemParam, setIsOpen, reload }: CurrencyF
     return (
         <PageRightComponent
             title={item.id ? "Editar Moneda" : "Nueva Moneda"}
-            onClick={() => setIsOpen(false)}
+            onClose={() => setIsOpen(false)}
         >
             <fieldset disabled={loading}>
-                <div className="flex flex-col gap-4 pt-3">
-                    <TextFieldApp className="flex-3" label="Nombre" value={item.name}
+                <div className="flex flex-col gap-4 py-3">
+                    <TextFieldApp label="Nombre" value={item.name}
                         maxLength={50} onChange={(value) => setItem({ ...item, name: value })} />
-                    <TextFieldApp className="flex-1" label="Código" value={item.code}
+                    <TextFieldApp label="Código" value={item.code}
                         maxLength={5} onChange={(value) => setItem({ ...item, code: value })} />
-                    <TextFieldApp className="flex-1" label="Símbolo" value={item.symbol}
+                    <TextFieldApp label="Símbolo" value={item.symbol}
                         maxLength={5} onChange={(value) => setItem({ ...item, symbol: value })} />
                 </div>
                 <div className="flex justify-center">

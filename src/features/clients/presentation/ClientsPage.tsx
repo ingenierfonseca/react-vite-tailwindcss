@@ -10,6 +10,8 @@ import { calculateAgeFromString } from "@/utils/date.util";
 import ClientProfile from "./components/ClientProfile";
 import type { ClientQueries } from "./types";
 import type { ClientModule } from "../application/create-client-module";
+import SearchApp from "@/components/commons/SearchApp";
+import { AvatarInfoMd } from "@/components/commons/AvatarInfo";
 
 export interface ClientsPageProps {
   module: ClientModule<Client>;
@@ -18,14 +20,16 @@ export interface ClientsPageProps {
   renderAdittionalInfo?: (
     client: Client,
     getProfile: ClientQueries["getProfile"],
+    closeProfile: () => Promise<void>,
   ) => ReactNode;
-  onStartAssessment?: (client: Client) => void;
+  onCloseAdditionalRender?: () => void
 }
 export function ClientsPage({
   module,
   queries,
   renderMetrics,
   renderAdittionalInfo,
+  onCloseAdditionalRender
 }: ClientsPageProps) {
   const clients = useClients(module, queries, !renderMetrics);
   const { state, actions, permissions, labels, avatarUrl, pagination } = clients;
@@ -83,21 +87,14 @@ export function ClientsPage({
         )}
 
       <div className="flex my-4">
-        <div className="flex-1">
-          <label className="sr-only" htmlFor="clients-search">{labels.search}</label>
-          <input
-            id="clients-search"
-            type="search"
-            value={state.search}
-            placeholder={labels.search}
-            onChange={(event) => {
+        <SearchApp
+          label={labels.search}
+          value={state.search}
+          onChange={(value) => {
               actions.setLoading(true);
               actions.setPage(1);
-              actions.setSearch(event.target.value);
-            }}
-            className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm dark:border-slate-700 dark:bg-slate-900 md:max-w-md"
-          />
-        </div>
+              actions.setSearch(value);
+            }} />
         {permissions.canCreate && (
             <button type="button" onClick={actions.openCreate} className="ml-auto rounded-lg bg-secondary px-4 py-2 text-sm font-semibold text-white cursor-pointer">
               {labels.add}
@@ -119,23 +116,16 @@ export function ClientsPage({
             <ul className="divide-y divide-slate-200 dark:divide-slate-800">
               {state.result.data.map((client) => (
                 <li key={client.id} className="grid gap-3 px-4 py-3 md:grid-cols-[minmax(0,2fr)_minmax(0,1fr)_minmax(0,1fr)_auto] md:items-center md:gap-4">
-                  <button type="button" onClick={() => actions.showPanel({ type: "profile", client })} className="min-w-0 text-left cursor-pointer">
-                    <span className="flex min-w-0 items-center gap-3">
-                      {avatarUrl(client) ? (
-                        <img src={avatarUrl(client)} alt="" className="size-10 shrink-0 rounded-full object-cover" />
-                      ) : (
-                        <span aria-hidden="true" className="flex size-10 shrink-0 items-center justify-center rounded-full bg-slate-100 text-sm font-semibold text-slate-600 dark:bg-slate-800 dark:text-slate-300">
-                          {client.firstName.charAt(0)}{client.lastName.charAt(0)}
-                        </span>
-                      )}
-                      <span className="min-w-0">
-                        <span className="block truncate font-medium">{client.firstName} {client.lastName}</span>
-                        <span className="mt-1 block truncate text-xs text-slate-500">
-                          {labels.id_short}: {client.dni} · {calculateAgeFromString(client.birthDate)} {Number(calculateAgeFromString(client.birthDate)) === 1 ? labels.age_one : labels.age_other}
-                        </span>
-                      </span>
-                    </span>
-                  </button>
+                <AvatarInfoMd
+                  title={`${labels.id_short}: ${client.dni} · ${calculateAgeFromString(client.birthDate)} ${Number(calculateAgeFromString(client.birthDate)) === 1 ? labels.age_one : labels.age_other}`}
+                  firstName={client.firstName}
+                  lastName={client.lastName}
+                  avatar={avatarUrl(client)}
+                  onClick={() => {
+                    onCloseAdditionalRender?.()
+                    actions.showPanel({ type: "profile", client })
+                  }}
+                 />
                   <span className="truncate text-sm text-slate-500">{client.email || "—"}</span>
                   <span className="text-sm text-slate-500">{client.phone || "—"}</span>
                   <span className="flex justify-end">
@@ -196,7 +186,7 @@ export function ClientsPage({
                 client={state.panel.client}
                 onCancel={actions.closePanel}
                 labels={labels}
-                renderAdittionalInfo={renderAdittionalInfo?.(state.panel.client, queries.getProfile)}
+                renderAdittionalInfo={renderAdittionalInfo?.(state.panel.client, queries.getProfile, actions.closePanel)}
                 onEdit={(isEditing) => { if (isEditing) actions.openEdit(state.panel!.client); }}
               />
             )}
@@ -205,7 +195,7 @@ export function ClientsPage({
                 client={state.panel.client}
                 onCancel={actions.closePanel}
                 labels={labels}
-                renderAdittionalInfo={renderAdittionalInfo?.(state.panel.client, queries.getProfile)}
+                renderAdittionalInfo={renderAdittionalInfo?.(state.panel.client, queries.getProfile, actions.closePanel)}
                 onEdit={(isEditing) => { if (isEditing) actions.openEdit(state.panel!.client); }}
               />
             )}

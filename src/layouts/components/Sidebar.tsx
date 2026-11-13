@@ -15,9 +15,10 @@ interface SidebarProps {
     collapsed: boolean;
     isMobileMenuOpen: boolean;
     isDesktop: boolean;
+    onToggle: () => void;
 }
 
-function Sidebar({ collapsed, isMobileMenuOpen, isDesktop }: SidebarProps) {
+function Sidebar({ collapsed, isMobileMenuOpen, isDesktop, onToggle }: SidebarProps) {
     const [expansionOverride, setExpansionOverride] = useState<{ path: string; items: Set<unknown> } | null>(null)
     const menuItems = useMemo(() => getMenuData(), []);
     const navigate = useNavigate();
@@ -63,7 +64,7 @@ function Sidebar({ collapsed, isMobileMenuOpen, isDesktop }: SidebarProps) {
 
     return (
         <div className={`
-            fixed top-0 left-0 z-50 flex h-screen w-72 flex-col overflow-x-hidden
+            fixed top-0 left-0 z-50 flex h-screen w-72 flex-col
             transition-[width,transform] duration-300 ease-in-out
             motion-reduce:transition-none
             ${isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"}
@@ -73,19 +74,19 @@ function Sidebar({ collapsed, isMobileMenuOpen, isDesktop }: SidebarProps) {
             backdrop-blur-xl border-r border-slate-200/50 dark:border-slate-700/50
             `}
         >
-            {/*<button className="absolute top-6 -right-3.5 p-1 rounded-full z-1000 text-sidebar-text
-              bg-sidebar-item cursor-pointer transition-colors"
-                onClick={()=>{}}>
+            <button className="sidebar-toogle-menu absolute top-9 -right-3.5 p-1 rounded-full z-1000 text-sidebar-text
+              bg-secondary cursor-pointer transition-colors"
+                onClick={onToggle}>
                     {collapsed && <ChevronRight className="w-5 h-5" strokeWidth={4} />}
                     {!collapsed && <ChevronLeft className="w-5 h-5" strokeWidth={4} />}
-            </button>*/}
+            </button>
             <div className="border-b border-slate-200/50 px-4 py-6 dark:border-slate-700/50">
                 <div className={`flex h-10 items-center ${collapsed && isDesktop ? "justify-center" : "gap-3"}`}>
                     <div className={`${collapsed && isDesktop ? "w-10" : "w-15"} flex h-10 shrink-0 items-center justify-center overflow-hidden bg-company-logo-background rounded-lg shadow-lg`}>
                         {settings.branding.logoUrl ? (
                             <img src={settings.branding.logoUrl} alt={settings.company.name} className="h-10 w-full rounded-xl object-contain" />
                         ) : (
-                            <BriefcaseMedical className="w-10 h-10 text-primary" />
+                            <BriefcaseMedical className="w-10 h-10 text-white" />
                         )}
                     </div>
 

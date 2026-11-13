@@ -18,18 +18,12 @@ export default function Invoice() {
         data, 
         dashboardData, 
         customer, 
-        setCustomer, 
-        loadDataPage,
         search,
-        setSearch,
         invoiceId,
-        setInvoiceId,
         isOpenTransitionRight,
         isOpenProfileBillInfo,
         isOpenMakeInvoice,
-        openProfileBillInfo,
-        openMakeInvoice,
-        openInvoiceDetail
+        actions
      } = useCustomerInvoice()
 
     return (
@@ -38,10 +32,7 @@ export default function Invoice() {
             description="Visión general de las cuentas de pacientes y transacciones"
             showButton={false}
             textButton="Agregar Nueva Factura"
-            onclick={() => {
-                /*setInvoiceId("0")
-                openMakeInvoice(true)*/
-            }}>
+            onclick={() => {}}>
             <div className="flex gap-2 md:gap-8">
                 {dashboardData && dashboardData.map((dashboard, index) => (
                     <DashboardCard
@@ -62,12 +53,16 @@ export default function Invoice() {
                 <PaginatedAutocomplete
                     label="Buscar Paciente"
                     value={search}
-                    onChange={(value) => setSearch(data?.data.find(c => c?.id === value)?.fullName || '')}
+                    onChange={(value) => actions.setSearch(data?.data.find(c => c?.id === value)?.firstName || '')}
                     fetchData={CustomerService.get}
                     getValue={(item) => item.id}
                     getLabel={(item) => `${item.firstName.trim()} ${item.lastName.trim()}`}
                 />
-                <div className="rounded-lg shadow-md p-3.5 border dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer flex items-center">
+                
+                {/*<button type="button" className="ml-auto rounded-lg bg-secondary px-4 py-2 text-sm font-semibold text-white cursor-pointer">
+                Agregar pago
+                </button>*/}
+                <div className="rounded-lg shadow-md p-1.5 border dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer flex items-center">
                     <Filter className="inline-block mr-2 text-slate-500 dark:text-slate-300 w-4 h-4 sm:w-6 sm:h-6 md:w-6 md:h-6" />
                     <span className="text-sm text-slate-500 dark:text-slate-300">Filtros</span>
                 </div>
@@ -78,11 +73,12 @@ export default function Invoice() {
                     <div className="flex w-full px-4">
                         <AvatarInfo className="min-w-0"
                             avatar={`${ASSETS_URLS.avatars}/${customer!.avatar}`}
-                            name={customer!.fullName}
+                            firstName={customer!.firstName}
+                            lastName={customer!.lastName}
                             title={`Ultimo Pago: ${customer!.lastPayment ? formatDateToMMDameDDYYYY(customer!.lastPayment) : 'Sin registros'}`}
                             onClick={() => {
-                                setCustomer(customer)
-                                openProfileBillInfo(true)
+                                actions.setCustomer(customer)
+                                actions.openProfileBillInfo(true)
                             }}
                         />
                         <div className="ml-auto">
@@ -121,11 +117,11 @@ export default function Invoice() {
             >
                 {isOpenProfileBillInfo && <PatientBillInfo 
                     customer={customer} 
-                    setIsOpen={openProfileBillInfo} 
-                    reload={loadDataPage}
-                    openInvoiceDetail={openInvoiceDetail} />}
+                    setIsOpen={actions.openProfileBillInfo} 
+                    reload={actions.loadDataPage}
+                    openInvoiceDetail={actions.openInvoiceDetail} />}
 
-                {isOpenMakeInvoice && <InvoiceDetail idParam={invoiceId} setIsOpen={openMakeInvoice} reload={loadDataPage} />}
+                {isOpenMakeInvoice && <InvoiceDetail idParam={invoiceId} setIsOpen={actions.openMakeInvoice} reload={actions.loadDataPage} />}
             </div>
         </PageComponent>
     )

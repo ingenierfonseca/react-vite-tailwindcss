@@ -15,7 +15,7 @@ export default function TextEditApp({ label, value, isRequired = false, type = "
     return (
         <div className="flex-1 flex flex-col">
             <div className="flex gap-1">
-                <span className="mb-1 text-sm text-primary font-medium">{label}</span>
+                <span className="mb-1 text-sm text-slate-800 font-medium">{label}</span>
                 {isRequired && value?.length! <= 0 && <span className="text-red-500 font-medium">*</span>}
             </div>
             <TextField

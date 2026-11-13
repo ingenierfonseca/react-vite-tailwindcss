@@ -46,6 +46,7 @@ export default function MainLayout() {
         <Sidebar collapsed={sidebarCollapsed}
           isMobileMenuOpen={isMobileMenuOpen}
           isDesktop={isDesktop}
+          onToggle={handleSidebarToggle}
         />
         <div className='main-layout flex-1 flex flex-col overflow-hidden'>
           <Header onToggle={handleSidebarToggle} collapsed={sidebarCollapsed}/>

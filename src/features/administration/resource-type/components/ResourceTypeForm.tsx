@@ -26,11 +26,11 @@ export default function ResourceTypeForm({ itemParam, setIsOpen, reload }: Resou
     return (
         <PageRightComponent
             title={item.id ? "Editar Tipo de Recurso" : "Nuevo Tipo de Recurso"}
-            onClick={() => setIsOpen(false)}
+            onClose={() => setIsOpen(false)}
         >
             <fieldset disabled={loading}>
-                <div className="flex flex-col gap-4 pt-3">
-                    <TextFieldApp className="flex-3" label="Nombre" value={item.name}
+                <div className="flex flex-col gap-4 py-3">
+                    <TextFieldApp label="Nombre" value={item.name}
                         maxLength={100} onChange={(value) => setItem({ ...item, name: value })} />
                 </div>
                 <div className="flex justify-center">

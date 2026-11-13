@@ -27,13 +27,13 @@ export default function ConsultationTypeForm({ itemParam, setIsOpen, reload }: C
     return (
         <PageRightComponent
             title={item.id ? "Editar Tipo de Consulta" : "Nuevo Tipo de Consulta"}
-            onClick={() => setIsOpen(false)}
+            onClose={() => setIsOpen(false)}
         >
             <fieldset disabled={loading}>
                 <div className="flex flex-col gap-4 pt-3">
-                    <TextFieldApp className="flex-3" label="Nombre" value={item.name}
+                    <TextFieldApp label="Nombre" value={item.name}
                         maxLength={100} onChange={(value) => setItem({ ...item, name: value })} />
-                    <TextFieldApp className="flex-3" label="Descripción" value={item.description ?? ""}
+                    <TextFieldApp label="Descripción" value={item.description ?? ""}
                         maxLength={200} onChange={(value) => setItem({ ...item, description: value })} />
                     <FormControlLabel
                         control={

@@ -105,7 +105,7 @@ export default function InvoiceDetail({ setIsOpen, reload, idParam }: InvoiceDet
     return (
         <PageRightComponent
             title={invoice?.id !== 0 ? !disabled ? "Editar Factura" : "Informacion de Factura" : "Nueva Factura"}
-            onClick={() => setIsOpen(false)}
+            onClose={() => setIsOpen(false)}
         >
             <InvoiceHeader
                 invoice={invoice}

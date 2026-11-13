@@ -46,22 +46,22 @@ export default function ResourceForm({ itemParam, setIsOpen, reload }: ResourceF
     return (
         <PageRightComponent
             title={item.id ? "Editar Recurso" : "Nuevo Recurso"}
-            onClick={() => setIsOpen(false)}
+            onClose={() => setIsOpen(false)}
         >
             <fieldset disabled={loading}>
-                <div className="flex flex-col gap-4 pt-3">
+                <div className="flex flex-col gap-4 py-3">
                     <DropDownApp title="Tipo de Recurso" data={resourceTypes}
                         value={item.resourceTypeId}
                         onChange={(val) => setItem({ ...item, resourceTypeId: Number(val) })} />
-                    <TextFieldApp className="flex-3" label="Nombre" value={item.name}
+                    <TextFieldApp label="Nombre" value={item.name}
                         maxLength={100} onChange={(value) => setItem({ ...item, name: value })} />
-                    <TextFieldApp className="flex-3" label="Descripción" value={item.description}
+                    <TextFieldApp label="Descripción" value={item.description}
                         maxLength={200} onChange={(value) => setItem({ ...item, description: value })} />
                     <div className="flex gap-4">
                         <NumberInputApp title="Capacidad" value={item.capacity}
                             min={1} shrink
                             onChange={(value) => setItem({ ...item, capacity: value })} />
-                        <TextFieldApp className="flex-1" label="Color" value={item.color}
+                        <TextFieldApp label="Color" value={item.color}
                             maxLength={7} onChange={(value) => setItem({ ...item, color: value })} />
                     </div>
                     <FormControlLabel

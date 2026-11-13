@@ -128,7 +128,7 @@ export const ClientPersonalInformation = ({
 
                 <div className="flex-2 flex flex-col justify-around">
                     <div className="flex flex-col">
-                        <span className="mb-1 text-sm text-primary font-medium">{labels.type_id}</span>
+                        <span className="mb-1 text-sm text-slate-800 font-medium">{labels.type_id}</span>
                         <DropDownApp
                             title={labels.type_id}
                             data={idTypes}
@@ -195,7 +195,7 @@ export const ClientPersonalInformation = ({
                 />
 
                 <div className="flex-1 flex flex-col">
-                    <span className="mb-1 text-sm text-primary font-medium">{labels.birth_date}</span>
+                    <span className="mb-1 text-sm text-slate-800 font-medium">{labels.birth_date}</span>
                     <DatePicker
                         value={client.birthDate ? dayjs(client.birthDate) : null}
                         onChange={(value) => onChange({ birthDate: value?.format("YYYY-MM-DD") ?? "" })}
@@ -210,7 +210,7 @@ export const ClientPersonalInformation = ({
             </div>
             <div className="grid grid-cols-1 gap-2 pt-3 md:grid-cols-3">
                 <div className="min-w-0 space-y-1">
-                    <label id="client-gender-label" htmlFor="client-gender" className="text-sm text-primary font-medium">
+                    <label id="client-gender-label" htmlFor="client-gender" className="text-sm text-slate-800 font-medium">
                         {labels.gender}<span aria-hidden="true" className="ml-1 text-red-500">*</span>
                     </label>
                     <DropDownApp
@@ -228,7 +228,7 @@ export const ClientPersonalInformation = ({
                     />
                 </div>
                 <div className="min-w-0 space-y-1">
-                    <span id="client-department-label" className="block text-sm text-primary font-medium">
+                    <span id="client-department-label" className="block text-sm text-slate-800 font-medium">
                         {labels.department}<span aria-hidden="true" className="ml-1 text-red-500">*</span>
                     </span>
                     <AutocompleteBasic
@@ -254,7 +254,7 @@ export const ClientPersonalInformation = ({
                     />
                 </div>
                 <div className="min-w-0 space-y-1">
-                    <span id="client-city-label" className="block text-sm text-primary font-medium">
+                    <span id="client-city-label" className="block text-sm text-slate-800 font-medium">
                         {labels.city}<span aria-hidden="true" className="ml-1 text-red-500">*</span>
                     </span>
                     <AutocompleteBasic

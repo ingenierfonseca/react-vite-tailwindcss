@@ -39,11 +39,13 @@ export const routesConfig = [
   {
     path: "/dashboard",
     title: "Dashboard",
+    description: "Resumen financiero · Noviembre 2026",
     element: <DashboardPage />,
   },
   {
     path: "/appointments",
-    title: "Citas",
+    title: "Administración de Citas",
+    description: "Administración de citas",
     element: <AppointmentList />,
   },
   {

@@ -32,7 +32,8 @@ export default function NotesTab({ sessionPlan }: { sessionPlan?: SessionPlan })
                 {notes.map((note) => (
                     <div key={note.id} className="p-3 border border-slate-300 dark:border-slate-700 rounded-lg bg-slate-50 dark:bg-slate-800/50">
                         <AvatarInfoSmall
-                            name={`${note.doctor?.title} ${note.doctor?.staff!.firstName} ${note.doctor?.staff!.lastName}`}
+                            firstName={`${note.doctor?.title} ${note.doctor?.staff!.firstName}`}
+                            lastName={note.doctor?.staff!.lastName ?? ''}
                             title={new Date(note.createdAt).toLocaleString()}
                             avatar={`${ASSETS_URLS.staffAvatars}${note.doctor?.staff!.avatar}`}
                         />

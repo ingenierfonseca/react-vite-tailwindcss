@@ -48,13 +48,13 @@ export default function TreatmentPlanForm({ itemParam, setIsOpen, reload }: Trea
     return (
         <PageRightComponent
             title={item.id ? "Editar Plan de Tratamiento" : "Nuevo Plan de Tratamiento"}
-            onClick={() => setIsOpen(false)}
+            onClose={() => setIsOpen(false)}
         >
             <fieldset disabled={loading}>
-                <div className="flex flex-col gap-4 pt-3">
-                    <TextFieldApp className="flex-3" label="Título" value={item.title}
+                <div className="flex flex-col gap-4 py-3">
+                    <TextFieldApp label="Título" value={item.title}
                         maxLength={100} onChange={(value) => setItem({ ...item, title: value })} />
-                    <TextFieldApp className="flex-5" label="Descripción" value={item.description}
+                    <TextFieldApp label="Descripción" value={item.description}
                         maxLength={200} onChange={(value) => setItem({ ...item, description: value })} />
                     
                     <div className="flex gap-4">

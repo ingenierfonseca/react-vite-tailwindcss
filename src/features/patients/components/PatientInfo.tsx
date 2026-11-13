@@ -24,14 +24,18 @@ const tabs = [
 interface PatientInfoProps {
     patientId: number;
     getProfile: (patientId: number) => Promise<PatientProfileData>;
+    onStartConsultation: () => void,
+    onClose: () => void,
+    selectedClient: () => void
 }
-export default function PatientInfo({ patientId, getProfile }: PatientInfoProps) {
+export default function PatientInfo({ patientId, getProfile, onStartConsultation, onClose, selectedClient }: PatientInfoProps) {
     const { can } = usePermissions();
     const navigate = useNavigate();
     const { risks, treatmentHistory, consultationHistory, loading, error } = usePatientProfileData(
         patientId,
         getProfile,
     );
+
     return (
         <div>
             {loading && <p className="mt-4 text-sm text-slate-500">Cargando información del perfil…</p>}
@@ -120,7 +124,11 @@ export default function PatientInfo({ patientId, getProfile }: PatientInfoProps)
                     )}
                     {can(PermissionAction.Create, PermissionResource.Appointments) && (
                         <button className="flex-1 px-4 py-2 border border-slate-300 text-black dark:text-white rounded-md hover:bg-slate-300 dark:hover:bg-slate-700"
-                            onClick={() => {}}>
+                            onClick={() => {
+                                onClose?.()
+                                selectedClient()
+                                onStartConsultation()
+                            }}>
                             Iniciar Consulta
                         </button>
                     )}

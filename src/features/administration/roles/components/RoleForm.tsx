@@ -26,11 +26,11 @@ export default function RoleForm({ itemParam, setIsOpen, reload }: RoleFormProps
     return (
         <PageRightComponent
             title={item.id ? "Editar Rol" : "Nuevo Rol"}
-            onClick={() => setIsOpen(false)}
+            onClose={() => setIsOpen(false)}
         >
             <fieldset disabled={loading}>
-                <div className="flex flex-col gap-4 pt-3">
-                    <TextFieldApp className="flex-3" label="Nombre del Rol" value={item.name}
+                <div className="flex flex-col gap-4 py-3">
+                    <TextFieldApp label="Nombre del Rol" value={item.name}
                         maxLength={50} onChange={(value) => setItem({ ...item, name: value })} />
                 </div>
                 <div className="flex justify-center">

@@ -30,19 +30,17 @@ export default function AppointmentTypeForm({ itemParam, setIsOpen, reload }: Ap
     return (
         <PageRightComponent
             title={item.id ? 'Editar Tipo de Cita' : `Nuevo Tipo de Cita`}
-            onClick={() => setIsOpen(false)}
+            onClose={() => setIsOpen(false)}
         >
             <fieldset disabled={loading}>
-                <div className="flex flex-col gap-4 pt-3">
+                <div className="flex flex-col gap-4 py-3">
                     <TextFieldApp
-                        className="flex-3"
                         label="Nombre"
                         value={item.name}
                         maxLength={50}
                         onChange={(value) => setItem({ ...item, name: value })}
                     />
                     <TextFieldApp
-                        className="flex-5"
                         label="Descripcion"
                         value={item.description}
                         maxLength={60}

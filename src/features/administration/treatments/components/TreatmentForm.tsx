@@ -53,19 +53,17 @@ export default function TreatmentForm({ treatmentParam, setIsOpen, reload }: Tre
     return (
         <PageRightComponent
             title={treatment?.id ? 'Editar Tratamiento' : `Nuevo Tratamiento`}
-            onClick={() => setIsOpen(false)}
+            onClose={() => setIsOpen(false)}
         >
             <fieldset disabled={loading}>
                 <div className="flex flex-col gap-4 pt-3">
                     <TextFieldApp
-                        className="flex-3"
                         label="Tratamiento"
                         value={treatment?.name}
                         maxLength={50}
                         onChange={(value) => setTreatment({ ...treatment!, name: value })}
                     />
                     <TextFieldApp
-                        className="flex-5"
                         label="Descripcion"
                         value={treatment?.description}
                         maxLength={60}
@@ -98,7 +96,7 @@ export default function TreatmentForm({ treatmentParam, setIsOpen, reload }: Tre
                         }}
                     />
                 </div>
-                <div className="mt-4">
+                <div className="my-4">
                     <FormControlLabel
                         control={
                             <Checkbox

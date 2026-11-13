@@ -29,10 +29,10 @@ export default function ExchangeRateForm({ itemParam, setIsOpen, reload }: Excha
     return (
         <PageRightComponent
             title={item.id ? "Editar Tipo de Cambio" : "Nuevo Tipo de Cambio"}
-            onClick={() => setIsOpen(false)}
+            onClose={() => setIsOpen(false)}
         >
             <fieldset disabled={loading}>
-                <div className="flex flex-col gap-4 pt-3">
+                <div className="flex flex-col gap-4 py-3">
                     <div className="flex gap-4">
                         <PaginatedAutocomplete
                             label="Moneda Origen"

@@ -3,8 +3,6 @@ import StatsGrid from "../components/dashboard/StatsGrid"
 import OrthoChart from "../components/dashboard/OrthoChart"
 import WeekAppoiment from "../components/dashboard/WeekAppoiment"
 
-const meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre']
-
 const weekAppoiments = [
     {
         name: 'Dra. Melissa Fonseca',
@@ -127,8 +125,6 @@ const weekAppoiments = [
 
 export default function DashboardPage() {
     const [mounted, setMounted] = useState(false)
-    const now = new Date()
-    const mesActual = meses[now.getMonth()]
 
     useEffect(() => {
         setMounted(true)
@@ -137,15 +133,15 @@ export default function DashboardPage() {
     return (
         <div className="min-h-screen">
             <div className="relative">
-                <div className="absolute inset-0 bg-white pointer-events-none" />
+                {/*<div className="absolute inset-0 bg-white pointer-events-none" />
                 <div className="absolute inset-0 opacity-[0.03]" style={{
                     backgroundImage: 'radial-gradient(circle at 25% 25%, white 0%, transparent 50%), radial-gradient(circle at 75% 75%, white 0%, transparent 50%)'
                 }} />
                 <div className="absolute top-0 right-0 w-125 h-125 bg-linear-to-bl from-violet-500/10 via-transparent to-transparent rounded-full blur-3xl pointer-events-none" />
                 <div className="absolute bottom-0 left-0 w-100 h-100 bg-linear-to-tr from-fuchsia-500/10 via-transparent to-transparent rounded-full blur-3xl pointer-events-none" />
-
-                <div className="relative z-10 p-4 space-y-6">
-                    <div className={`transition-all duration-700 ease-out ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+                */}
+                <div className="relative z-10 p-4 space-y-6 ">
+                    {/*<div className={`transition-all duration-700 ease-out ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
                         <div className="flex items-center justify-between mb-1">
                             <div>
                                 <h1 className="text-2xl font-bol tracking-tight">
@@ -160,7 +156,7 @@ export default function DashboardPage() {
                                 <span className="text-xs text-white/50">Sistema activo</span>
                             </div>
                         </div>
-                    </div>
+                    </div>*/}
 
                     <div className={`transition-all duration-700 delay-100 ease-out ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
                         <StatsGrid />

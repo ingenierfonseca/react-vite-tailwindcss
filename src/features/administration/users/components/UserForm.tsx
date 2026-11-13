@@ -46,20 +46,18 @@ export default function UserForm({ itemParam, setIsOpen, reload }: UserFormProps
     return (
         <PageRightComponent
             title={isEditing ? "Editar Usuario" : "Nuevo Usuario"}
-            onClick={() => setIsOpen(false)}
+            onClose={() => setIsOpen(false)}
         >
             <fieldset disabled={loading}>
-                <div className="flex flex-col gap-4 pt-3">
+                <div className="flex flex-col gap-4 py-3">
                     <TextFieldApp
                         label="Usuario"
-                        className="w-full"
                         value={item.username}
                         onChange={(value) => setItem({ ...item, username: value })}
                     />
 
                     <TextFieldApp
                         label="Email"
-                        className="w-full"
                         value={item.email}
                         onChange={(value) => setItem({ ...item, email: value })}
                     />

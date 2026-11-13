@@ -36,7 +36,7 @@ export default function DoctorForm({ id, setIsOpen, reload }: DoctorFormProps) {
     return (
         <PageRightComponent
             title={item.id ? "Editar Doctor" : "Nuevo Doctor"}
-            onClick={() => setIsOpen(false)}
+            onClose={() => setIsOpen(false)}
         >
             <fieldset disabled={loading}>
                 <div className="flex gap-4 pt-3">
@@ -57,7 +57,7 @@ export default function DoctorForm({ id, setIsOpen, reload }: DoctorFormProps) {
                         getLabel={(item) => `${item.name.trim()}`}
                     />
                 </div>
-                <div className="flex gap-2 pt-3">
+                <div className="flex gap-2 py-3">
                     <PaginatedAutocomplete
                         key={`specialty-${item.serviceId}`}
                         label="Especialidad"

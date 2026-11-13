@@ -4,13 +4,14 @@ import { Navigate } from "react-router";
 import { toast } from "react-toastify";
 import PageComponent from "@/components/commons/PageComponent";
 import TextFieldApp from "@/components/commons/TextFieldApp";
-import { SubmitSaveApp } from "@/components/commons/ButtonSaveApp";
+import { ButtonApp, CancelButtonApp, SubmitSaveApp } from "@/components/commons/ButtonSaveApp";
 import { usePermissions } from "@/hooks/usePermissions";
 import { useSettings } from "@/hooks/useSettings";
 import { PermissionAction, PermissionResource } from "@/models/permission.enum";
 import { validateCompanySettings, type BrandTheme, type CompanySettings } from "../domain/company-settings";
 import { BrandPreview } from "./BrandPreview";
 import { prepareLogoFile, type PreparedLogo } from "./prepare-logo-file";
+import { BasicStepComponent } from "@/features/upload-data/components/StepComponent";
 
 interface LogoSelection extends PreparedLogo {
   previewUrl: string;
@@ -29,25 +30,27 @@ function ColorField({
 }) {
   const validHex = /^#(?:[\da-f]{3}|[\da-f]{6})$/i.test(value);
   return (
-    <div className="flex items-center gap-3 rounded-xl border border-slate-200 p-3 dark:border-slate-700">
-      <input
-        type="color"
-        aria-label={label}
-        value={validHex ? value : "#000000"}
-        disabled={disabled}
-        onChange={(event) => onChange(event.target.value)}
-        className="size-11 cursor-pointer rounded-lg border-0 bg-transparent p-0 disabled:cursor-not-allowed"
-      />
-      <div className="min-w-0 flex-1">
-        <label className="mb-1 block text-xs font-medium text-slate-500 dark:text-slate-400">{label}</label>
+    <div className="flex flex-col gap-1 rounded-xl p-3 dark:border-slate-700">
+      <label className="block text-xs font-medium text-slate-500 dark:text-slate-400">{label}</label>
+      <div className="flex gap-3">
         <input
-          type="text"
-          value={value}
-          maxLength={7}
+          type="color"
+          aria-label={label}
+          value={validHex ? value : "#000000"}
           disabled={disabled}
           onChange={(event) => onChange(event.target.value)}
-          className="w-full rounded-md border border-slate-200 bg-transparent px-2 py-1.5 text-sm uppercase outline-none focus:border-primary dark:border-slate-700"
+          className="h-8 cursor-pointer rounded-lg border-0 bg-transparent p-0 disabled:cursor-not-allowed"
         />
+        <div className="min-w-0 flex-1">
+          <input
+            type="text"
+            value={value}
+            maxLength={7}
+            disabled={disabled}
+            onChange={(event) => onChange(event.target.value)}
+            className="w-full rounded-md border border-slate-200 bg-transparent px-2 py-1.5 text-sm uppercase outline-none focus:border-primary dark:border-slate-700"
+          />
+        </div>
       </div>
     </div>
   );
@@ -64,6 +67,7 @@ export default function CompanySettingsPage() {
     cancelPreview,
     saveSettings,
   } = useSettings();
+  const [step, setStep] = useState(1);
   const [draft, setDraft] = useState<CompanySettings>(settings);
   const [logoMode, setLogoMode] = useState<"url" | "file">("url");
   const [logoSelection, setLogoSelection] = useState<LogoSelection | null>(null);
@@ -171,7 +175,7 @@ export default function CompanySettingsPage() {
   if (!canView) return <Navigate to="/not-found" replace />;
 
   return (
-    <PageComponent title="Personalizar empresa" description="Administra los datos de la empresa y la identidad visual de la aplicación." textButton="" onclick={() => {}} showButton={false}>
+    <PageComponent title="Personalizar empresa" description="Administra los datos de la empresa y la identidad visual de la aplicación." textButton="" onclick={() => { }} showButton={false}>
       <form onSubmit={handleSave} className="space-y-5">
         {error && (
           <div role="alert" className="rounded-xl border border-amber-300 bg-amber-50 p-4 text-sm text-amber-900 dark:border-amber-800 dark:bg-amber-950/30 dark:text-amber-200">
@@ -179,7 +183,11 @@ export default function CompanySettingsPage() {
           </div>
         )}
 
-        <div className="grid gap-5 xl:grid-cols-2">
+        <div className="flex py-3 justify-evenly">
+          <BasicStepComponent stepActive={step} stepNumber={1} title="Datos de la empresa" onClick={() => setStep(1)} />
+          <BasicStepComponent stepActive={step} stepNumber={2} title="Paleta de colores" onClick={() => setStep(2)} />
+        </div>
+        <div hidden={step !== 1} className="grid gap-5 xl:grid-cols-2">
           <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
             <div className="mb-5 flex items-start gap-3">
               <span className="rounded-xl bg-primary/10 p-2 text-primary"><Building2 className="size-5" /></span>
@@ -189,12 +197,12 @@ export default function CompanySettingsPage() {
               </div>
             </div>
             <div className="grid gap-4 sm:grid-cols-2">
-              <TextFieldApp className="w-full sm:col-span-2" label="Nombre visible" value={draft.company.name} maxLength={100} disabled={!canEdit} onChange={(name) => updateCompany({ name })} />
-              <TextFieldApp className="w-full sm:col-span-2" label="Razón social" value={draft.company.legalName} maxLength={150} disabled={!canEdit} onChange={(legalName) => updateCompany({ legalName })} />
-              <TextFieldApp className="w-full" label="Identificación fiscal" value={draft.company.taxId} maxLength={40} disabled={!canEdit} onChange={(taxId) => updateCompany({ taxId })} />
-              <TextFieldApp className="w-full" label="Teléfono" value={draft.company.phone} maxLength={40} disabled={!canEdit} onChange={(phone) => updateCompany({ phone })} />
-              <TextFieldApp className="w-full" label="Correo electrónico" value={draft.company.email} maxLength={120} disabled={!canEdit} onChange={(email) => updateCompany({ email })} />
-              <TextFieldApp className="w-full sm:col-span-2" label="Dirección" value={draft.company.address} maxLength={240} disabled={!canEdit} onChange={(address) => updateCompany({ address })} />
+              <TextFieldApp label="Nombre visible" value={draft.company.name} maxLength={100} disabled={!canEdit} onChange={(name) => updateCompany({ name })} />
+              <TextFieldApp label="Razón social" value={draft.company.legalName} maxLength={150} disabled={!canEdit} onChange={(legalName) => updateCompany({ legalName })} />
+              <TextFieldApp label="Identificación fiscal" value={draft.company.taxId} maxLength={40} disabled={!canEdit} onChange={(taxId) => updateCompany({ taxId })} />
+              <TextFieldApp label="Teléfono" value={draft.company.phone} maxLength={40} disabled={!canEdit} onChange={(phone) => updateCompany({ phone })} />
+              <TextFieldApp label="Correo electrónico" value={draft.company.email} maxLength={120} disabled={!canEdit} onChange={(email) => updateCompany({ email })} />
+              <TextFieldApp label="Dirección" value={draft.company.address} maxLength={240} disabled={!canEdit} onChange={(address) => updateCompany({ address })} />
             </div>
           </section>
 
@@ -224,7 +232,7 @@ export default function CompanySettingsPage() {
               </div>
               <div className="mt-5">
                 {logoMode === "url" ? (
-                  <TextFieldApp className="w-full" label="URL del logo" value={draft.branding.logoUrl} maxLength={500} disabled={!canEdit} onChange={changeLogoUrl} />
+                  <TextFieldApp label="URL del logo" value={draft.branding.logoUrl} maxLength={500} disabled={!canEdit} onChange={changeLogoUrl} />
                 ) : (
                   <div className="space-y-2">
                     <label htmlFor="company-logo-file" className="block text-sm font-medium text-slate-700 dark:text-slate-200">Archivo del logo</label>
@@ -244,44 +252,65 @@ export default function CompanySettingsPage() {
                 )}
               </div>
               <div className="mt-7 border-t border-slate-200 pt-5 dark:border-slate-700">
-                <TextFieldApp className="w-full" label="URL del favicon" value={draft.branding.faviconUrl} maxLength={500} disabled={!canEdit} onChange={(faviconUrl) => updateBrand({ faviconUrl })} />
+                <TextFieldApp label="URL del favicon" value={draft.branding.faviconUrl} maxLength={500} disabled={!canEdit} onChange={(faviconUrl) => updateBrand({ faviconUrl })} />
                 <p className="mt-2 text-xs text-slate-500">El archivo del logo se sube al servidor y este debe devolver una URL permanente. El favicon se mantiene como URL.</p>
               </div>
             </div>
           </section>
         </div>
 
-        <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-          <div className="mb-5 flex items-start gap-3">
-            <span className="rounded-xl bg-primary/10 p-2 text-primary"><Palette className="size-5" /></span>
-            <div>
-              <h2 className="font-semibold text-slate-900 dark:text-white">Colores de la aplicación</h2>
-              <p className="mt-1 text-sm text-slate-500">Los cambios válidos se previsualizan inmediatamente y solo se guardan al confirmar.</p>
+        <div hidden={step !== 2} className="flex flex-col gap-4">
+          <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+            <div className="mb-5 flex items-start gap-3">
+              <span className="rounded-xl bg-primary/10 p-2 text-primary"><Palette className="size-5" /></span>
+              <div>
+                <h2 className="font-semibold text-slate-900 dark:text-white">Colores de la aplicación</h2>
+                <p className="text-sm text-slate-500">Los cambios válidos se previsualizan inmediatamente y solo se guardan al confirmar.</p>
+              </div>
             </div>
-          </div>
-          <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
-            <ColorField label="Color principal" value={draft.branding.primaryColor} disabled={!canEdit} onChange={(primaryColor) => updateBrand({ primaryColor })} />
-            <ColorField label="Color principal oscuro" value={draft.branding.primaryDarkColor} disabled={!canEdit} onChange={(primaryDarkColor) => updateBrand({ primaryDarkColor })} />
-            <ColorField label="Color secundario" value={draft.branding.secondaryColor} disabled={!canEdit} onChange={(secondaryColor) => updateBrand({ secondaryColor })} />
-            <ColorField label="Nombre de empresa (claro)" value={draft.branding.companyNameColor} disabled={!canEdit} onChange={(companyNameColor) => updateBrand({ companyNameColor })} />
-            <ColorField label="Nombre de empresa (oscuro)" value={draft.branding.companyNameColorDark} disabled={!canEdit} onChange={(companyNameColorDark) => updateBrand({ companyNameColorDark })} />
-            <ColorField label="Fondo detrás del logo" value={draft.branding.logoBackgroundColor} disabled={!canEdit} onChange={(logoBackgroundColor) => updateBrand({ logoBackgroundColor })} />
-            <ColorField label="Bordes" value={draft.branding.borderColor} disabled={!canEdit} onChange={(borderColor) => updateBrand({ borderColor })} />
-            <ColorField label="Bordes al pasar el cursor" value={draft.branding.borderHover} disabled={!canEdit} onChange={(borderHover) => updateBrand({ borderHover })} />
-            <ColorField label="Fondo del menú" value={draft.branding.sidebarBackground} disabled={!canEdit} onChange={(sidebarBackground) => updateBrand({ sidebarBackground })} />
-            <ColorField label="Elemento activo del menú" value={draft.branding.sidebarItemBackground} disabled={!canEdit} onChange={(sidebarItemBackground) => updateBrand({ sidebarItemBackground })} />
-            <ColorField label="Texto del menú" value={draft.branding.sidebarText} disabled={!canEdit} onChange={(sidebarText) => updateBrand({ sidebarText })} />
-            <ColorField label="Texto activo del menú" value={draft.branding.sidebarActiveText} disabled={!canEdit} onChange={(sidebarActiveText) => updateBrand({ sidebarActiveText })} />
-          </div>
-        </section>
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+              <ColorField label="Color principal" value={draft.branding.primaryColor} disabled={!canEdit} onChange={(primaryColor) => updateBrand({ primaryColor })} />
+              <ColorField label="Color principal oscuro" value={draft.branding.primaryDarkColor} disabled={!canEdit} onChange={(primaryDarkColor) => updateBrand({ primaryDarkColor })} />
+              <ColorField label="Color secundario" value={draft.branding.secondaryColor} disabled={!canEdit} onChange={(secondaryColor) => updateBrand({ secondaryColor })} />
+              <ColorField label="Bordes" value={draft.branding.borderColor} disabled={!canEdit} onChange={(borderColor) => updateBrand({ borderColor })} />
+              <ColorField label="Bordes al pasar el cursor" value={draft.branding.borderHover} disabled={!canEdit} onChange={(borderHover) => updateBrand({ borderHover })} />
+            </div>
+          </section>
 
-        <BrandPreview settings={logoSelection ? { ...draft, branding: { ...draft.branding, logoUrl: logoSelection.previewUrl } } : draft} />
+          <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+            <div className="mb-5 flex items-start gap-3">
+              <span className="rounded-xl bg-primary/10 p-2 text-primary"><Palette className="size-5" /></span>
+              <div>
+                <h2 className="font-semibold text-slate-900 dark:text-white">Colores del sidebar(Menú izquierdo)</h2>
+                <p className="text-sm text-slate-500">Los cambios válidos se previsualizan inmediatamente y solo se guardan al confirmar.</p>
+              </div>
+            </div>
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+              <ColorField label="Fondo del menú" value={draft.branding.sidebarBackground} disabled={!canEdit} onChange={(sidebarBackground) => updateBrand({ sidebarBackground })} />
+              <ColorField label="Elemento activo del menú" value={draft.branding.sidebarItemBackground} disabled={!canEdit} onChange={(sidebarItemBackground) => updateBrand({ sidebarItemBackground })} />
+              <ColorField label="Texto del menú" value={draft.branding.sidebarText} disabled={!canEdit} onChange={(sidebarText) => updateBrand({ sidebarText })} />
+              <ColorField label="Texto activo del menú" value={draft.branding.sidebarActiveText} disabled={!canEdit} onChange={(sidebarActiveText) => updateBrand({ sidebarActiveText })} />
+              <ColorField label="Nombre de empresa (claro)" value={draft.branding.companyNameColor} disabled={!canEdit} onChange={(companyNameColor) => updateBrand({ companyNameColor })} />
+              <ColorField label="Nombre de empresa (oscuro)" value={draft.branding.companyNameColorDark} disabled={!canEdit} onChange={(companyNameColorDark) => updateBrand({ companyNameColorDark })} />
+              <ColorField label="Fondo detrás del logo" value={draft.branding.logoBackgroundColor} disabled={!canEdit} onChange={(logoBackgroundColor) => updateBrand({ logoBackgroundColor })} />
+            </div>
+          </section>
+
+          <BrandPreview settings={logoSelection ? { ...draft, branding: { ...draft.branding, logoUrl: logoSelection.previewUrl } } : draft} />
+        </div>
 
         {canEdit && (
           <div className="flex flex-wrap justify-end gap-3">
-            <button type="button" onClick={discardChanges} disabled={saving} className="rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:opacity-50 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800">
-              Descartar cambios
-            </button>
+            <CancelButtonApp
+              loading={false}
+              label="Descartar cambios"
+              disabled={saving}
+              onClick={discardChanges} />
+            <ButtonApp
+              label="Siguiente"
+              loading={saving}
+              disabled={saving || Boolean(validationError)}
+              onClick={() => setStep(step + 1)} />
             <SubmitSaveApp label="configuración" loading={saving} disabled={saving || Boolean(validationError)} />
           </div>
         )}

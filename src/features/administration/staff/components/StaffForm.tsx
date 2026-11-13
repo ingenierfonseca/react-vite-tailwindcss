@@ -50,7 +50,7 @@ export default function StaffForm({ itemParam, setIsOpen, reload }: StaffFormPro
     return (
         <PageRightComponent
             title={itemParam?.id ? "Editar Empleado" : "Nuevo Empleado"}
-            onClick={() => setIsOpen(false)}
+            onClose={() => setIsOpen(false)}
         >
             <form onSubmit={handleSubmit(onSubmit, onError)} noValidate>
                 <fieldset disabled={loading}>
@@ -88,7 +88,6 @@ export default function StaffForm({ itemParam, setIsOpen, reload }: StaffFormPro
                                     render={({ field }) => (
                                         <div className="flex-1 flex flex-col">
                                             <TextFieldApp
-                                                className="flex-1"
                                                 label="Nombre"
                                                 value={field.value ?? ""}
                                                 onChange={field.onChange}
@@ -106,7 +105,6 @@ export default function StaffForm({ itemParam, setIsOpen, reload }: StaffFormPro
                                     render={({ field }) => (
                                         <div className="flex-1 flex flex-col">
                                             <TextFieldApp
-                                                className="flex-1"
                                                 label="Apellido"
                                                 value={field.value ?? ""}
                                                 onChange={field.onChange}
@@ -161,7 +159,6 @@ export default function StaffForm({ itemParam, setIsOpen, reload }: StaffFormPro
                                     render={({ field }) => (
                                         <div className="flex-1 flex flex-col">
                                             <TextFieldApp
-                                                className="flex-1"
                                                 label="Email"
                                                 value={field.value ?? ""}
                                                 onChange={field.onChange}
@@ -179,7 +176,6 @@ export default function StaffForm({ itemParam, setIsOpen, reload }: StaffFormPro
                                     render={({ field }) => (
                                         <div className="flex-1 flex flex-col">
                                             <TextFieldApp
-                                                className="flex-1"
                                                 label="Teléfono"
                                                 value={field.value ?? ""}
                                                 onChange={field.onChange}
@@ -198,7 +194,6 @@ export default function StaffForm({ itemParam, setIsOpen, reload }: StaffFormPro
                                 render={({ field }) => (
                                     <div className="flex-1 flex flex-col pt-3">
                                         <TextFieldApp
-                                            className="flex-1"
                                             label="Dirección"
                                             value={field.value ?? ""}
                                             onChange={field.onChange}

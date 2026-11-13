@@ -9,12 +9,29 @@ interface StepComponentProps {
 export default function StepComponent({stepActive, stepNumber, title, subTitle}: StepComponentProps) {
     return (
         <div className="flex gap-3 items-center flex-1 min-w-0">
-            <div className={`flex justify-center items-center w-10 h-10 shrink-0 ${stepActive === stepNumber ? 'bg-sidebar-item text-slate-200' : 'bg-slate-200 text-black dark:bg-slate-700'} rounded-full dark:text-slate-100 text-lg font-semibold`}>{stepNumber}</div>
+            <div className={`flex justify-center items-center w-10 h-10 shrink-0 ${stepActive === stepNumber ? 'bg-primary text-slate-200' : 'bg-slate-200 text-black dark:bg-slate-700'} rounded-full dark:text-slate-100 text-lg font-semibold`}>{stepNumber}</div>
             <div className="min-w-0 shrink-0 hidden md:block">
                 <p className={`text-sm truncate text-black ${stepActive === stepNumber ? 'dark:text-slate-200' : 'dark:text-slate-300'} font-semibold`}>{title}</p>
                 <p className="text-xs truncate dark:text-slate-400">{subTitle}</p>
             </div>
             <div className="flex-1 h-px mr-3 border-t border-dashed border-slate-300 dark:border-slate-600"></div>
         </div>
+    )
+}
+
+interface BasicStepProps {
+    stepActive: number
+    stepNumber: number
+    title: string,
+    onClick: () => void
+}
+export function BasicStepComponent({stepActive, stepNumber, title, onClick}: BasicStepProps) {
+    return (
+        <button 
+            className="flex gap-3 items-center min-w-0 cursor-pointer"
+            onClick={onClick}>
+            <div className={`flex justify-center items-center w-7 h-7 shrink-0 ${stepActive === stepNumber ? 'bg-primary' : 'bg-primary/30'} rounded-full text-white text-lg font-semibold`}>{stepNumber}</div>
+            <p className={`text-xl ${stepActive === stepNumber ? 'text-primary' : 'text-primary/30'} font-semibold`}>{title}</p>
+        </button>
     )
 }

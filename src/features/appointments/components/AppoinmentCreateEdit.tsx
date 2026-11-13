@@ -12,7 +12,6 @@ import { ResourceService } from "@/services/resource/resource.service"
 import { AppointmentStatusService } from "@/services/appointment-status/appointmentStatus.service"
 import { Checkbox, FormControlLabel, TextField } from "@mui/material"
 import PageRightComponent from "@/components/commons/PageRightComponent"
-import { Calendar } from "lucide-react"
 
 interface AppointmentCreateProps {
     itemParam?: Partial<Appointment>
@@ -69,12 +68,7 @@ export default function AppointmentCreate({ itemParam, setIsOpen, refetch }: App
     return (
         <PageRightComponent
              title={appointment && appointment.id ? 'Editar Cita' : 'Nueva Cita'}
-             icon={
-                <div className="p-2 bg-primary/5 text-primary rounded-lg">
-                    <Calendar />
-                </div>
-            }
-            onClick={() => setIsOpen(false)}
+            onClose={() => setIsOpen(false)}
         >
             <div className="flex flex-col md:flex-row gap-8 mt-4">
                 <PaginatedAutocomplete

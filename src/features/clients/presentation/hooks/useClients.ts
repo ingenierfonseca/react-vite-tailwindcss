@@ -58,6 +58,7 @@ export const useClients = (
   const [panel, setPanel] = useState<PanelState<Client>>(null);
   const [panelVisible, setPanelVisible] = useState(false);
   const closeTimer = useRef<number | null>(null);
+  const closeWaiters = useRef<Array<() => void>>([]);
   const animationFrame = useRef<number | null>(null);
   const panelClassName = "dark:bg-slate-800";
   const panelWidthClassName = "md:w-7/12 md:max-w-none";
@@ -95,10 +96,20 @@ export const useClients = (
     return () => { active = false; };
   }, [errorMessage, module, page, reloadKey, search]);
 
+  const resolveCloseWaiters = useCallback(() => {
+    closeWaiters.current.splice(0).forEach((resolve) => resolve());
+  }, []);
+
+  useEffect(() => () => {
+    if (closeTimer.current !== null) window.clearTimeout(closeTimer.current);
+    resolveCloseWaiters();
+  }, [resolveCloseWaiters]);
+
   const showPanel = (nextPanel: NonNullable<PanelState<Client>>) => {
     if (closeTimer.current !== null) {
       window.clearTimeout(closeTimer.current);
       closeTimer.current = null;
+      resolveCloseWaiters();
     }
     setPanel(nextPanel);
     if (!panelVisible) {
@@ -126,16 +137,21 @@ export const useClients = (
     showPanel({ type: "form", client: snapshot });
   };
 
-  const closePanel = () => {
+  const closePanel = (): Promise<void> => {
     setPanelVisible(false);
     if (closeTimer.current !== null) window.clearTimeout(closeTimer.current);
-    closeTimer.current = window.setTimeout(() => {
-      setPanel(null);
-      setDraft(null);
-      setOriginalDraft(null);
-      setFormError(null);
-      closeTimer.current = null;
-    }, 500);
+
+    return new Promise((resolve) => {
+      closeWaiters.current.push(resolve);
+      closeTimer.current = window.setTimeout(() => {
+        setPanel(null);
+        setDraft(null);
+        setOriginalDraft(null);
+        setFormError(null);
+        closeTimer.current = null;
+        resolveCloseWaiters();
+      }, 500);
+    });
   };
 
   const reload = useCallback(() => {

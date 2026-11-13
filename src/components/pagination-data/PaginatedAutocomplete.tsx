@@ -110,6 +110,7 @@ export function PaginatedAutocomplete<T>({
       renderInput={(params) => <TextField 
         {...params} 
         label={label}
+        size="small"
         slotProps={{
         input: {
           ...params.InputProps,

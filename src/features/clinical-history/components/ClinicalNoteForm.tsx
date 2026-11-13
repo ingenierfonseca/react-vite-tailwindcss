@@ -41,7 +41,7 @@ export default function ClinicalNoteForm({ sessionId, itemParam, setIsOpen, relo
     return (
         <PageRightComponent
             title={item.id ? "Editar Nota" : "Nueva Nota"}
-            onClick={() => setIsOpen(false)}
+            onClose={() => setIsOpen(false)}
         >
             <fieldset disabled={loading}>
                 <div className="flex flex-col gap-4 pt-3">

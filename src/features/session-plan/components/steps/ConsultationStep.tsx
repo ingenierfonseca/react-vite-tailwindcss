@@ -30,6 +30,12 @@ export default function ConsultationStep() {
                                 label="Fecha de la consulta"
                                 value={dayjs(session.date)}
                                 onChange={(val) => field.onChange(val ? val.toISOString() : "")}
+                                slotProps={{
+                                textField: {
+                                    size: 'small', // Reduce la altura automáticamente
+                                    fullWidth: true,
+                                },
+                        }}
                             />
                         )}
                     />

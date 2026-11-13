@@ -1,7 +1,7 @@
 import type { Client } from "@/features/clients/domain/client";
 
 export interface Customer extends Client {
-    idType: number
+    /*idType: number
     dni: string
     phone: string
     email: string
@@ -17,7 +17,7 @@ export interface Customer extends Client {
     locationAccuracyMeters?: number | null
     locationSource?: "ManualMap" | "BrowserGps" | null
     locationUpdatedAtUtc?: string | null
-    locationDataProvided?: boolean
+    locationDataProvided?: boolean*/
 }
 
 export interface CustomerDashboard {

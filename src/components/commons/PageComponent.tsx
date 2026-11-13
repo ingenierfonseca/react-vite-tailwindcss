@@ -12,7 +12,7 @@ interface PageComponentProps {
 }
 export default function PageComponent({ title, description, textButton, onclick, children, secondaryButton, showButton = true }: PageComponentProps) {
     return (
-        <div className="relative min-h-screen px-4 pt-4 pb-18 z-20 bg-white dark:bg-slate-900">
+        <div className="relative min-h-screen p-4 rounded-2xl z-20 bg-white dark:bg-slate-900">
             <div className="flex mb-2">
                 {/*<div>
                     <p className="m-0 leading-none text-2xl font-bold text-slate-800 dark:text-white">{title}</p>

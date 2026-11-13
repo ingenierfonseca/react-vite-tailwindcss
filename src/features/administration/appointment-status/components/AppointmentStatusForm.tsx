@@ -26,11 +26,11 @@ export default function AppointmentStatusForm({ itemParam, setIsOpen, reload }: 
     return (
         <PageRightComponent
             title={item.id ? "Editar Estado de Cita" : "Nuevo Estado de Cita"}
-            onClick={() => setIsOpen(false)}
+            onClose={() => setIsOpen(false)}
         >
             <fieldset disabled={loading}>
                 <div className="flex flex-col gap-4 pt-3">
-                    <TextFieldApp className="flex-3" label="Nombre" value={item.name}
+                    <TextFieldApp label="Nombre" value={item.name}
                         maxLength={100} onChange={(value) => setItem({ ...item, name: value })} />
                 </div>
                 <div className="flex justify-center">

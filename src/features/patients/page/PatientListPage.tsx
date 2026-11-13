@@ -11,10 +11,28 @@ import { usePermissions } from "@/hooks/usePermissions";
 import PatientInfo from "../components/PatientInfo";
 import DashboardCardII from "@/components/dashboard/DashboardCardII";
 
+export const usePatients= () => {
+  const panelClassName = "dark:bg-slate-800";
+  const panelWidthClassName = "md:w-7/12 md:max-w-none";
+  const [panelVisible, setPanelVisible] = useState(false);
+
+  return {
+    state: {
+      panelClassName,
+      panelWidthClassName,
+      panelVisible
+    },
+    actions: {
+      setPanelVisible
+    }
+  }
+}
 export default function PatientListPage() {
   const { can } = usePermissions();
   const [dashboardData, setDashboardData] = useState<CustomerDashboard[]>([]);
-  const [assessmentCustomer, setAssessmentCustomer] = useState<Customer | null>(null);
+  const [selectedPatient, setSelectedPatient] = useState<Customer | null>(null);
+  const {state, actions} = usePatients()
+  
 
   useEffect(() => {
     CustomerService.getDashboard()
@@ -29,12 +47,6 @@ export default function PatientListPage() {
   return (
     <>
       <CustomerClientsPage
-        onStartAssessment={(client) => setAssessmentCustomer({
-          ...client,
-          phone: client.phone ?? "",
-          email: client.email ?? "",
-          address: client.address ?? "",
-        })}
         renderMetrics={(
           <div className="grid grid-cols-[repeat(auto-fit,minmax(80px,1fr))] gap-4">
             {Array.isArray(dashboardData) && dashboardData.map((dashboard, index) => (
@@ -57,16 +69,32 @@ export default function PatientListPage() {
             {<DashboardCardII title="Pacientes activos" value={100} />}
           </div>
         )}
-        renderAdittionalInfo={(client, getProfile) => (
-          <PatientInfo patientId={client.id} getProfile={getProfile} />
+        renderAdittionalInfo={(client, getProfile, onClose) => (
+          <PatientInfo 
+            patientId={client.id} 
+            getProfile={getProfile} 
+            onClose={onClose}
+            onStartConsultation={() => actions.setPanelVisible(true)} 
+            selectedClient={() => setSelectedPatient(client)} />
         )}
-      />
-
-      {assessmentCustomer && (
-        <div className="fixed inset-0 z-60">
-          <ClinicalAssessment customer={assessmentCustomer} setIsOpen={(isOpen) => { if (!isOpen) setAssessmentCustomer(null); }} />
+        onCloseAdditionalRender={() => actions.setPanelVisible(false)}
+      >
+      </CustomerClientsPage>
+      <div className="pointer-events-none fixed inset-0 z-50" role="presentation">
+          <div
+            className={`pointer-events-auto fixed right-0 top-0 z-10 h-full w-full overflow-y-auto bg-white shadow-2xl transition-transform duration-500 ease-in-out dark:bg-slate-900 
+              ${state.panelWidthClassName ?? "md:max-w-2xl"} 
+              ${state.panelClassName ?? ""} 
+              ${state.panelVisible ? "translate-x-0" : "translate-x-full"}`}
+              role="dialog"
+              aria-modal="true"
+              aria-label=""
+              inert={!state.panelVisible}
+          >
+            {selectedPatient &&
+          <ClinicalAssessment customer={selectedPatient!} onClose={() => actions.setPanelVisible(false)} />}
         </div>
-      )}
+      </div>
     </>
   );
 }

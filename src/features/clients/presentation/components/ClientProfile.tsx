@@ -31,7 +31,7 @@ export default function ClientProfile({ client, labels, renderAdittionalInfo, on
                         <img
                             src={`${ASSETS_URLS.avatars}${client.avatar}`}
                             alt={`${client.firstName} ${client.lastName}`}
-                            className="client-profile-avatar rounded-md object-cover"
+                            className="client-profile-avatar rounded-md object-cover min-w-20"
                         />
                     ) : (
                         <div className="client-profile-avatar flex aspect-square items-center justify-center rounded-md bg-gray-300">
@@ -42,7 +42,7 @@ export default function ClientProfile({ client, labels, renderAdittionalInfo, on
                     )}
                     <div className="client-profile-details">
                         <div>
-                            <p className="mb-8 text-2xl font-medium text-black dark:text-white">
+                            <p className="client-profile-details-name mb-8 text-2xl font-medium text-black dark:text-white">
                                 {client.firstName} {client.lastName}
                             </p>
                             <CustomerItemInfo

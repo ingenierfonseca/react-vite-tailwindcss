@@ -19,6 +19,7 @@ export default function NumberInputApp({ title, value, className, max, onChange,
             label={title}
             variant="outlined"
             type="number"
+            size="small"
             value={value === 0 ? "" : value}
             disabled={disabled}
             slotProps={{

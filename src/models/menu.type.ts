@@ -1,4 +1,4 @@
-import { BarChart3, Calendar, LayoutDashboard, MapPinnedIcon, Palette, Receipt, Settings, Upload, Users, Wallet, type LucideProps } from "lucide-react";
+import { BarChart3, BarChartHorizontalIcon, Calendar, LayoutDashboard, MapPinnedIcon, Palette, Receipt, Settings, Upload, Users, Wallet, type LucideProps } from "lucide-react";
 import { PermissionResource } from "./permission.enum";
 
 export interface SubMenuAppModel {
@@ -36,14 +36,14 @@ export function getMenuData() {
             badge: "3",
             resource: PermissionResource.Appointments
         },
-        {
+        /*{
             id: "clients",
             icon: Users,
             label: "Clientes",   //"Clientes",
             count: "2.4k",
             path: "/clients",
             resource: PermissionResource.Patients
-        },
+        },*/
         {
             id: "patients",
             icon: Users,
@@ -77,14 +77,14 @@ export function getMenuData() {
             id: "performance",
             icon: BarChart3,
             label: "Desempeño de la clínica",   //"Clinic Performance"
-        },*/
+        },
         {
             id: "odontogram",
             icon: Users,
             label: "Odontograma",
             path: "/odontogram",
             resource: PermissionResource.Odontogram
-        },
+        },*/
         {
             id: "credit",
             icon: Wallet,
@@ -111,22 +111,29 @@ export function getMenuData() {
                 { id: "doctors", label: "Doctores", path: "doctors", resource: PermissionResource.Doctors },
                 { id: "treatments", label: "Tratamientos", path: "treatments", resource: PermissionResource.Treatments },
                 { id: "treatment-plans", label: "Planes de Tratamiento", path: "treatment-plans", resource: PermissionResource.TreatmentPlans },
-                { id: "currencies", label: "Monedas", path: "currencies", resource: PermissionResource.Currencies },
-                { id: "treatmentCategories", label: "Categorías de Tratamiento", path: "treatment-categories", resource: PermissionResource.TreatmentCategories },
-                { id: "exchangeRates", label: "Tipos de Cambio", path: "exchange-rates", resource: PermissionResource.ExchangeRates },
-                { id: "appointmentType", label: "Tipos de cita", path: "appointment-types", resource: PermissionResource.AppointmentTypes },
                 { id: "users", label: "Usuarios", path: "users", resource: PermissionResource.Users },
                 { id: "rolePermissions", label: "Roles y Permisos", path: "role-permissions", resource: PermissionResource.RolePermissions },
                 { id: "roles", label: "Roles", path: "roles", resource: PermissionResource.Roles },
                 { id: "permissions", label: "Permisos", path: "permissions", resource: PermissionResource.Permissions },
                 { id: "userRoles", label: "Roles de Usuario", path: "user-roles", resource: PermissionResource.UserRoles },
+                { id: "staff", label: "Staff", path: "staff", resource: PermissionResource.Staff },
+                { id: "branches", label: "Sucursales", path: "/branches", resource: PermissionResource.Branches }
+            ]
+        },
+        {
+            id: "catalogs",
+            icon: BarChartHorizontalIcon,
+            label: "Catálogos",
+            submenu: [
+                { id: "currencies", label: "Monedas", path: "currencies", resource: PermissionResource.Currencies },
+                { id: "treatmentCategories", label: "Categorías de Tratamiento", path: "treatment-categories", resource: PermissionResource.TreatmentCategories },
+                { id: "exchangeRates", label: "Tipos de Cambio", path: "exchange-rates", resource: PermissionResource.ExchangeRates },
+                { id: "appointmentType", label: "Tipos de cita", path: "appointment-types", resource: PermissionResource.AppointmentTypes },
                 { id: "resourceTypes", label: "Tipos de Recurso", path: "resource-types", resource: PermissionResource.ResourceTypes },
                 { id: "resources", label: "Recursos", path: "resources", resource: PermissionResource.Resources },
                 { id: "appointmentStatuses", label: "Estados de Cita", path: "appointment-statuses", resource: PermissionResource.AppointmentStatuses },
                 { id: "consultationTypes", label: "Tipos de Consulta", path: "consultation-types", resource: PermissionResource.ConsultationTypes },
                 { id: "specialties", label: "Especialidades", path: "specialties", resource: PermissionResource.Specialties },
-                { id: "staff", label: "Staff", path: "staff", resource: PermissionResource.Staff },
-                { id: "branches", label: "Sucursales", path: "/branches", resource: PermissionResource.Branches }
             ]
         },
         {

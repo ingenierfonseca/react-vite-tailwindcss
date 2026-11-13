@@ -8,7 +8,7 @@ export function BrandPreview({ settings }: { settings: CompanySettings }) {
     <section className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-900">
       <header className="border-b border-slate-200 px-5 py-4 dark:border-slate-700">
         <h2 className="font-semibold text-slate-900 dark:text-white">Vista previa</h2>
-        <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Así se verá la identidad visual en la aplicación.</p>
+        <p className="text-sm text-slate-500 dark:text-slate-400">Así se verá la identidad visual en la aplicación.</p>
       </header>
       <div className="grid min-h-64 sm:grid-cols-[180px_1fr]">
         <aside className="p-4 text-sm" style={{ backgroundColor: branding.sidebarBackground, color: branding.sidebarText }}>

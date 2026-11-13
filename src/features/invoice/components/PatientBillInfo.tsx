@@ -56,17 +56,13 @@ export default function PatientBillInfo({ customer, setIsOpen, reload/*, openInv
     return (
         <PageRightComponent
             title="Información de Pago del Paciente"
-            icon={
-                <div className="p-2 bg-primary/5 text-primary rounded-lg">
-                    <Receipt />
-                </div>
-            }
-            onClick={() => setIsOpen(false)}
+            onClose={() => setIsOpen(false)}
         >
             <AvatarInfo
                 className={"mt-6"}
                 avatar={`${ASSETS_URLS.avatars}/${customer!.avatar}`}
-                name={customer?.fullName || ""}
+                firstName={customer?.fullName || ""}
+                lastName={customer?.fullName || ""}
                 title={`Ultima Visita: ${customer?.lastVisit ? formatDateToMMDameDDYYYY(customer.lastVisit) : 'No ha realizado visitas'}`}
                 onClick={() => { }}
             />

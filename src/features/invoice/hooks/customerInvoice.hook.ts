@@ -75,17 +75,21 @@ export const useCustomerInvoice = () => {
         loading,
         error,
         customer,
-        setCustomer,
-        loadDataPage,
         search,
-        setSearch,
         invoiceId,
-        setInvoiceId,
         isOpenTransitionRight,
         isOpenProfileBillInfo,
         isOpenMakeInvoice,
-        openProfileBillInfo,
-        openMakeInvoice,
-        openInvoiceDetail
+        
+
+        actions: {
+            loadDataPage,
+            openProfileBillInfo,
+            openMakeInvoice,
+            openInvoiceDetail,
+            setCustomer,
+            setInvoiceId,
+            setSearch,
+        }
     };
 }

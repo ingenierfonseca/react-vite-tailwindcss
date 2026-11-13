@@ -39,10 +39,10 @@ export default function UserRoleForm({ setIsOpen, reload }: UserRoleFormProps) {
     return (
         <PageRightComponent
             title="Asignar Rol a Usuario"
-            onClick={() => setIsOpen(false)}
+            onClose={() => setIsOpen(false)}
         >
             <fieldset disabled={loading}>
-                <div className="flex flex-col gap-4 pt-3">
+                <div className="flex flex-col gap-4 py-3">
                     <DropDownApp
                         title="Usuario"
                         data={userOptions}

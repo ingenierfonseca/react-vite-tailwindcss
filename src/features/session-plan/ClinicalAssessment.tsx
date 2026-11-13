@@ -12,9 +12,9 @@ import ConsultationStep from "./components/steps/ConsultationStep";
 
 interface ClinicalAssessmentProps {
     customer: Customer;
-    setIsOpen: (value: boolean) => void;
+    onClose: () => void;
 }
-export default function ClinicalAssessment({ customer, setIsOpen }: ClinicalAssessmentProps) {
+export default function ClinicalAssessment({ customer, onClose }: ClinicalAssessmentProps) {
     const {
         form,
         loading,
@@ -27,7 +27,7 @@ export default function ClinicalAssessment({ customer, setIsOpen }: ClinicalAsse
     return (
         <PageRightComponent
             title={"Nueva Consulta"}
-            onClick={() => setIsOpen(false)}>
+            onClose={onClose}>
 
             <div className="flex flex-col gap-4 mt-3 max-w-full min-w-0 w-full">
                 <PatientInfo customer={customer} />

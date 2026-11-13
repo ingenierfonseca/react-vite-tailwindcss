@@ -197,6 +197,10 @@
   background-color: color-mix(in srgb, var(--color-sidebar-text-dynamic, #94a3b8) 55%, transparent);
 }
 
+.hamburger-menu {
+  display: none;
+}
+
 .client-profile-container {
   container-type: inline-size;
   width: 100%;
@@ -220,7 +224,25 @@
   min-width: 0;
 }
 
+.hamburger-menu {
+  display: none;
+}
+
+.sidebar-toogle-menu {
+  display: block;
+}
+
+@media screen and (max-width: 767px) {
+  .hamburger-menu {
+    display: block;
+  }
+
+  .sidebar-toogle-menu {
+    display: none;
+  }
+}
 @container (max-width: 600px) {
+
   .client-profile-header {
     flex-direction: column;
   }
@@ -232,6 +254,10 @@
 
   .client-profile-details {
     width: 100%;
+  }
+
+  .client-profile-details-name {
+    margin-bottom: 0px;
   }
 
   .customer-info-icon {

@@ -1,5 +1,5 @@
 import { CircularProgress } from "@mui/material";
-import { Save } from "lucide-react";
+import { Save, X } from "lucide-react";
 
 interface ButtonSaveAppProps {
     onClick: () => void
@@ -61,11 +61,40 @@ export function SubmitSaveApp({ label, children, loading, className, disabled = 
             {loading ? (
                 <>
                     <CircularProgress size={20} color="inherit" />
-                    <span>Guardando...</span>
+                    <>Guardando...</>
                 </>
             ) : (
-                <span className="text-sm font-semibold">{`Guardar ${label}`}</span>
+                <>{`Guardar ${label}`}</>
             )}
+        </button>
+    )
+}
+
+export function ButtonApp({ label, onClick, className, disabled = false}: ButtonSaveAppProps) {
+    return (
+        <button
+            onClick={disabled ? undefined : onClick}
+            disabled={disabled}
+            className={`${className}
+                flex items-center justify-center disabled:opacity-50
+                mt-4 bg-primary px-4 py-2 text-white rounded-sm
+                hover:bg-secondary/90 hover:text-white/70 cursor-pointer
+            `}
+        >{label}
+        </button>
+    )
+}
+
+export function CancelButtonApp({ label, onClick, disabled = false}: ButtonSaveAppProps) {
+    return (
+        <button
+            type="button"
+            disabled={disabled}
+            onClick={onClick}
+            className="flex items-center justify-center mt-4 gap-2 px-4 py-2 rounded-sm border border-primary font-medium cursor-pointer hover:bg-slate-100"
+            >
+            <X />
+            {label}
         </button>
     )
 }

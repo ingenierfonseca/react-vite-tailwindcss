@@ -26,13 +26,13 @@ export default function PermissionForm({ itemParam, setIsOpen, reload }: Permiss
     return (
         <PageRightComponent
             title={item.id ? "Editar Permiso" : "Nuevo Permiso"}
-            onClick={() => setIsOpen(false)}
+            onClose={() => setIsOpen(false)}
         >
             <fieldset disabled={loading}>
-                <div className="flex flex-col gap-4 pt-3">
-                    <TextFieldApp className="flex-3" label="Permiso" value={item.name}
+                <div className="flex flex-col gap-4 py-3">
+                    <TextFieldApp label="Permiso" value={item.name}
                         maxLength={100} onChange={(value) => setItem({ ...item, name: value })} />
-                    <TextFieldApp className="flex-5" label="Descripción" value={item.description}
+                    <TextFieldApp label="Descripción" value={item.description}
                         maxLength={200} onChange={(value) => setItem({ ...item, description: value })} />
                 </div>
                 <div className="flex justify-center">
